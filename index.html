@@ -145,6 +145,8 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.6}
 .link{background:none;border:0;color:var(--blue);text-decoration:underline;padding:6px;min-height:36px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 
+.figbox{margin:8px 0 12px;max-width:340px}.qfig{width:100%;height:auto;display:block;background:var(--paper2);border:1px solid var(--line);border-radius:10px}.figcap{font-size:11px;color:var(--ink2);margin-top:4px}
+
 </style>
 <div id="app"></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -840,6 +842,88 @@ function wRat(use) {
 
 const WIDGETS = { iso: wIso, para: wPara, sim: wSim, count: wCount, fig: wFig, par: wPar, pyth: wPyth, pl: wPl, cen: wCen, rat: wRat };
 
+/* ===== 확인 문제용 그림 ===== */
+function F(o) {
+  const w = o.w || 260, hh = o.h || 160, P = o.P || {};
+  const svg = h('s:svg', { viewBox: '-22 -14 ' + (w + 44) + ' ' + (hh + 28), role: 'img', 'aria-label': o.alt || '문제 그림', class: 'qfig' });
+  const pt = n => P[n];
+  const base = (o.poly && o.poly[0] ? o.poly[0] : Object.keys(P).filter(k => k[0] !== '_')).map(pt);
+  const cen = [base.reduce((s, p) => s + p[0], 0) / base.length, base.reduce((s, p) => s + p[1], 0) / base.length];
+  const away = (p, d) => { const v = [p[0] - cen[0], p[1] - cen[1]], L = Math.hypot(...v) || 1; return [p[0] + v[0] / L * d, p[1] + v[1] / L * d]; };
+  (o.fill || []).forEach(([ns, c]) => svg.append(poly(ns.map(pt), { fill: c, stroke: 'none' })));
+  (o.poly || []).forEach(ns => svg.append(poly(ns.map(pt), { fill: o.nofill ? 'none' : 'var(--blue-soft)', 'fill-opacity': .55, 'stroke-width': 2 })));
+  (o.circ || []).forEach(([cx, cy, r, c]) => svg.append(h('s:circle', { cx, cy, r, fill: c || 'var(--blue-soft)', 'fill-opacity': .6, stroke: 'var(--blue)', 'stroke-width': 2 })));
+  (o.raw || []).forEach(n => svg.append(n));
+  (o.seg || []).forEach(([a, b, st]) => svg.append(seg(pt(a), pt(b), st === 'r' ? { stroke: 'var(--red)', 'stroke-width': 2.2 } : st === 'd' ? { stroke: 'var(--red)', 'stroke-dasharray': '5 4', 'stroke-width': 2 } : st === 't' ? { stroke: 'var(--blue)', 'stroke-width': 2.4 } : { stroke: 'var(--blue)', 'stroke-width': 2 })));
+  (o.tk || []).forEach(([a, b, n]) => svg.append(tick(pt(a), pt(b), n || 1)));
+  (o.par || []).forEach(([a, b]) => { const m = [(pt(a)[0] + pt(b)[0]) / 2, (pt(a)[1] + pt(b)[1]) / 2], d = [pt(b)[0] - pt(a)[0], pt(b)[1] - pt(a)[1]], L = Math.hypot(...d) || 1, u = [d[0] / L, d[1] / L], n = [-u[1], u[0]];
+    svg.append(h('s:path', { d: 'M' + (m[0] - u[0] * 6 + n[0] * 4) + ' ' + (m[1] - u[1] * 6 + n[1] * 4) + ' L' + (m[0] + u[0] * 2) + ' ' + m[1] + ' L' + (m[0] - u[0] * 6 - n[0] * 4) + ' ' + (m[1] - u[1] * 6 - n[1] * 4), fill: 'none', stroke: 'var(--red)', 'stroke-width': 1.8 })); });
+  (o.rt || []).forEach(([v, a, b]) => { const V = pt(v), u = [pt(a)[0] - V[0], pt(a)[1] - V[1]], w2 = [pt(b)[0] - V[0], pt(b)[1] - V[1]], lu = Math.hypot(...u), lw = Math.hypot(...w2), s = 10, uu = [u[0] / lu * s, u[1] / lu * s], ww = [w2[0] / lw * s, w2[1] / lw * s];
+    svg.append(h('s:path', { d: 'M' + (V[0] + uu[0]) + ' ' + (V[1] + uu[1]) + ' l' + ww[0] + ' ' + ww[1] + ' l' + (-uu[0]) + ' ' + (-uu[1]), fill: 'none', stroke: 'var(--ink)', 'stroke-width': 1.5 })); });
+  (o.ang || []).forEach(([v, a, b, t]) => { const V = pt(v), A = pt(a), B = pt(b), a1 = Math.atan2(A[1] - V[1], A[0] - V[0]), a2 = Math.atan2(B[1] - V[1], B[0] - V[0]); let d = a2 - a1; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
+    const r = 15, p1 = [V[0] + r * Math.cos(a1), V[1] + r * Math.sin(a1)], p2 = [V[0] + r * Math.cos(a2), V[1] + r * Math.sin(a2)], mid = a1 + d / 2;
+    svg.append(h('s:path', { d: 'M' + p1[0] + ' ' + p1[1] + ' A' + r + ' ' + r + ' 0 0 ' + (d > 0 ? 1 : 0) + ' ' + p2[0] + ' ' + p2[1], fill: 'none', stroke: 'var(--red)', 'stroke-width': 1.8 }), label(V[0] + 31 * Math.cos(mid), V[1] + 31 * Math.sin(mid) + 4, t, 'svgm')); });
+  Object.keys(P).forEach(n => { if (n[0] === '_') return; const q = away(pt(n), 13); svg.append(label(q[0], q[1] + 5, n.replace(/'/g, '′'), 'svgt')); });
+  Object.keys(P).forEach(n => { if (n[0] !== '_' && !(o.nodot || []).includes(n)) svg.append(dot(pt(n), 3.2)); });
+  (o.txt || []).forEach(t => { if (typeof t[0] === 'string') { const [a, b, s, off] = t, m = [(pt(a)[0] + pt(b)[0]) / 2, (pt(a)[1] + pt(b)[1]) / 2], q = away(m, off == null ? 13 : off); svg.append(label(q[0], q[1] + 4, s, 'svgm')); } else svg.append(label(t[0], t[1], t[2], 'svgm')); });
+  return h('div', { class: 'figbox' }, svg, h('div', { class: 'figcap', text: '※ 그림은 실제 크기와 다를 수 있어요.' }));
+}
+const cone = (cx, by, r, hh, fill) => h('s:g', {}, h('s:path', { d: 'M' + (cx - r) + ' ' + by + ' L' + cx + ' ' + (by - hh) + ' L' + (cx + r) + ' ' + by + ' A' + r + ' ' + (r * .3) + ' 0 0 1 ' + (cx - r) + ' ' + by, fill: fill || 'var(--blue-soft)', 'fill-opacity': .7, stroke: 'var(--blue)', 'stroke-width': 2 }), h('s:path', { d: 'M' + (cx - r) + ' ' + by + ' A' + r + ' ' + (r * .3) + ' 0 0 0 ' + (cx + r) + ' ' + by, fill: 'none', stroke: 'var(--blue)', 'stroke-dasharray': '4 3' }));
+const cubeGrid = (x, y, u, n) => { const g = h('s:g', {}), d = u * n * .45, c = 'var(--blue)', add = (p, q, wd) => g.append(seg(p, q, { stroke: c, 'stroke-width': wd || .9 }));
+  g.append(poly([[x, y], [x + u * n, y], [x + u * n + d, y - d], [x + d, y - d]], { fill: 'var(--blue-soft)', 'fill-opacity': .5, 'stroke-width': 1.6 }), poly([[x + u * n, y], [x + u * n + d, y - d], [x + u * n + d, y - d + u * n], [x + u * n, y + u * n]], { fill: 'var(--blue-soft)', 'fill-opacity': .8, 'stroke-width': 1.6 }), poly([[x, y], [x + u * n, y], [x + u * n, y + u * n], [x, y + u * n]], { fill: 'var(--blue-soft)', 'fill-opacity': .3, 'stroke-width': 1.6 }));
+  for (let i = 1; i < n; i++) { add([x + i * u, y], [x + i * u, y + u * n]); add([x, y + i * u], [x + u * n, y + i * u]); add([x + i * u, y], [x + i * u + d, y - d]); add([x + u * n, y + i * u], [x + u * n + d, y + i * u - d]); add([x + u * n + i * u / n * 0 + (d / n) * i, y - (d / n) * i], [x + u * n + (d / n) * i, y - (d / n) * i + u * n]); add([x + (d / n) * i, y - (d / n) * i], [x + (d / n) * i + u * n, y - (d / n) * i]); }
+  return g; };
+const onLn = (p, q, y) => { const t = (y - p[1]) / (q[1] - p[1]); return [p[0] + (q[0] - p[0]) * t, y]; };
+
+(() => {
+  const L = Object.fromEntries(LESSONS.map(l => [l.id, l]));
+  const put = (id, i, fn) => { L[id].checks[i].fig = fn; };
+  const iso = { A: [130, 15], B: [76, 135], C: [184, 135] };
+  put('l01', 0, () => F({ P: iso, poly: [['A', 'B', 'C']], tk: [['A', 'B'], ['A', 'C']], ang: [['A', 'B', 'C', '40°']], alt: 'AB = AC인 이등변삼각형, 꼭지각 40°' }));
+  put('l01', 1, () => F({ P: iso, poly: [['A', 'B', 'C']], tk: [['A', 'B'], ['A', 'C']], ang: [['B', 'C', 'A', '65°'], ['A', 'B', 'C', '?']], alt: 'AB = AC인 이등변삼각형, ∠B = 65°' }));
+  put('l01', 2, () => F({ P: Object.assign({ D: [130, 135] }, iso), poly: [['A', 'B', 'C']], seg: [['A', 'D', 'd']], tk: [['A', 'B'], ['A', 'C']], txt: [['B', 'C', 'BC = 14 cm', 26]], h: 175, alt: 'AB = AC, AD는 꼭지각의 이등분선' }));
+  const pg = { A: [75, 25], B: [35, 120], C: [165, 120], D: [205, 25] };
+  put('l04', 0, () => F({ P: pg, poly: [['A', 'B', 'C', 'D']], par: [['A', 'D'], ['B', 'C']], ang: [['A', 'B', 'D', '110°'], ['B', 'A', 'C', '?']], alt: '평행사변형 ABCD, ∠A = 110°' }));
+  put('l04', 1, () => F({ P: pg, poly: [['A', 'B', 'C', 'D']], txt: [['A', 'B', '7 cm', 15], ['B', 'C', '5 cm', 15]], alt: '평행사변형 ABCD, AB = 7, BC = 5' }));
+  put('l04', 2, () => F({ P: Object.assign({ O: [120, 72.5] }, pg), poly: [['A', 'B', 'C', 'D']], seg: [['A', 'C', 'r'], ['B', 'D', 'r']], txt: [[120, 150, 'AC = 12 cm,  BD = 8 cm']], alt: '평행사변형의 두 대각선과 교점 O' }));
+  const tA = { A: [30, 55], B: [10, 125], C: [90, 125] }, tD = { D: [165, 25], E: [130, 130], F: [250, 130] };
+  put('l06', 0, () => F({ w: 270, P: Object.assign({}, tA, tD), poly: [['A', 'B', 'C'], ['D', 'E', 'F']], txt: [['A', 'B', '6 cm'], ['B', 'C', '8 cm', 16], ['D', 'E', '9 cm'], ['E', 'F', '? cm', 16]], alt: '닮은 두 삼각형 ABC, DEF' }));
+  put('l06', 1, () => F({ w: 270, P: Object.assign({}, tA, tD), poly: [['A', 'B', 'C'], ['D', 'E', 'F']], ang: [['A', 'B', 'C', '70°'], ['B', 'C', 'A', '50°'], ['F', 'D', 'E', '?']], alt: '닮은 두 삼각형, ∠A = 70°, ∠B = 50°' }));
+  const q1 = { A: [20, 45], B: [10, 125], C: [95, 125], D: [75, 55] }, q2 = { E: [130, 15], F: [120, 130], G: [255, 130], H: [225, 40] };
+  put('l06', 2, () => F({ w: 270, P: Object.assign({}, q1, q2), poly: [['A', 'B', 'C', 'D'], ['E', 'F', 'G', 'H']], txt: [['A', 'B', '12 cm'], ['E', 'F', '? cm'], [57, 150, '닮음비 3 : 5']], alt: '닮은 두 사각형 ABCD, EFGH' }));
+  const t7a = { A: [60, 20], B: [15, 120], C: [120, 120] }, t7b = { D: [195, 30], E: [160, 125], F: [260, 125] };
+  put('l07', 1, () => F({ w: 270, P: Object.assign({}, t7a, t7b), poly: [['A', 'B', 'C'], ['D', 'E', 'F']], ang: [['A', 'B', 'C', '50°'], ['B', 'C', 'A', '60°'], ['D', 'E', 'F', '50°'], ['F', 'D', 'E', '70°']], alt: '두 삼각형의 각의 크기' }));
+  put('l07', 2, () => F({ w: 270, P: Object.assign({}, t7a, t7b), poly: [['A', 'B', 'C'], ['D', 'E', 'F']], txt: [['B', 'C', 'BC = 8 cm', 16], ['E', 'F', 'EF = ? cm', 16], [135, 150, 'AB : DE = 2 : 3']], alt: '닮은 두 삼각형' }));
+  put('l07', 3, () => F({ w: 270, P: Object.assign({}, t7a, t7b), poly: [['A', 'B', 'C'], ['D', 'E', 'F']], txt: [['A', 'B', '4'], ['A', 'C', '6'], ['D', 'E', '8'], ['D', 'F', '12']], ang: [['B', 'C', 'A', '40°'], ['E', 'F', 'D', '40°']], alt: '두 삼각형의 변의 길이와 각' }));
+  const T = { A: [130, 15], B: [40, 135], C: [230, 135] }, lerp = (p, q, t) => [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t];
+  const tri2 = (t, s) => Object.assign({ D: lerp(T.A, T.B, t), E: lerp(T.A, T.C, s) }, T);
+  put('l08', 0, () => F({ w: 270, P: tri2(.6, .6), poly: [['A', 'B', 'C']], seg: [['D', 'E', 'r']], par: [['D', 'E'], ['B', 'C']], txt: [['A', 'D', '3', 14], ['D', 'B', '2', 14], ['A', 'E', '4.5', 14], ['E', 'C', '?', 14]], alt: '삼각형 ABC에서 DE ∥ BC' }));
+  put('l08', 1, () => F({ w: 270, P: tri2(.4, .4), poly: [['A', 'B', 'C']], seg: [['D', 'E', 'r']], par: [['D', 'E'], ['B', 'C']], txt: [['A', 'D', 'AD = 4', 26], ['A', 'B', 'AB = 10', 26], ['B', 'C', 'BC = 15', 18], ['D', 'E', 'DE = ?', -12]], alt: '삼각형 ABC에서 DE ∥ BC' }));
+  put('l08', 2, () => F({ w: 270, P: Object.assign({ M: lerp(T.A, T.B, .5), N: lerp(T.A, T.C, .5) }, T), poly: [['A', 'B', 'C']], seg: [['M', 'N', 'r']], tk: [['A', 'M'], ['M', 'B'], ['A', 'N'], ['N', 'C']], txt: [['B', 'C', 'BC = 18', 18], ['M', 'N', 'MN = ?', -12]], alt: 'M, N은 AB, AC의 중점' }));
+  put('l08', 3, () => F({ w: 270, P: tri2(.4, 4 / 9), poly: [['A', 'B', 'C']], seg: [['D', 'E', 'r']], txt: [['A', 'D', '2', 14], ['D', 'B', '3', 14], ['A', 'E', '4', 14], ['E', 'C', '5', 14]], alt: '삼각형 ABC와 선분 DE' }));
+  const par3 = (yb) => { const p0 = [60, 8], p1 = [42, 152], q0 = [175, 8], q1 = [208, 152], ys = [25, yb, 135], P = {}, nm = ['A', 'B', 'C']; ys.forEach((y, i) => { P[nm[i]] = onLn(p0, p1, y); P[nm[i] + "'"] = onLn(q0, q1, y); });
+    return F({ w: 270, P: Object.assign({ _p0: p0, _p1: p1, _q0: q0, _q1: q1 }, P), nofill: true, seg: [['_p0', '_p1'], ['_q0', '_q1']], raw: ys.map((y, i) => seg([10, y], [240, y], { stroke: 'var(--blue)', 'stroke-width': 2.5 })).concat(ys.map((y, i) => label(256, y + 4, 'lmn'[i], 'svgt'))), poly: [['A', 'C', "C'", "A'"]], alt: '평행한 세 직선 l, m, n과 두 직선 p, q', h: 185 }); };
+  put('l14', 0, () => { const f = par3(25 + 110 * 6 / 15); f.querySelector('svg').append(label(135, 182, 'p 위: AB = 6, BC = 9  /  q 위: A′B′ = 4, B′C′ = ?', 'svgm')); return f; });
+  put('l14', 1, () => { const f = par3(25 + 110 * 6 / 14); f.querySelector('svg').append(label(135, 182, 'AB = x, BC = 8  /  A′B′ = 9, B′C′ = 12', 'svgm')); return f; });
+  put('l14', 2, () => { const top = [[100, 20], [180, 20]], bot = [[60, 140], [220, 140]], rows = [0, 1, 2, 3, 4].map(k => { const t = k / 4; return [[top[0][0] + (bot[0][0] - top[0][0]) * t, 20 + 120 * t], [top[1][0] + (bot[1][0] - top[1][0]) * t, 20 + 120 * t]]; });
+    return h('div', { class: 'figbox' }, h('s:svg', { viewBox: '-10 -10 290 195', class: 'qfig', role: 'img', 'aria-label': '가로대 5개인 사다리' }, seg(top[0], bot[0], { stroke: 'var(--gold)', 'stroke-width': 4 }), seg(top[1], bot[1], { stroke: 'var(--gold)', 'stroke-width': 4 }), rows.map(r => seg(r[0], r[1], { stroke: 'var(--gold)', 'stroke-width': 3 })), label(140, 10, '40 cm', 'svgm'), label(140, 160, '80 cm', 'svgm'), label(160, 74, '? cm', 'svgm', 'start')), h('div', { class: 'figcap', text: '※ 그림은 실제 크기와 다를 수 있어요.' })); });
+  const G = [(T.A[0] + T.B[0] + T.C[0]) / 3, (T.A[1] + T.B[1] + T.C[1]) / 3], mid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
+  const cP = Object.assign({ D: mid(T.B, T.C), E: mid(T.A, T.C), F: mid(T.A, T.B), G }, T);
+  put('l15', 0, () => F({ w: 270, P: cP, poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], tk: [['B', 'D'], ['D', 'C'], ['A', 'E'], ['E', 'C'], ['A', 'F'], ['F', 'B']], txt: [[135, 170, 'AD = 18 cm,  AG = ?']], h: 178, alt: '무게중심 G와 세 중선' }));
+  put('l15', 1, () => F({ w: 270, P: cP, poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], tk: [['A', 'E'], ['E', 'C']], txt: [[135, 170, 'GE = 5 cm,  BG = ?']], h: 178, alt: '무게중심 G, E는 AC의 중점' }));
+  put('l15', 2, () => F({ w: 270, P: cP, fill: [[['A', 'G', 'C'], 'var(--gold-soft)']], poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], txt: [[135, 170, '△GAC = 12 cm²  (노란 부분)']], h: 178, alt: '△GAC에 색칠' }));
+  put('l15', 3, () => F({ w: 270, P: cP, fill: [[['G', 'D', 'C', 'E'], 'var(--gold-soft)']], poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], txt: [[135, 170, '□GDCE = 40 cm²  (노란 부분)']], h: 178, alt: '□GDCE에 색칠' }));
+  put('l16', 0, () => F({ w: 270, P: { A: [45, 80], B: [10, 130], C: [95, 130], D: [180, 25], E: [125, 130], F: [255, 130] }, poly: [['A', 'B', 'C'], ['D', 'E', 'F']], txt: [[52, 118, '18 cm²'], [190, 100, '? cm²'], [135, 168, '닮음비 3 : 5']], h: 172, alt: '닮은 두 삼각형의 넓이' }));
+  put('l16', 1, () => h('div', { class: 'figbox' }, h('s:svg', { viewBox: '-10 -10 290 195', class: 'qfig', role: 'img', 'aria-label': '닮은 두 원뿔' }, cone(70, 125, 30, 70), cone(185, 135, 60, 125), label(70, 150, '40 cm³', 'svgm'), label(185, 172, '? cm³', 'svgm'), label(128, 90, '2 : 3', 'svgm')), h('div', { class: 'figcap', text: '※ 그림은 실제 크기와 다를 수 있어요.' })));
+  put('l16', 2, () => F({ w: 270, P: { _a: [0, 0] }, circ: [[70, 85, 38], [185, 80, 46, 'var(--green-soft)']], txt: [[70, 88, '넓이 25'], [185, 84, '넓이 36'], [70, 145, '둘레?'], [185, 145, '둘레?']], alt: '넓이의 비가 25 : 36인 두 원' }));
+  put('l16', 3, () => h('div', { class: 'figbox' }, h('s:svg', { viewBox: '-10 -10 290 195', class: 'qfig', role: 'img', 'aria-label': '아이스크림 조각과 케이크' }, cubeGrid(30, 143, 12, 1), cubeGrid(100, 100, 22, 3), label(40, 175, '5 cm', 'svgm'), label(133, 178, '15 cm', 'svgm')), h('div', { class: 'figcap', text: '※ 케이크는 조각을 쌓아 만들어요.' })));
+  put('l16', 4, () => h('div', { class: 'figbox' }, h('s:svg', { viewBox: '-10 -10 290 205', class: 'qfig', role: 'img', 'aria-label': '물이 반쯤 찬 원뿔 그릇' }, h('s:path', { d: 'M90 20 L180 20 L135 145 Z', fill: 'var(--blue-soft)', 'fill-opacity': .4, stroke: 'var(--blue)', 'stroke-width': 2.2 }), h('s:path', { d: 'M112.5 82.5 L157.5 82.5 L135 145 Z', fill: 'var(--blue)', 'fill-opacity': .35 }), label(135, 165, '물 높이 = 전체 높이의 1/2', 'svgm'), label(135, 182, '그릇 부피 240π cm³', 'svgm'))));
+  const R = { C: [40, 130], A: [40, 58], B: [136, 130] };
+  put('l09', 0, () => F({ w: 270, P: R, poly: [['A', 'B', 'C']], rt: [['C', 'A', 'B']], txt: [['A', 'C', '6', 14], ['C', 'B', '8', 14], ['A', 'B', '?', 14]], alt: '직각삼각형, 직각변 6, 8' }));
+  put('l09', 1, () => F({ w: 270, P: { C: [40, 135], A: [40, 85], B: [160, 135] }, poly: [['A', 'B', 'C']], rt: [['C', 'A', 'B']], txt: [['A', 'C', '5', 14], ['C', 'B', '?', 14], ['A', 'B', '13', 14]], alt: '직각삼각형, 빗변 13, 한 직각변 5' }));
+  put('l09', 2, () => F({ w: 270, P: { A: [30, 25], B: [30, 110], C: [180, 110], D: [180, 25] }, poly: [['A', 'B', 'C', 'D']], seg: [['A', 'C', 'r']], txt: [['B', 'C', '15', 14], ['A', 'B', '8', 14], [130, 62, '대각선 ?']], alt: '가로 15, 세로 8인 직사각형의 대각선' }));
+})();
+
 /* ===== 앱 ===== */
 const KEY = 'gaenyeom-v1', TKEY = 'gaenyeom-teacher-v1';
 const STEPS = ['질문', '탐색', '일반화', '정리', '확인', '내 말로'];
@@ -1067,7 +1151,7 @@ function stepCheck(p, l, s, advance, touch) {
       else { const inp = h('input', { class: 'in', id: 'chk' + i, inputmode: 'decimal', autocomplete: 'off', 'aria-label': '답', value: x.val || '', disabled: x.ok || x.show });
         inp.addEventListener('keydown', e => { if (e.key === 'Enter') submit(i, inp.value); });
         ctrl = h('div', { class: 'ans' }, inp, c.unit ? h('span', { text: c.unit }) : null, h('button', { class: 'btn', type: 'button', disabled: x.ok || x.show, text: '확인', onclick: () => submit(i, inp.value) })); }
-      return h('div', { class: 'card chk' }, h('div', { class: 'qt', text: (i + 1) + '. ' + c.q }), ctrl,
+      return h('div', { class: 'card chk' }, h('div', { class: 'qt', text: (i + 1) + '. ' + c.q }), c.fig ? c.fig() : null, ctrl,
         x.ok ? h('div', { class: 'fb good', text: '정답! ' + c.why }) : x.show ? h('div', { class: 'fb hint', text: '정답 확인: ' + c.why }) : x.tries ? h('div', { class: 'fb bad', text: '아쉬워요. 힌트: ' + c.hint }) : null,
         !x.ok && !x.show && x.tries >= 2 ? h('button', { class: 'btn sm', type: 'button', text: '정답 보기', onclick: () => { x.show = true; x.ok = true; touch(); paint(); } }) : null);
     }));
