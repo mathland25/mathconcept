@@ -1,0 +1,1175 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><title>개념 탐구 노트</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;600;700&family=Jua&display=swap">
+<style>
+/* 노트 같은 모눈종이 위에서 탐구하는 앱. 파란 잉크 + 빨간 펜 + 거북이 초록 */
+:root{
+  --bg:#eef2f0;--paper:#fbfdfc;--paper2:#f1f6f4;--ink:#14282b;--ink2:#506466;--line:#cfdad8;--grid:rgba(29,95,134,.07);
+  --blue:#1d5f86;--blue-soft:#dcecf4;--red:#c8382e;--red-soft:#fbe3e0;--green:#2e7d5b;--green-soft:#dff1e7;--gold:#a8690f;--gold-soft:#f8ecd2;
+  --f-disp:'Jua','IBM Plex Sans KR',system-ui,sans-serif;--f-body:'IBM Plex Sans KR','Noto Sans KR',system-ui,sans-serif;--r:14px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1b1e;--paper:#172529;--paper2:#1d2d32;--ink:#e6f0ee;--ink2:#9db3b3;--line:#2c4247;--grid:rgba(120,180,210,.07);
+  --blue:#7cc0e6;--blue-soft:#1d3a4a;--red:#ff8a7e;--red-soft:#4a2724;--green:#6fcf9f;--green-soft:#1c3a2d;--gold:#e8b45a;--gold-soft:#3d3118;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1b1e;--paper:#172529;--paper2:#1d2d32;--ink:#e6f0ee;--ink2:#9db3b3;--line:#2c4247;--grid:rgba(120,180,210,.07);
+  --blue:#7cc0e6;--blue-soft:#1d3a4a;--red:#ff8a7e;--red-soft:#4a2724;--green:#6fcf9f;--green-soft:#1c3a2d;--gold:#e8b45a;--gold-soft:#3d3118;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.6 var(--f-body);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;
+  padding-inline:16px;padding-block:14px 60px;-webkit-text-size-adjust:100%}
+button,input,textarea,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+#app{max-width:1080px;margin:0 auto}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:10px;font:400 1.35rem var(--f-disp)}
+.brand svg{flex:none}
+.btn{border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:9px 16px;font-weight:600;min-height:44px}
+a.btn{text-decoration:none;display:inline-flex;align-items:center;color:var(--ink)}
+.btn:hover{border-color:var(--blue)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+.btn.ghost{background:transparent}
+.btn.sm{min-height:36px;padding:5px 12px;font-size:.88rem}
+.btn.red{border-color:var(--red);color:var(--red)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.card{background:var(--paper);border:1.5px solid var(--line);border-radius:var(--r);padding:18px 20px}
+.h1{font:400 1.7rem/1.3 var(--f-disp);margin:0 0 6px;text-wrap:balance}
+.h2{font:400 1.2rem/1.35 var(--f-disp);margin:0 0 8px}
+.note{color:var(--ink2);font-size:.9rem;margin:4px 0 10px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.chip{display:inline-block;padding:1px 10px;border-radius:99px;font-size:.78rem;font-weight:600;background:var(--blue-soft);color:var(--blue);white-space:nowrap}
+.chip.gray{background:var(--paper2);color:var(--ink2);border:1px solid var(--line)}
+.chip.green{background:var(--green-soft);color:var(--green)}
+.chip.gold{background:var(--gold-soft);color:var(--gold)}
+.chip.red{background:var(--red-soft);color:var(--red)}
+/* 시작 */
+.welcome{display:grid;gap:16px;max-width:560px;margin:6vh auto 0}
+.in{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--paper)}
+.fieldrow{display:grid;grid-template-columns:1fr 120px;gap:10px}
+label.l{display:block;font-size:.85rem;font-weight:600;color:var(--ink2);margin-bottom:4px}
+.pcards{display:flex;flex-direction:column;gap:8px}
+.pcard{display:flex;justify-content:space-between;gap:10px;text-align:left;width:100%}
+/* 홈 */
+.hero{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;margin-bottom:14px}
+.units{display:flex;flex-direction:column;gap:18px}
+.unit h2{font:400 1.25rem var(--f-disp);margin:0 0 4px}
+.unit .sub{color:var(--ink2);font-size:.9rem;margin:0 0 10px}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px}
+.lcard{text-align:left;display:flex;flex-direction:column;gap:6px;border:1.5px solid var(--line);background:var(--paper);border-radius:var(--r);padding:14px 16px;min-width:0}
+.lcard:hover:not(:disabled){border-color:var(--blue)}
+.lcard .no{font:400 .95rem var(--f-disp);color:var(--blue)}
+.lcard .t{font-weight:700;font-size:1.05rem}
+.lcard .q{color:var(--ink2);font-size:.9rem}
+.lcard.soon{opacity:.7;cursor:default}
+.lcard.done{border-color:var(--green)}
+.bar{height:8px;border-radius:6px;background:var(--paper2);border:1px solid var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--blue)}
+/* 차시 */
+.stepper{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 14px}
+.stepper button{display:flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--paper);border-radius:99px;padding:5px 14px;font-weight:600;font-size:.9rem;min-height:38px}
+.stepper button.on{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+.stepper button.ok:not(.on){border-color:var(--green);color:var(--green)}
+.stepper button:disabled{opacity:.4}
+.qbig{font:400 1.55rem/1.4 var(--f-disp);text-wrap:balance;margin:6px 0 12px}
+.cols{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:880px){.cols{grid-template-columns:minmax(0,1fr)}.hero{grid-template-columns:1fr}.fieldrow{grid-template-columns:1fr}}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{text-align:left;border:1.5px solid var(--line);background:var(--paper);border-radius:12px;padding:10px 14px;min-height:46px}
+.opt:hover:not(:disabled){border-color:var(--blue)}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.opt.good{border-color:var(--green);background:var(--green-soft)}
+.opt.bad{border-color:var(--red);background:var(--red-soft)}
+.task{border-top:1px dashed var(--line);padding-top:12px;margin-top:12px}
+.task:first-child{border-top:0;margin-top:0;padding-top:0}
+.fb{margin-top:8px;padding:8px 12px;border-radius:10px;font-size:.92rem}
+.fb.good{background:var(--green-soft);color:var(--green)}
+.fb.bad{background:var(--red-soft);color:var(--red)}
+.fb.hint{background:var(--gold-soft);color:var(--gold)}
+.gen{font-size:1.1rem;line-height:2.4}
+.blank{display:inline-flex;gap:4px;flex-wrap:wrap;vertical-align:middle;margin:0 4px}
+.blank button{border:1.5px solid var(--blue);background:var(--paper);color:var(--blue);border-radius:8px;padding:0 12px;min-height:36px;font-weight:700}
+.blank button.good{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.blank button.bad{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+.genitem{padding:8px 0;border-bottom:1px dashed var(--line)}
+.genitem:last-child{border-bottom:0}
+.sumcard{border-left:5px solid var(--blue)}
+.points{margin:6px 0 0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px}
+.def{background:var(--blue-soft);border-radius:12px;padding:10px 14px;margin:10px 0}
+.def b{color:var(--blue)}
+.checks{display:flex;flex-direction:column;gap:12px}
+.chk{display:grid;gap:8px}
+.chk .qt{font-weight:600}
+.ans{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ans input{width:120px;font-size:1.1rem;text-align:center}
+.stamp{width:54px;height:54px;border:4px solid var(--red);border-radius:50%;display:grid;place-items:center;color:var(--red);font:400 1.5rem var(--f-disp);transform:rotate(-8deg)}
+textarea.in{min-height:110px;resize:vertical;line-height:1.6}
+.done-box{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+/* 위젯 */
+.widget{padding:12px 14px}
+.widget svg{width:100%;height:auto;display:block;touch-action:none;background:var(--paper2);border-radius:10px;border:1px solid var(--line)}
+.wtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.wtabs button{border:1.5px solid var(--line);background:var(--paper);border-radius:99px;padding:3px 14px;font-weight:600;font-size:.88rem;min-height:36px}
+.wtabs button.on{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+.ctl{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;margin-top:8px;font-size:.92rem}
+.ctl input[type=range]{width:100%;min-height:32px;accent-color:var(--blue)}
+.ctl output{font-weight:700;min-width:3.2em;text-align:right;font-variant-numeric:tabular-nums}
+.read{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:10px;font-variant-numeric:tabular-nums}
+.read span{background:var(--paper2);border:1px solid var(--line);border-radius:8px;padding:2px 10px;font-size:.92rem}
+.read span.hi{border-color:var(--blue);background:var(--blue-soft)}
+.verdict{margin-top:10px;padding:8px 12px;border-radius:10px;font-weight:600;background:var(--paper2);border:1px solid var(--line)}
+.verdict.yes{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.verdict.no{background:var(--red-soft);border-color:var(--red);color:var(--red)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chips span{border:1.5px solid var(--blue);border-radius:8px;padding:1px 9px;font-size:.84rem;background:var(--paper)}
+.chips.gold span{border-color:var(--gold);color:var(--gold)}
+.grid-combo{display:grid;gap:4px;margin-top:8px}
+.grid-combo span{border:1.5px solid var(--blue);background:var(--paper);border-radius:6px;padding:2px 4px;font-size:.78rem;text-align:center;white-space:nowrap}
+.svgt{fill:var(--ink);font:600 13px var(--f-body)}
+.svgm{fill:var(--ink2);font:500 11px var(--f-body)}
+/* 교사용 */
+.syncline{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;border-radius:10px;background:var(--paper2);border:1px solid var(--line);font-size:.9rem;margin:6px 0}
+.syncline .dot{width:10px;height:10px;border-radius:50%;background:var(--ink2);flex:none}
+.syncline.on .dot{background:var(--blue)}.syncline.err{border-color:var(--red)}.syncline.err .dot{background:var(--red)}
+.tscroll{overflow-x:auto;padding:6px 8px}
+.mx{border-collapse:collapse;width:100%;min-width:640px}
+.mx th{font-size:.78rem;color:var(--ink2);font-weight:600;padding:6px 6px;text-align:center;border-bottom:1px solid var(--line);white-space:nowrap}
+.mx th:first-child,.mx td:first-child{text-align:left}
+.mx td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:center}
+.mx tbody tr{cursor:pointer}.mx tbody tr:hover{background:var(--paper2)}
+.cell{display:inline-block;min-width:34px;padding:0 6px;border-radius:8px;font-size:.82rem;font-weight:700}
+.cell.d{background:var(--green-soft);color:var(--green)}.cell.p{background:var(--gold-soft);color:var(--gold)}.cell.n{color:var(--line)}
+.refl{background:var(--paper2);border-radius:10px;padding:8px 12px;margin:6px 0;white-space:pre-wrap;word-break:break-word}
+.refl small{display:block;color:var(--ink2);margin-bottom:2px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:9;font-size:.92rem}
+.toast.on{opacity:1}
+.link{background:none;border:0;color:var(--blue);text-decoration:underline;padding:6px;min-height:36px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+</style>
+<div id="app"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+<script>
+(()=>{'use strict';
+/* ===== 중2-2 개념 학습 내용 (초안) ===== */
+const UNITS = [
+  { id: 0, name: 'Ⅳ. 도형의 성질', sub: '삼각형과 사각형의 성질' },
+  { id: 1, name: 'Ⅴ. 도형의 닮음', sub: '닮음과 피타고라스 정리' },
+  { id: 2, name: 'Ⅵ. 경우의 수와 확률', sub: '세는 방법과 가능성' }
+];
+const LESSONS = [
+  { id: 'l01', unit: 0, no: 1, title: '이등변삼각형의 성질', q: '두 변의 길이가 같은 삼각형에는 어떤 일이 함께 일어날까?', lens: '대칭 · 관계',
+    ready: true, widget: 'iso',
+    pred: { ask: '길이가 같은 두 변(AB = AC)이 있는 삼각형에서, 그 두 변 맞은편의 각 ∠C와 ∠B의 크기는 어떨 것 같아요?', opts: ['∠B가 더 클 것 같다', '∠C가 더 클 것 같다', '둘이 같을 것 같다', '모르겠다'] },
+    tasks: [
+      { ask: '슬라이더로 AB = AC(두 값을 같게)로 맞추고 ∠B와 ∠C를 비교해 보세요.', opts: ['∠B > ∠C', '∠B = ∠C', '∠B < ∠C'], ans: 1, why: '두 변의 길이가 같으면 그 맞은편 각의 크기도 같아요.' },
+      { ask: 'AB를 AC보다 길게 만들어 보세요. 어느 각이 더 커지나요?', opts: ['∠B가 더 크다', '∠C가 더 크다', '같다'], ans: 1, why: '더 긴 변(AB)의 맞은편 각 ∠C가 더 커요. 변의 길이와 맞은편 각의 크기는 함께 움직여요.' },
+      { ask: 'AB = AC로 맞춘 뒤 "수직선 긋기"를 켜 보세요. 점 H는 밑변 BC의 어디에 있나요?', opts: ['B에 가깝다', 'C에 가깝다', 'BC의 한가운데(BH = HC)'], ans: 2, why: 'BH = HC = 5로 꼭 반이에요. 그리고 ∠BAH = ∠HAC도 확인해 보세요.' }
+    ],
+    gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+      { pre: 'AB = AC인 삼각형(이등변삼각형)에서 두 밑각 ∠B와 ∠C의 크기는', opts: ['같다', '다르다', '알 수 없다'], ans: 0, post: '.' },
+      { pre: '이등변삼각형에서 꼭지각의 이등분선은 밑변을', opts: ['수직이등분한다', '3등분한다', '평행하게 지난다'], ans: 0, post: '.' },
+      { pre: '거꾸로, 두 내각의 크기가 같은 삼각형은', opts: ['이등변삼각형이다', '직각삼각형이다', '정삼각형이다'], ans: 0, post: '.' }
+    ] },
+    sum: { title: '이등변삼각형', defs: [['이등변삼각형', '두 변의 길이가 같은 삼각형'], ['꼭지각', '길이가 같은 두 변이 이루는 각'], ['밑각', '꼭지각의 반대쪽 변(밑변)의 양 끝 각']],
+      points: ['이등변삼각형의 두 밑각의 크기는 같다. (AB = AC이면 ∠B = ∠C)', '이등변삼각형의 꼭지각의 이등분선은 밑변을 수직이등분한다.', '두 내각의 크기가 같은 삼각형은 이등변삼각형이다. (∠B = ∠C이면 AB = AC)'],
+      note: '"크기가 같은 두 각"은 꼭지각을 포함하지 않아요. 꼭지각은 두 밑각과 별개예요.' },
+    checks: [
+      { q: '△ABC에서 AB = AC이고 ∠A = 40°입니다. ∠B의 크기는?', unit: '°', ans: 70, hint: '∠B = ∠C이고, 세 각의 합은 180°예요.', why: '(180° − 40°) ÷ 2 = 70°' },
+      { q: '△ABC에서 AB = AC이고 ∠B = 65°입니다. 꼭지각 ∠A의 크기는?', unit: '°', ans: 50, hint: '밑각이 두 개 있다는 점을 생각해요.', why: '∠C = 65°이므로 ∠A = 180° − 65° × 2 = 50°' },
+      { q: 'AB = AC인 이등변삼각형 ABC에서 꼭지각 ∠A의 이등분선이 BC와 만나는 점을 D라 합니다. BC = 14 cm일 때 BD의 길이는?', unit: 'cm', ans: 7, hint: '꼭지각의 이등분선은 밑변을 어떻게 나누죠?', why: '밑변을 수직이등분하므로 BD = 14 ÷ 2 = 7 cm' },
+      { q: 'AB = AC인 삼각형 ABC에서 크기가 항상 같은 두 각은?', opts: ['∠A와 ∠B', '∠B와 ∠C', '∠A와 ∠C'], ans: 1, hint: '길이가 같은 두 변의 맞은편 각을 찾아요.', why: 'AB = AC이므로 AB의 맞은편 ∠C와 AC의 맞은편 ∠B가 같아요.' }
+    ],
+    refl: ['이등변삼각형의 두 밑각이 같은 까닭을 "접기" 또는 "대칭"이라는 말을 써서 친구에게 설명해 보세요.', '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요. (없으면 "없음")']
+  },
+  { id: 'l02', unit: 0, no: 2, title: '삼각형의 외심', q: '삼각형의 세 변의 수직이등분선은 왜 한 점에서 만날까?', lens: '위치 · 거리' },
+  { id: 'l03', unit: 0, no: 3, title: '삼각형의 내심', q: '삼각형 안에서 세 변까지의 거리가 같은 점은 어디일까?', lens: '위치 · 거리' },
+  { id: 'l04', unit: 0, no: 4, title: '평행사변형의 성질', q: '마주 보는 두 쌍의 변이 평행하면 어떤 성질이 따라올까?', lens: '조건 · 성질',
+    ready: true, widget: 'para',
+    pred: { ask: '평행사변형의 꼭짓점을 마음대로 끌어도 늘 변하지 않는 것은 무엇일 것 같아요?', opts: ['네 변의 길이가 모두 같다', '마주 보는 변의 길이가 같다', '네 각의 크기가 모두 같다', '모르겠다'] },
+    tasks: [
+      { ask: '"변" 탭에서 꼭짓점을 이리저리 끌어 보세요. 마주 보는 변 AB와 DC의 길이는?', opts: ['항상 같다', '항상 다르다', '모양에 따라 다르다'], ans: 0, why: '모양이 바뀌어도 AB = DC, AD = BC예요.' },
+      { ask: '"각" 탭에서 이웃한 두 각의 합(∠A + ∠B)을 살펴보세요.', opts: ['90°', '180°', '360°'], ans: 1, why: '∠A + ∠B = 180°. 평행선에서 같은 쪽 안쪽의 각의 합이에요.' },
+      { ask: '"대각선" 탭에서 두 대각선의 교점 O가 각 대각선을 어떻게 나누는지 보세요.', opts: ['항상 이등분한다', '항상 3등분한다', '모양에 따라 다르다'], ans: 0, why: 'AO = OC, BO = OD예요. 두 대각선은 서로 다른 것을 이등분해요.' }
+    ],
+    gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+      { pre: '평행사변형에서 마주 보는 두 쌍의 변의 길이는 각각', opts: ['같다', '다르다'], ans: 0, post: '.' },
+      { pre: '평행사변형에서 마주 보는 두 쌍의 각의 크기는 각각', opts: ['같다', '다르다'], ans: 0, post: '.' },
+      { pre: '평행사변형에서 두 대각선은 서로 다른 것을', opts: ['이등분한다', '수직으로 만난다', '길이가 같다'], ans: 0, post: '.' }
+    ] },
+    sum: { title: '평행사변형', defs: [['평행사변형', '두 쌍의 대변이 각각 평행한 사각형'], ['대변', '마주 보는 변'], ['대각', '마주 보는 각']],
+      points: ['두 쌍의 대변의 길이는 각각 같다.', '두 쌍의 대각의 크기는 각각 같다.', '두 대각선은 서로 다른 것을 이등분한다.', '이 성질 가운데 한 가지를 만족하는 사각형(예: 두 쌍의 대각이 같다)은 평행사변형이다.'],
+      note: '"성질"은 평행사변형이면 항상 일어나는 일이고, "조건"은 그 성질로 평행사변형임을 확인하는 방법이에요.' },
+    checks: [
+      { q: '평행사변형 ABCD에서 ∠A = 110°입니다. ∠B의 크기는?', unit: '°', ans: 70, hint: '이웃한 두 각의 합은 얼마였죠?', why: '∠A + ∠B = 180°이므로 ∠B = 70°' },
+      { q: '평행사변형 ABCD에서 AB = 7 cm, BC = 5 cm입니다. 둘레의 길이는?', unit: 'cm', ans: 24, hint: '대변의 길이는 각각 같아요.', why: '2 × (7 + 5) = 24 cm' },
+      { q: '평행사변형 ABCD의 두 대각선의 교점을 O라 하고, AC = 12 cm, BD = 8 cm입니다. OC + OD의 길이는?', unit: 'cm', ans: 10, hint: '두 대각선은 서로 다른 것을 이등분해요.', why: 'OC = 12 ÷ 2 = 6, OD = 8 ÷ 2 = 4이므로 합은 10 cm' },
+      { q: '다음 중 항상 평행사변형이 되는 사각형은?', opts: ['한 쌍의 대변만 평행한 사각형', '두 쌍의 대각의 크기가 각각 같은 사각형', '두 대각선의 길이가 같은 사각형', '한 쌍의 대변이 평행하고 다른 한 쌍의 대변의 길이가 같은 사각형'], ans: 1, hint: '반례(조건은 맞는데 평행사변형이 아닌 도형)를 찾아봐요. 사다리꼴도 후보예요.', why: '두 쌍의 대각이 각각 같으면 평행사변형이 돼요. 나머지는 사다리꼴이나 등변사다리꼴 같은 반례가 있어요.' }
+    ],
+    refl: ['평행사변형의 세 가지 성질 중 하나를 골라, 왜 그렇게 될 것 같은지 자기 말로 설명해 보세요.', '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요. (없으면 "없음")']
+  },
+  { id: 'l05', unit: 0, no: 5, title: '여러 가지 사각형', q: '정사각형은 직사각형일까, 마름모일까?', lens: '분류 · 관계' },
+  { id: 'l06', unit: 1, no: 6, title: '닮은 도형', q: '크기가 달라도 "같은 모양"이라고 말할 수 있는 기준은 무엇일까?', lens: '형태 · 비율' },
+  { id: 'l07', unit: 1, no: 7, title: '삼각형의 닮음 조건', q: '삼각형이 닮았다고 말하려면 무엇이 같아야 최소한으로 충분할까?', lens: '조건 · 형태',
+    ready: true, widget: 'sim',
+    pred: { ask: '두 삼각형이 닮음이려면 모든 변의 비와 모든 각이 같아야 할까요? (6개를 다 확인해야 할까요?)', opts: ['6개를 모두 확인해야 한다', '더 적게 확인해도 충분할 것 같다', '모르겠다'] },
+    tasks: [
+      { ask: '"SSS" 탭에서 세 변의 길이를 조절해 세 쌍의 대응변의 비가 모두 같아지게 해 보세요. 그때 삼각형은?', opts: ['닮음이다', '닮음이 아니다'], ans: 0, why: '세 쌍의 대응변의 길이의 비가 같으면 닮음이에요. (SSS 닮음)' },
+      { ask: '"SAS" 탭에서 두 변의 비는 같게, 끼인각은 다르게 만들어 보세요. 그때 삼각형은?', opts: ['닮음이다', '닮음이 아니다'], ans: 1, why: '끼인각이 다르면 닮음이 아니에요. 두 변의 비만으로는 부족해요.' },
+      { ask: '"AA" 탭에서 두 각만 맞추어 보세요. 나머지 한 각은 어떻게 되나요?', opts: ['자동으로 같아져서 닮음이다', '달라질 수 있어서 닮음이 아니다'], ans: 0, why: '삼각형의 세 각의 합은 180°이므로 두 각이 같으면 나머지 한 각도 같아요. (AA 닮음)' }
+    ],
+    gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+      { pre: '세 쌍의 대응변의 길이의 비가 같으면', opts: ['SSS 닮음', 'SAS 닮음', 'AA 닮음'], ans: 0, post: '이다.' },
+      { pre: '두 쌍의 대응변의 길이의 비가 같고 그 끼인각의 크기가 같으면', opts: ['SSS 닮음', 'SAS 닮음', 'AA 닮음'], ans: 1, post: '이다.' },
+      { pre: '두 쌍의 대응각의 크기가 각각 같으면', opts: ['SSS 닮음', 'SAS 닮음', 'AA 닮음'], ans: 2, post: '이다.' }
+    ] },
+    sum: { title: '삼각형의 닮음 조건', defs: [['대응', '닮은 두 도형에서 서로 겹쳐지는 꼭짓점·변·각'], ['끼인각', '두 변 사이에 끼여 있는 각'], ['닮음 기호', '△ABC ∽ △DEF (대응하는 꼭짓점 순서로 쓴다)']],
+      points: ['SSS 닮음: 세 쌍의 대응변의 길이의 비가 같다.', 'SAS 닮음: 두 쌍의 대응변의 길이의 비가 같고, 그 끼인각의 크기가 같다.', 'AA 닮음: 두 쌍의 대응각의 크기가 각각 같다.'],
+      note: 'SAS에서는 반드시 "끼인각"이어야 해요. 끼인각이 아닌 각이 같은 경우는 닮음이라고 할 수 없어요.' },
+    checks: [
+      { q: '△ABC와 △DEF에서 AB : DE = BC : EF = CA : FD = 2 : 3 입니다. 어떤 조건으로 닮음일까요?', opts: ['SSS 닮음', 'SAS 닮음', 'AA 닮음'], ans: 0, hint: '변의 비가 몇 쌍 주어졌는지 세어 봐요.', why: '세 쌍의 대응변의 길이의 비가 같으므로 SSS 닮음이에요.' },
+      { q: '△ABC에서 ∠A = 50°, ∠B = 60°이고, △DEF에서 ∠D = 50°, ∠F = 70°입니다. 두 삼각형은 닮음일까요?', opts: ['닮음이다 (AA 닮음)', '닮음이 아니다', '변의 길이를 모르므로 알 수 없다'], ans: 0, hint: '△ABC의 ∠C를 먼저 구해 봐요.', why: '∠C = 180° − 50° − 60° = 70°이므로 ∠A = ∠D, ∠C = ∠F. 두 각이 같으므로 AA 닮음이에요.' },
+      { q: '△ABC ∽ △DEF이고 닮음비가 AB : DE = 2 : 3입니다. BC = 8 cm일 때 EF의 길이는?', unit: 'cm', ans: 12, hint: '대응변의 비는 모두 같아요. BC : EF = 2 : 3', why: '8 : EF = 2 : 3이므로 EF = 12 cm' },
+      { q: '△ABC에서 AB = 4, AC = 6, ∠B = 40°이고 △DEF에서 DE = 8, DF = 12, ∠E = 40°입니다. 닮음이라고 할 수 있을까요?', opts: ['SAS 닮음이므로 닮음이다', '끼인각이 아니라서 닮음이라고 할 수 없다', '닮음이 아니다'], ans: 1, hint: '∠B는 어느 두 변 사이의 각인가요?', why: '변 AB, AC의 끼인각은 ∠A예요. ∠B는 끼인각이 아니라서 SAS 조건을 쓸 수 없고, 이 정보만으로는 닮음이라고 확정할 수 없어요.' }
+    ],
+    refl: ['삼각형의 닮음을 확인하는 데 왜 6개를 다 보지 않고 3가지 조건만으로 충분한지 자기 말로 설명해 보세요.', '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요. (없으면 "없음")']
+  },
+  { id: 'l08', unit: 1, no: 8, title: '평행선과 선분의 길이의 비', q: '삼각형의 한 변과 평행한 선을 그으면 다른 두 변은 어떻게 나뉠까?', lens: '비례 · 평행' },
+  { id: 'l09', unit: 1, no: 9, title: '피타고라스 정리', q: '직각삼각형의 세 변 사이에는 어떤 관계가 있을까?', lens: '관계 · 넓이' },
+  { id: 'l10', unit: 2, no: 10, title: '경우의 수 (합의 법칙, 곱의 법칙)', q: '"또는"과 "그리고"는 경우를 세는 방법을 어떻게 바꿀까?', lens: '구조 · 세기',
+    ready: true, widget: 'count',
+    pred: { ask: '서울에서 대전까지 가는 기차가 3편, 버스가 2편 있습니다. 한 번 갈 때 선택할 수 있는 방법은 모두 몇 가지일 것 같아요?', opts: ['5가지', '6가지', '8가지', '모르겠다'] },
+    tasks: [
+      { ask: '"또는(합)" 탭에서 기차 3편, 버스 2편으로 맞추고 한 번 가는 방법의 수를 세어 보세요.', opts: ['5가지', '6가지', '3가지'], ans: 0, why: '기차 3 + 버스 2 = 5가지. 기차와 버스는 동시에 탈 수 없는 서로 다른 선택이에요.' },
+      { ask: '"그리고(곱)" 탭에서 상의 3벌, 하의 4벌로 맞추고 옷차림의 수를 세어 보세요.', opts: ['7가지', '12가지', '24가지'], ans: 1, why: '상의 3 × 하의 4 = 12가지. 상의를 고르고 이어서 하의를 고르는 상황이에요.' },
+      { ask: '상의를 고르고 이어서 하의를 고르는 상황에서는 어떤 법칙을 쓰나요?', opts: ['합의 법칙', '곱의 법칙'], ans: 1, why: '"그리고(잇달아)"가 보이면 곱의 법칙을 써요.' }
+    ],
+    gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+      { pre: '두 사건 A, B가 동시에 일어나지 않을 때, A 또는 B가 일어나는 경우의 수는 m', opts: ['+', '×', '−'], ans: 0, post: 'n이다. (합의 법칙)' },
+      { pre: '사건 A와 B가 잇달아 일어날 때, 경우의 수는 m', opts: ['+', '×', '−'], ans: 1, post: 'n이다. (곱의 법칙)' },
+      { pre: '문제에 "또는"이 보이면', opts: ['합의 법칙', '곱의 법칙'], ans: 0, post: ', "그리고(잇달아)"가 보이면 곱의 법칙을 쓴다.' }
+    ] },
+    sum: { title: '경우의 수', defs: [['경우의 수', '어떤 사건이 일어나는 서로 다른 방법의 수'], ['합의 법칙', '동시에 일어나지 않는 두 사건 A, B의 경우의 수가 각각 m, n이면 A 또는 B가 일어나는 경우의 수는 m + n'], ['곱의 법칙', '두 사건 A, B가 잇달아 일어나고 경우의 수가 각각 m, n이면 경우의 수는 m × n']],
+      points: ['"또는"이 보이면 더한다.', '"그리고", "잇달아"가 보이면 곱한다.', '세기 전에 "서로 다른 방법이 겹치지 않는지" 먼저 확인한다.'],
+      note: '합의 법칙을 쓸 때는 두 사건이 동시에 일어나지 않아야 해요.' },
+    checks: [
+      { q: '서울에서 대전까지 가는 기차가 3편, 버스가 2편입니다. 기차 또는 버스를 한 번 타고 가는 방법은 모두 몇 가지?', unit: '가지', ans: 5, hint: '"또는"이에요.', why: '3 + 2 = 5가지' },
+      { q: '티셔츠 4벌과 바지 3벌이 있습니다. 티셔츠 한 벌과 바지 한 벌을 짝지어 입는 경우의 수는?', unit: '가지', ans: 12, hint: '"티셔츠를 고르고 이어서 바지를 고른다"로 읽어 봐요.', why: '4 × 3 = 12가지' },
+      { q: '서로 다른 두 개의 주사위를 동시에 던질 때, 나온 눈의 수의 합이 5 또는 6이 되는 경우의 수는?', unit: '가지', ans: 9, hint: '합이 5인 경우와 합이 6인 경우를 따로 세어 합쳐요.', why: '합이 5: (1,4)(2,3)(3,2)(4,1) 4가지, 합이 6: (1,5)(2,4)(3,3)(4,2)(5,1) 5가지 → 4 + 5 = 9가지' },
+      { q: '동전 2개와 주사위 1개를 동시에 던질 때, 나오는 경우의 수는? (동전은 서로 구분됩니다)', unit: '가지', ans: 24, hint: '동전 하나의 경우의 수 × 다른 동전 × 주사위', why: '2 × 2 × 6 = 24가지' }
+    ],
+    refl: ['"또는"과 "그리고"에서 계산이 왜 다른지, 오늘의 예시를 하나 들어 자기 말로 설명해 보세요.', '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요. (없으면 "없음")']
+  },
+  { id: 'l11', unit: 2, no: 11, title: '여러 가지 경우의 수', q: '순서가 중요한 경우와 중요하지 않은 경우는 어떻게 다를까?', lens: '구조 · 순서' },
+  { id: 'l12', unit: 2, no: 12, title: '확률의 뜻과 성질', q: '"일어나기 쉽다"를 숫자로 나타낼 수 있을까?', lens: '가능성 · 비율' },
+  { id: 'l13', unit: 2, no: 13, title: '확률의 계산', q: '일어나지 않을 확률을 알면 일어날 확률도 알 수 있을까?', lens: '가능성 · 관계' }
+];
+
+/* ===== Ⅴ. 도형의 닮음 — 6, 8, 9차시 ===== */
+Object.assign(LESSONS.find(l => l.id === 'l06'), {
+  ready: true, widget: 'fig',
+  pred: { ask: '어떤 도형을 가로와 세로를 같은 비율로 키우면 "같은 모양"일까요? 가로만 두 배로 늘리면요?', opts: ['같은 비율로 키우면 같은 모양, 가로만 늘리면 다른 모양', '둘 다 같은 모양이다', '둘 다 다른 모양이다', '모르겠다'] },
+  tasks: [
+    { ask: '"같은 비율" 탭에서 배율을 2로 맞추세요. 도형의 대응하는 변의 길이는 각각 몇 배가 되었나요?', opts: ['모두 같은 배수가 된다', '변마다 다른 배수가 된다'], ans: 0, why: '모든 변이 똑같이 2배가 돼요. 대응변의 길이의 비가 일정해요.' },
+    { ask: '같은 탭에서 ∠B와 ∠B′의 크기를 비교해 보세요.', opts: ['∠B′이 더 크다', '같다', '∠B′이 더 작다'], ans: 1, why: '크기를 바꿔도 대응하는 각의 크기는 그대로예요.' },
+    { ask: '"가로만 늘리기" 탭에서 가로 2배, 세로 1배로 맞추어 보세요. 이 도형은 처음 도형과 닮음일까요?', opts: ['닮음이다', '닮음이 아니다'], ans: 1, why: '변마다 늘어난 배수가 달라지고 각의 크기도 달라져서 닮음이 아니에요.' }
+  ],
+  gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+    { pre: '닮은 두 도형에서 대응변의 길이의 비는', opts: ['모두 같다', '모두 다르다'], ans: 0, post: '.' },
+    { pre: '닮은 두 도형에서 대응각의 크기는 각각', opts: ['같다', '다르다'], ans: 0, post: '.' },
+    { pre: '닮은 두 도형에서 대응변의 길이의 비를', opts: ['닮음비', '합동비', '축척비'], ans: 0, post: '라고 한다.' },
+    { pre: '닮음비가 1 : 1인 두 도형은', opts: ['합동이다', '닮음이 아니다'], ans: 0, post: '.' }
+  ] },
+  sum: { title: '닮은 도형', defs: [['닮음', '한 도형을 일정한 비율로 확대하거나 축소한 도형이 다른 도형과 합동일 때, 두 도형은 닮음인 관계'], ['닮은 도형', '닮음인 관계에 있는 두 도형'], ['기호', '△ABC ∽ △DEF (대응하는 꼭짓점을 같은 순서로 쓴다)'], ['닮음비', '닮은 두 도형에서 대응변의 길이의 비']],
+    points: ['닮은 두 도형에서 대응변의 길이의 비는 일정하다.', '닮은 두 도형에서 대응각의 크기는 각각 같다.', '닮음비가 1 : 1이면 두 도형은 합동이다.'],
+    note: '닮음비는 순서가 있어요. △ABC ∽ △DEF에서 AB : DE가 2 : 3이면 △ABC가 더 작은 도형이에요.' },
+  checks: [
+    { q: '△ABC ∽ △DEF이고 AB = 6 cm, DE = 9 cm, BC = 8 cm입니다. EF의 길이는?', unit: 'cm', ans: 12, hint: '닮음비는 AB : DE = 6 : 9 = 2 : 3이에요. BC에 대응하는 변은 EF예요.', why: '8 : EF = 2 : 3이므로 EF = 12 cm' },
+    { q: '△ABC ∽ △DEF이고 ∠A = 70°, ∠B = 50°입니다. ∠F의 크기는?', unit: '°', ans: 60, hint: '먼저 ∠C를 구한 뒤, 대응각을 찾아요.', why: '∠C = 180° − 70° − 50° = 60°이고 ∠F는 ∠C의 대응각이므로 ∠F = 60°' },
+    { q: '닮은 두 사각형 ABCD와 EFGH의 닮음비가 3 : 5이고 AB = 12 cm입니다. EF의 길이는?', unit: 'cm', ans: 20, hint: 'AB와 EF는 대응변이에요.', why: '12 : EF = 3 : 5이므로 EF = 20 cm' },
+    { q: '다음 중 항상 닮음인 두 도형은?', opts: ['두 정삼각형', '두 직사각형', '두 마름모', '두 이등변삼각형'], ans: 0, hint: '닮음이 아닌 반례를 하나씩 떠올려 봐요.', why: '정삼각형은 세 각이 모두 60°이고 변의 길이의 비도 같아서 항상 닮음이에요. 직사각형은 가로·세로의 비가, 마름모는 각의 크기가, 이등변삼각형은 꼭지각이 다를 수 있어요.' }
+  ],
+  refl: ['"닮음"이란 무엇인지, 가로만 늘린 도형과 비교해서 자기 말로 설명해 보세요.', '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요.']
+});
+
+Object.assign(LESSONS.find(l => l.id === 'l08'), {
+  ready: true, widget: 'par',
+  pred: { ask: '삼각형 ABC에서 변 AB의 한가운데 점 D를 지나 BC와 평행한 선을 그으면, 이 선이 변 AC와 만나는 점 E는 어디쯤일 것 같아요?', opts: ['AC의 한가운데', 'A에 더 가깝다', 'C에 더 가깝다', '모르겠다'] },
+  tasks: [
+    { ask: '"평행하게" 탭에서 D의 위치를 바꿔 보세요. AD : DB와 AE : EC를 비교하면?', opts: ['항상 같다', '항상 다르다', 'D의 위치에 따라 다르다'], ans: 0, why: 'DE ∥ BC이면 AD : DB = AE : EC예요. D를 어디로 옮겨도 마찬가지예요.' },
+    { ask: 'AD : AB, AE : AC, DE : BC를 비교해 보세요.', opts: ['세 비가 모두 같다', 'AD : AB만 다르다', '모두 다르다'], ans: 0, why: 'AD : AB = AE : AC = DE : BC예요. 평행선이 삼각형을 닮은 작은 삼각형으로 잘라 내요.' },
+    { ask: '"자유롭게" 탭에서 E를 움직여 AD : DB와 AE : EC가 같아지게 해 보세요. 이때 DE와 BC는?', opts: ['평행하다', '평행하지 않다'], ans: 0, why: '두 비가 같아지는 순간 DE ∥ BC가 돼요. (평행선과 선분의 비의 역)' }
+  ],
+  gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+    { pre: '△ABC에서 DE ∥ BC이면 AD : AB = AE : AC =', opts: ['DE : BC', 'DB : BC', 'DE : AD'], ans: 0, post: '이다.' },
+    { pre: '△ABC에서 DE ∥ BC이면 AD : DB =', opts: ['AE : EC', 'AE : AC', 'DE : BC'], ans: 0, post: '이다.' },
+    { pre: '거꾸로, AD : DB = AE : EC이면 DE와 BC는', opts: ['평행하다', '수직이다', '길이가 같다'], ans: 0, post: '.' }
+  ] },
+  sum: { title: '삼각형에서 평행선과 선분의 길이의 비', defs: [['삼각형과 평행선', '△ABC의 변 AB, AC 위에 점 D, E를 잡았을 때 DE ∥ BC인 경우'], ['중점연결정리', '삼각형의 두 변의 중점을 이은 선분은 나머지 한 변과 평행하고, 그 길이는 나머지 한 변의 길이의 절반']],
+    points: ['DE ∥ BC이면 AD : AB = AE : AC = DE : BC', 'DE ∥ BC이면 AD : DB = AE : EC', 'AD : DB = AE : EC이면 DE ∥ BC', 'AD = DB, AE = EC이면 DE ∥ BC이고 DE = ½BC'],
+    note: 'AD : AB(위쪽 전체)와 AD : DB(위쪽 : 아래쪽)를 헷갈리지 마세요. 어느 쪽 비인지 먼저 확인해요.' },
+  checks: [
+    { q: '△ABC에서 DE ∥ BC이고 AD = 3, DB = 2, AE = 4.5입니다. EC의 길이는?', unit: '', ans: 3, hint: 'AD : DB = AE : EC', why: '3 : 2 = 4.5 : EC이므로 EC = 3' },
+    { q: '△ABC에서 DE ∥ BC이고 AD = 4, AB = 10, BC = 15입니다. DE의 길이는?', unit: '', ans: 6, hint: 'AD : AB = DE : BC', why: '4 : 10 = DE : 15이므로 DE = 6' },
+    { q: '△ABC에서 변 AB, AC의 중점을 각각 M, N이라 하고 BC = 18일 때, MN의 길이는?', unit: '', ans: 9, hint: '중점연결정리를 떠올려 봐요.', why: 'MN ∥ BC이고 MN = ½BC = 9' },
+    { q: '△ABC에서 AD = 2, DB = 3, AE = 4, EC = 5입니다. DE와 BC는 평행할까요?', opts: ['평행하다', '평행하지 않다', '알 수 없다'], ans: 1, hint: 'AD : DB와 AE : EC를 비교해 봐요.', why: 'AD : DB = 2 : 3이고 AE : EC = 4 : 5로 서로 달라서 DE는 BC와 평행하지 않아요.' }
+  ],
+  refl: ['DE ∥ BC일 때 AD : DB = AE : EC가 되는 까닭을, 닮음을 떠올려 자기 말로 설명해 보세요.', '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요.']
+});
+
+Object.assign(LESSONS.find(l => l.id === 'l09'), {
+  ready: true, widget: 'pyth',
+  pred: { ask: '직각삼각형의 직각을 낀 두 변 위에 각각 정사각형을 만들고, 빗변 위에도 정사각형을 만들면 넓이 사이에 어떤 관계가 있을 것 같아요?', opts: ['두 변 위의 넓이의 합 = 빗변 위의 넓이', '빗변 위의 넓이가 항상 훨씬 크다', '아무 관계가 없다', '모르겠다'] },
+  tasks: [
+    { ask: '"정사각형 넓이" 탭에서 두 직각변의 길이를 바꿔 보세요. a² + b²과 c²를 비교하면?', opts: ['항상 같다', 'a² + b²이 더 크다', 'c²이 더 크다', '변에 따라 다르다'], ans: 0, why: '직각삼각형이면 a² + b² = c²가 항상 성립해요.' },
+    { ask: '"각 C 바꾸기" 탭에서 ∠C가 90°보다 작으면 a² + b²과 c²의 크기는?', opts: ['a² + b² > c²', 'a² + b² = c²', 'a² + b² < c²'], ans: 0, why: '∠C가 작아지면 빗변 쪽이 짧아져서 c²가 a² + b²보다 작아져요.' },
+    { ask: '같은 탭에서 a² + b² = c²가 되는 때는 ∠C가 몇 도일 때인가요?', opts: ['60°', '90°', '120°'], ans: 1, why: '∠C = 90°일 때만 a² + b² = c²가 돼요. 거꾸로, a² + b² = c²이면 직각삼각형이에요.' }
+  ],
+  gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+    { pre: '직각삼각형에서 직각을 낀 두 변의 길이를 a, b, 빗변의 길이를 c라 하면', opts: ['a² + b² = c²', 'a + b = c', 'a² − b² = c²'], ans: 0, post: '이다.' },
+    { pre: '세 변의 길이가 a, b, c이고 a² + b² = c²이면 이 삼각형은', opts: ['직각삼각형이다', '이등변삼각형이다', '둔각삼각형이다'], ans: 0, post: '.' },
+    { pre: '가장 긴 변이 c일 때 a² + b² > c²이면 이 삼각형은', opts: ['예각삼각형이다', '직각삼각형이다', '둔각삼각형이다'], ans: 0, post: '.' }
+  ] },
+  sum: { title: '피타고라스 정리', defs: [['빗변', '직각삼각형에서 직각의 맞은편 변(가장 긴 변)'], ['피타고라스 정리', '직각삼각형에서 직각을 낀 두 변의 길이의 제곱의 합은 빗변의 길이의 제곱과 같다'], ['피타고라스 정리의 역', '세 변의 길이가 a, b, c이고 a² + b² = c²이면 길이가 c인 변의 맞은편 각이 직각이다']],
+    points: ['직각삼각형: a² + b² = c² (c는 빗변)', '세 변이 a² + b² = c²를 만족하면 직각삼각형이다.', '가장 긴 변이 c일 때 a² + b² > c²이면 예각삼각형, a² + b² < c²이면 둔각삼각형이다.'],
+    note: '식에서 c²는 반드시 가장 긴 변(빗변)이에요. 어느 변이 가장 긴지 먼저 확인해요.' },
+  checks: [
+    { q: '직각삼각형에서 직각을 낀 두 변의 길이가 6, 8일 때 빗변의 길이는?', unit: '', ans: 10, hint: 'c² = 6² + 8²', why: 'c² = 36 + 64 = 100이므로 c = 10' },
+    { q: '빗변의 길이가 13이고 한 직각변의 길이가 5인 직각삼각형에서 다른 직각변의 길이는?', unit: '', ans: 12, hint: 'b² = 13² − 5²', why: 'b² = 169 − 25 = 144이므로 b = 12' },
+    { q: '가로 8, 세로 15인 직사각형의 대각선의 길이는?', unit: '', ans: 17, hint: '대각선은 직각삼각형의 빗변이에요.', why: '8² + 15² = 64 + 225 = 289이므로 대각선은 17' },
+    { q: '세 변의 길이가 4, 5, 6인 삼각형은 어떤 삼각형일까요?', opts: ['직각삼각형', '예각삼각형', '둔각삼각형'], ans: 1, hint: '가장 긴 변 6의 제곱과 나머지 두 변의 제곱의 합을 비교해 봐요.', why: '4² + 5² = 41이고 6² = 36이므로 a² + b² > c²이에요. 따라서 예각삼각형이에요.' }
+  ],
+  refl: ['피타고라스 정리를 "정사각형의 넓이"라는 말을 써서 친구에게 설명해 보세요.', '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요.']
+});
+
+/* 모든 차시의 두 번째 질문에서 '없음' 안내 제거 */
+LESSONS.forEach(l => { if (l.refl) l.refl = l.refl.map(q => q.replace(/\s*\(없으면 "없음"\)/, '')); });
+
+/* ===== Ⅴ. 도형의 닮음 — 학습지 5, 6, 7차시 + 평가 요소 표시 ===== */
+const GEN_REFL = '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요.';
+LESSONS.push(
+{ id: 'l14', unit: 1, title: '평행선 사이의 선분의 길이의 비', q: '평행선이 두 직선을 자르면, 잘린 선분의 길이는 어떤 관계가 있을까?', lens: '비례 · 평행', ready: true, widget: 'pl',
+  pred: { ask: '평행한 세 직선 l, m, n이 두 직선 p, q와 만날 때, p 위의 AB : BC와 q 위의 A′B′ : B′C′는 어떨 것 같아요?', opts: ['AB : BC = A′B′ : B′C′', 'AB = A′B′, BC = B′C′', '아무 관계도 없다', '모르겠다'] },
+  tasks: [
+    { ask: '"l ∥ m ∥ n" 탭에서 m의 높이를 바꿔 보세요. AB ÷ BC와 A′B′ ÷ B′C′의 값은?', opts: ['항상 같다', '항상 다르다', 'm의 위치에 따라 다르다'], ans: 0, why: 'm을 어디로 옮겨도 두 비는 같아요. 선분의 길이는 바뀌어도 비는 변하지 않아요.' },
+    { ask: '같은 탭에서 q의 기울기를 바꿔 보세요. 두 비는 여전히 같을까요?', opts: ['여전히 같다', '달라진다'], ans: 0, why: '두 직선 p, q가 어떻게 놓여도 평행선이 자른 비는 같아요.' },
+    { ask: '"m 기울이기" 탭에서 m의 왼쪽과 오른쪽 높이를 서로 다르게 해 보세요. 두 비는?', opts: ['여전히 같다', '달라진다'], ans: 1, why: 'm이 l, n과 평행하지 않으면 비가 달라져요. "평행"이 꼭 필요한 조건이에요.' }
+  ],
+  gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+    { pre: '세 직선 l, m, n이 서로 평행할 때, AB : BC =', opts: ['A′B′ : B′C′', 'A′B′ : A′C′', 'BC : B′C′'], ans: 0, post: '이다.' },
+    { pre: 'l ∥ m ∥ n이면 두 직선 p, q가 어떻게 놓여 있어도 이 성질은', opts: ['성립한다', '성립하지 않는다'], ans: 0, post: '.' },
+    { pre: '세 직선이 평행하지 않으면 AB : BC = A′B′ : B′C′가', opts: ['항상 성립하지는 않는다', '항상 성립한다'], ans: 0, post: '.' }
+  ] },
+  sum: { title: '평행선 사이에 있는 선분의 길이의 비', defs: [['평행선 사이의 선분', '평행한 직선들이 다른 직선 위에 잘라 낸 선분']],
+    points: ['세 개의 평행선이 다른 두 직선과 만날 때, 평행선 사이에 있는 선분의 길이의 비는 같다. (l ∥ m ∥ n이면 a : b = c : d)', '두 직선이 서로 교차하는 모양이어도 성립한다.', '증명 방법: 점 A를 지나고 q와 평행한 직선을 그어, 삼각형에서 평행선과 선분의 길이의 비와 평행사변형의 성질을 이용한다.'],
+    note: '"비가 같다"이지 "길이가 같다"가 아니에요. 길이가 같아지려면 평행선 사이의 간격도 같아야 해요.' },
+  checks: [
+    { q: 'l ∥ m ∥ n이고, 직선 p 위에서 AB = 6 cm, BC = 9 cm, 직선 q 위에서 A′B′ = 4 cm입니다. B′C′의 길이는?', unit: 'cm', ans: 6, hint: 'AB : BC = A′B′ : B′C′', why: '6 : 9 = 4 : x이므로 x = 6 cm' },
+    { q: 'l ∥ m ∥ n일 때, AB = x cm, BC = 8 cm, A′B′ = 9 cm, B′C′ = 12 cm입니다. x의 값은?', unit: 'cm', ans: 6, hint: 'x : 8 = 9 : 12', why: '12x = 72이므로 x = 6' },
+    { q: '5개의 가로대가 일정한 간격으로 놓인 사다리가 있습니다. 맨 위 가로대가 40 cm, 맨 아래 가로대가 80 cm일 때, 가운데(세 번째) 가로대의 길이는?', unit: 'cm', ans: 60, hint: '가로대 사이 간격이 같으면 길이는 일정하게 늘어요. 40, ?, ?, ?, 80', why: '길이가 일정하게 늘어 40, 50, 60, 70, 80이므로 세 번째는 60 cm' },
+    { q: '미오: "세 직선이 평행하면 a : b = c : d가 성립해." 다오: "a : b = c : d가 성립하면 세 직선은 모두 평행해." 잘못 말한 사람은?', opts: ['미오', '다오', '둘 다 맞다', '둘 다 틀리다'], ans: 1, hint: '"평행 ⇒ 비가 같다"와 "비가 같다 ⇒ 평행"은 방향이 달라요.', why: '평행하면 비가 같지만, 비가 같다고 해서 세 직선이 모두 평행한 것은 아니에요. 직선을 기울여 둔 채로 비가 같아지도록 그릴 수 있어요.' }
+  ],
+  refl: ['평행선 사이의 선분의 길이의 비가 같은 까닭을 "삼각형" 또는 "평행사변형"이라는 말을 써서 설명해 보세요.', GEN_REFL] },
+{ id: 'l15', unit: 1, title: '삼각형의 무게중심', q: '삼각형의 세 중선은 한 점에서 만날까? 그 점은 어떤 특별함이 있을까?', lens: '위치 · 균형', ready: true, widget: 'cen',
+  pred: { ask: '삼각형의 세 꼭짓점에서 각각 마주 보는 변의 중점으로 선분(중선)을 그으면, 세 선분은 어떻게 될 것 같아요?', opts: ['한 점에서 만난다', '두 점에서 만난다', '만나지 않는다', '모르겠다'] },
+  tasks: [
+    { ask: '"중선" 탭에서 A를 움직여 삼각형의 모양을 바꿔 보세요. 세 중선은 늘 어떻게 만나나요?', opts: ['항상 한 점 G에서 만난다', '모양에 따라 달라진다'], ans: 0, why: '어떤 삼각형이든 세 중선은 한 점 G에서 만나요. 이 점을 무게중심이라고 해요.' },
+    { ask: '같은 탭에서 AG ÷ GD, BG ÷ GE, CG ÷ GF의 값을 보세요.', opts: ['모두 1', '모두 2', '모두 3'], ans: 1, why: '모두 2예요. 즉 AG : GD = BG : GE = CG : GF = 2 : 1이에요.' },
+    { ask: '"넓이" 탭에서 6개의 작은 삼각형의 넓이를 비교해 보세요.', opts: ['모두 같다', 'G에 가까울수록 크다', '모양에 따라 다르다'], ans: 0, why: '여섯 삼각형의 넓이는 모두 같아요. 각각 전체 넓이의 1/6이에요.' }
+  ],
+  gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+    { pre: '삼각형의 한 꼭짓점과 그 대변의 중점을 이은 선분을', opts: ['중선', '높이', '이등분선'], ans: 0, post: '이라고 한다.' },
+    { pre: '삼각형의 세 중선은', opts: ['한 점에서 만난다', '세 점에서 만난다'], ans: 0, post: '. 이 점을 무게중심이라고 한다.' },
+    { pre: '무게중심 G는 중선 AD를 꼭짓점 A로부터', opts: ['2 : 1', '1 : 1', '1 : 2'], ans: 0, post: '로 나눈다.' },
+    { pre: '세 중선으로 나누어진 6개의 삼각형의 넓이는', opts: ['모두 같다', '모두 다르다'], ans: 0, post: '.' }
+  ] },
+  sum: { title: '삼각형의 무게중심', defs: [['중선', '삼각형의 한 꼭짓점과 그 대변의 중점을 이은 선분'], ['무게중심', '삼각형의 세 중선이 만나는 점']],
+    points: ['삼각형의 세 중선은 한 점(무게중심)에서 만난다.', '무게중심은 세 중선의 길이를 각 꼭짓점으로부터 2 : 1로 나눈다. (AG : GD = BG : GE = CG : GF = 2 : 1)', '한 중선은 삼각형의 넓이를 이등분하고, 세 중선은 삼각형의 넓이를 6등분한다.', '증명 아이디어: 중점연결정리로 △GAB ∽ △GDE(닮음비 2 : 1)임을 보인다.'],
+    note: '2 : 1은 "꼭짓점 쪽이 2"예요. AG : GD = 2 : 1이지 GD : AG가 아니에요.' },
+  checks: [
+    { q: '점 G가 △ABC의 무게중심이고 중선 AD의 길이가 18 cm일 때, AG의 길이는?', unit: 'cm', ans: 12, hint: 'AG : GD = 2 : 1이면 AG는 AD의 몇 분의 몇일까요?', why: 'AG = 18 × 2/3 = 12 cm' },
+    { q: '점 G가 △ABC의 무게중심이고, E가 AC의 중점입니다. GE = 5 cm일 때, BG의 길이는?', unit: 'cm', ans: 10, hint: 'BE는 중선이에요. BG : GE = 2 : 1', why: 'BG = 2 × GE = 10 cm' },
+    { q: '점 G가 △ABC의 무게중심이고 △GAC의 넓이가 12 cm²일 때, △ABC의 넓이는?', unit: 'cm²', ans: 36, hint: '△GAB, △GBC, △GCA의 넓이는 모두 같아요.', why: '세 삼각형의 넓이가 같으므로 12 × 3 = 36 cm²' },
+    { q: '점 G가 △ABC의 무게중심이고, D, E는 각각 BC, AC의 중점입니다. □GDCE의 넓이가 40 cm²일 때, △ABC의 넓이는?', unit: 'cm²', ans: 120, hint: '□GDCE는 6등분된 삼각형 중 몇 개일까요?', why: '□GDCE는 작은 삼각형 2개이므로 전체의 1/3이에요. 40 × 3 = 120 cm²' }
+  ],
+  refl: ['삼각형의 무게중심이 중선을 2 : 1로 나누는 까닭을 "중점연결정리"나 "닮음"이라는 말을 써서 설명해 보세요.', GEN_REFL] },
+{ id: 'l16', unit: 1, title: '닮은 도형의 넓이와 부피', q: '닮음비가 2 : 3이면 넓이의 비도 2 : 3일까? 부피의 비는?', lens: '비율 · 차원', ready: true, widget: 'rat',
+  pred: { ask: '정사각형의 한 변을 2배로 늘리면 넓이는 몇 배가 될 것 같아요?', opts: ['2배', '4배', '8배', '모르겠다'] },
+  tasks: [
+    { ask: '"넓이" 탭에서 m = 1, n = 2로 맞추세요. 큰 직사각형의 넓이(칸 수)는 작은 것의 몇 배인가요?', opts: ['2배', '4배', '8배'], ans: 1, why: '닮음비가 1 : 2이면 넓이는 4배(1² : 2²)가 돼요.' },
+    { ask: '같은 탭에서 m : n = 2 : 3으로 맞추고 넓이의 비를 확인해 보세요.', opts: ['2 : 3', '4 : 9', '8 : 27'], ans: 1, why: '넓이의 비는 2² : 3² = 4 : 9예요.' },
+    { ask: '"부피" 탭에서 m : n = 2 : 3으로 맞추고 부피의 비를 확인해 보세요.', opts: ['2 : 3', '4 : 9', '8 : 27'], ans: 2, why: '부피의 비는 2³ : 3³ = 8 : 27이에요.' }
+  ],
+  gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+    { pre: '닮은 두 평면도형의 닮음비가 m : n이면 넓이의 비는', opts: ['m² : n²', 'm : n', 'm³ : n³'], ans: 0, post: '이다.' },
+    { pre: '닮은 두 입체도형의 닮음비가 m : n이면 부피의 비는', opts: ['m³ : n³', 'm² : n²', 'm : n'], ans: 0, post: '이다.' },
+    { pre: '닮음비가 2 : 5인 두 평면도형의 넓이의 비는', opts: ['4 : 25', '2 : 5', '8 : 125'], ans: 0, post: '이다.' }
+  ] },
+  sum: { title: '닮은 도형의 넓이의 비와 부피의 비', defs: [['닮음비', '닮은 두 도형에서 대응하는 길이의 비']],
+    points: ['닮은 두 평면도형의 닮음비가 m : n이면 넓이의 비는 m² : n²이다.', '닮은 두 입체도형의 닮음비가 m : n이면 부피의 비는 m³ : n³이다.', '두 원은 항상 닮음이고 닮음비는 반지름의 비이다. 두 구도 마찬가지이다.'],
+    note: '먼저 닮음비를 m : n으로 쓰고, 거듭제곱한 뒤 비례식을 세워요. 닮음비와 넓이의 비를 헷갈리지 않게 단계마다 이름을 붙여 보세요.' },
+  checks: [
+    { q: '닮은 두 삼각형의 닮음비가 3 : 5이고 작은 삼각형의 넓이가 18 cm²입니다. 큰 삼각형의 넓이는?', unit: 'cm²', ans: 50, hint: '넓이의 비는 3² : 5² = 9 : 25', why: '9 : 25 = 18 : x이므로 x = 50 cm²' },
+    { q: '닮은 두 원뿔의 닮음비가 2 : 3이고 작은 원뿔의 부피가 40 cm³입니다. 큰 원뿔의 부피는?', unit: 'cm³', ans: 135, hint: '부피의 비는 2³ : 3³ = 8 : 27', why: '8 : 27 = 40 : x이므로 x = 135 cm³' },
+    { q: '두 원의 넓이의 비가 25 : 36일 때, 두 원의 둘레의 길이의 비는?', opts: ['5 : 6', '25 : 36', '125 : 216'], ans: 0, hint: '원은 닮은 도형이고, 둘레는 길이예요. 넓이의 비는 닮음비의 제곱이에요.', why: '닮음비 : 넓이의 비 = 5 : 6의 제곱이 25 : 36이므로 닮음비는 5 : 6이고, 둘레의 비도 5 : 6' },
+    { q: '한 모서리가 5 cm인 정육면체 아이스크림 조각을 쌓아, 한 모서리가 15 cm인 정육면체 케이크를 만들려고 합니다. 조각은 모두 몇 개 필요할까요?', unit: '개', ans: 27, hint: '닮음비는 5 : 15 = 1 : 3', why: '부피의 비는 1³ : 3³ = 1 : 27이므로 27개' },
+    { q: '원뿔 모양 그릇에 물이 전체 높이의 1/2만큼 채워져 있습니다. 그릇의 부피가 240π cm³일 때, 그릇을 가득 채우려면 물을 몇 cm³ 더 넣어야 할까요?', unit: 'π cm³', ans: 210, hint: '물이 찬 부분도 원뿔이고, 그릇과 닮음이에요. 닮음비는 1 : 2', why: '부피의 비는 1 : 8이므로 물의 부피는 240π ÷ 8 = 30π. 더 넣을 물은 240π − 30π = 210π cm³' }
+  ],
+  refl: ['닮음비가 m : n일 때 넓이의 비가 m² : n²인 까닭을 직사각형이나 정사각형을 예로 들어 설명해 보세요.', GEN_REFL] }
+);
+
+/* 차시 순서: 선생님 학습지(5단원 1~8차시) 순서 */
+(() => {
+  const ord = ['l01','l02','l03','l04','l05','l06','l07','l08','l14','l15','l16','l09','l10','l11','l12','l13'];
+  const m = Object.fromEntries(LESSONS.map(l => [l.id, l]));
+  LESSONS.splice(0, LESSONS.length, ...ord.map(id => m[id]));
+  const cnt = {};
+  LESSONS.forEach((l, i) => { l.no = i + 1; cnt[l.unit] = (cnt[l.unit] || 0) + 1; l.ws = cnt[l.unit]; });
+  const T = { l06: ['닮은 도형의 성질', '교과서 192~197쪽'], l07: ['삼각형의 닮음 조건', '교과서 203~205쪽'], l08: ['삼각형에서 평행선과 선분의 길이의 비 · 중점연결정리', '학습지 3·4차시'], l14: ['평행선 사이의 선분의 길이의 비', '교과서 218~220쪽'], l15: ['삼각형의 무게중심', '교과서 221~223쪽'], l16: ['닮은 도형의 넓이와 부피의 비', '교과서 198~201쪽'], l09: ['피타고라스 정리', '학습지 8차시'] };
+  Object.entries(T).forEach(([id, [el, src]]) => { m[id].el = el; m[id].src = src; });
+  m.l08.ws = 3; // 학습지 3·4차시
+  [m.l14, m.l15, m.l16, m.l09].forEach((l, i) => { l.ws = 5 + i; });
+  m.l08.wsLabel = '3·4';
+})();
+
+/* ===== 탐색 위젯 (SVG) ===== */
+const NS = 'http://www.w3.org/2000/svg';
+function h(tag, a, ...k) {
+  const svg = tag.startsWith('s:');
+  const el = svg ? document.createElementNS(NS, tag.slice(2)) : document.createElement(tag);
+  for (const [key, v] of Object.entries(a || {})) {
+    if (v == null || v === false) continue;
+    if (key === 'class') el.setAttribute('class', v);
+    else if (key === 'text') el.textContent = v;
+    else if (key === 'html') el.innerHTML = v;
+    else if (key.startsWith('on')) el.addEventListener(key.slice(2), v);
+    else el.setAttribute(key, v === true ? '' : v);
+  }
+  el.append(...k.flat(Infinity).filter(x => x != null && x !== false));
+  return el;
+}
+const deg = r => r * 180 / Math.PI;
+const r1 = v => (Math.round(v * 10) / 10).toFixed(1).replace(/\.0$/, '');
+const dist = (p, q) => Math.hypot(p[0] - q[0], p[1] - q[1]);
+const angleAt = (p, a, b) => { // p에서 a, b가 이루는 각(도)
+  const u = [a[0] - p[0], a[1] - p[1]], v = [b[0] - p[0], b[1] - p[1]];
+  return deg(Math.acos(Math.max(-1, Math.min(1, (u[0] * v[0] + u[1] * v[1]) / (Math.hypot(...u) * Math.hypot(...v))))));
+};
+function slider(label, min, max, step, val, fmt, onInput) {
+  const out = h('output', { text: fmt(val) });
+  const inp = h('input', { type: 'range', min, max, step, value: val, 'aria-label': label });
+  inp.addEventListener('input', () => { const v = +inp.value; out.textContent = fmt(v); onInput(v); });
+  return [h('span', { text: label }), inp, out];
+}
+const tabs = (items, cur, onPick) => h('div', { class: 'wtabs', role: 'group' }, items.map(([k, l]) =>
+  h('button', { type: 'button', class: k === cur ? 'on' : '', 'aria-pressed': k === cur ? 'true' : 'false', text: l, onclick: () => onPick(k) })));
+const label = (x, y, t, cls = 'svgt', anchor) => h('s:text', { x, y, class: cls, 'text-anchor': anchor || 'middle', text: t });
+const poly = (pts, attrs) => h('s:polygon', Object.assign({ points: pts.map(p => p.join(',')).join(' '), fill: 'var(--blue-soft)', stroke: 'var(--blue)', 'stroke-width': 2.5, 'stroke-linejoin': 'round' }, attrs));
+const seg = (p, q, attrs) => h('s:line', Object.assign({ x1: p[0], y1: p[1], x2: q[0], y2: q[1], stroke: 'var(--ink2)', 'stroke-width': 1.8 }, attrs));
+const dot = (p, rr = 4.5, fill = 'var(--blue)') => h('s:circle', { cx: p[0], cy: p[1], r: rr, fill });
+const tick = (p, q, n = 1) => { // 선분 pq의 같은 길이 표시
+  const m = [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2], d = [q[0] - p[0], q[1] - p[1]], L = Math.hypot(...d) || 1, nx = -d[1] / L, ny = d[0] / L;
+  return h('s:g', {}, Array.from({ length: n }, (_, i) => { const o = (i - (n - 1) / 2) * 5; return seg([m[0] + d[0] / L * o + nx * 6, m[1] + d[1] / L * o + ny * 6], [m[0] + d[0] / L * o - nx * 6, m[1] + d[1] / L * o - ny * 6], { stroke: 'var(--red)', 'stroke-width': 2.5 }); }));
+};
+
+/* 1. 이등변삼각형 */
+function wIso(use) {
+  const S = { b: 9, c: 9, alt: false };
+  const svg = h('s:svg', { viewBox: '0 0 400 300', role: 'img', 'aria-label': '이등변삼각형 탐색' });
+  const read = h('div', { class: 'read' });
+  const verdict = h('div', { class: 'verdict' });
+  function draw() {
+    const U = 16, B = [120, 255], C = [280, 255], BC = 10, { b, c } = S;
+    const x = (b * b - c * c + BC * BC) / (2 * BC), y = Math.sqrt(Math.max(0, b * b - x * x));
+    const A = [B[0] + x * U, B[1] - y * U];
+    const angB = angleAt(B, C, A), angC = angleAt(C, B, A), angA = 180 - angB - angC;
+    svg.replaceChildren(poly([A, B, C]), label(A[0], A[1] - 10, 'A'), label(B[0] - 12, B[1] + 6, 'B'), label(C[0] + 12, C[1] + 6, 'C'), dot(A), dot(B), dot(C));
+    if (Math.abs(b - c) < 1e-9) svg.append(tick(A, B), tick(A, C));
+    const H = [A[0], B[1]];
+    if (S.alt) svg.append(seg(A, H, { stroke: 'var(--red)', 'stroke-dasharray': '5 4' }), dot(H, 3.5, 'var(--red)'), label(H[0], H[1] + 18, 'H', 'svgt'));
+    const hx = (A[0] - B[0]) / U;
+    const items = [['AB = ' + r1(b), 0], ['AC = ' + r1(c), 0], ['∠B = ' + r1(angB) + '°', 1], ['∠C = ' + r1(angC) + '°', 1], ['∠A = ' + r1(angA) + '°', 0]];
+    if (S.alt) items.push(['BH = ' + r1(hx), 1], ['HC = ' + r1(BC - hx), 1], ['∠BAH = ' + r1(angleAt(A, B, H)) + '°', 1], ['∠HAC = ' + r1(angleAt(A, H, C)) + '°', 1]);
+    read.replaceChildren(...items.map(([t, hi]) => h('span', { class: hi ? 'hi' : '', text: t })));
+    const eq = Math.abs(b - c) < 1e-9;
+    verdict.className = 'verdict' + (eq ? ' yes' : '');
+    verdict.textContent = eq ? 'AB = AC (이등변삼각형)' : 'AB ≠ AC';
+  }
+  const el = h('div', { class: 'card widget' },
+    svg, verdict,
+    h('div', {}, h('div', { class: 'ctl' }, slider('AB', 6, 13, 0.5, S.b, v => r1(v), v => { S.b = v; draw(); use(); })),
+      h('div', { class: 'ctl' }, slider('AC', 6, 13, 0.5, S.c, v => r1(v), v => { S.c = v; draw(); use(); }))),
+    h('div', { class: 'row' }, h('label', {}, h('input', { type: 'checkbox', id: 'iso-alt', onchange: e => { S.alt = e.target.checked; draw(); use(); } }), ' A에서 밑변 BC에 수직선 긋기')),
+    read);
+  draw();
+  return el;
+}
+
+/* 2. 평행사변형 */
+function wPara(use) {
+  const S = { tab: 'side', A: [110, 215], B: [250, 215], D: [165, 105] };
+  const svg = h('s:svg', { viewBox: '0 0 400 300', role: 'img', 'aria-label': '평행사변형 탐색. 점 A, B, D를 끌어 보세요' });
+  const read = h('div', { class: 'read' }), note = h('div', { class: 'note' });
+  const tabsBox = h('div'); const U = 16; let drag = null;
+  function draw() {
+    const { A, B, D } = S, C = [B[0] + D[0] - A[0], B[1] + D[1] - A[1]], O = [(A[0] + C[0]) / 2, (A[1] + C[1]) / 2];
+    const cross = (B[0] - A[0]) * (D[1] - A[1]) - (B[1] - A[1]) * (D[0] - A[0]);
+    svg.replaceChildren();
+    const ok = Math.abs(cross) > 900;
+    svg.append(poly([A, B, C, D], { fill: ok ? 'var(--blue-soft)' : 'none' }));
+    const lab = (p, t, dx, dy) => label(p[0] + dx, p[1] + dy, t);
+    svg.append(lab(A, 'A', -12, 4), lab(B, 'B', 12, 4), lab(C, 'C', 12, 4), lab(D, 'D', -12, 4));
+    if (S.tab === 'side') svg.append(tick(A, B, 1), tick(D, C, 1), tick(A, D, 2), tick(B, C, 2));
+    if (S.tab === 'diag') svg.append(seg(A, C, { stroke: 'var(--red)' }), seg(B, D, { stroke: 'var(--red)' }), dot(O, 4, 'var(--red)'), lab(O, 'O', 4, -9), tick(A, O, 1), tick(O, C, 1), tick(B, O, 2), tick(O, D, 2));
+    [['A', A], ['B', B], ['D', D]].forEach(([n, p]) => svg.append(dot(p, 6), h('s:circle', { cx: p[0], cy: p[1], r: 16, fill: 'transparent', style: 'cursor:grab', 'data-p': n })));
+    svg.append(dot(C, 5, 'var(--ink2)'));
+    const L = (p, q) => dist(p, q) / U;
+    let items;
+    if (!ok) items = [['꼭짓점을 끌어 사각형을 다시 만들어 보세요', 0]];
+    else if (S.tab === 'side') items = [['AB = ' + r1(L(A, B)), 1], ['DC = ' + r1(L(D, C)), 1], ['AD = ' + r1(L(A, D)), 0], ['BC = ' + r1(L(B, C)), 0]];
+    else if (S.tab === 'angle') { const a = angleAt(A, B, D), b = angleAt(B, A, C), c = angleAt(C, B, D), d = angleAt(D, A, C); items = [['∠A = ' + r1(a) + '°', 1], ['∠C = ' + r1(c) + '°', 1], ['∠B = ' + r1(b) + '°', 0], ['∠D = ' + r1(d) + '°', 0], ['∠A + ∠B = ' + r1(a + b) + '°', 1]]; }
+    else items = [['AO = ' + r1(L(A, O)), 1], ['OC = ' + r1(L(O, C)), 1], ['BO = ' + r1(L(B, O)), 0], ['OD = ' + r1(L(O, D)), 0]];
+    read.replaceChildren(...items.map(([t, hi]) => h('span', { class: hi ? 'hi' : '', text: t })));
+  }
+  const pt = e => { const r = svg.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * 400, (e.clientY - r.top) / r.height * 300]; };
+  svg.addEventListener('pointerdown', e => { const n = e.target.getAttribute && e.target.getAttribute('data-p'); if (!n) return; drag = n; svg.setPointerCapture(e.pointerId); e.preventDefault(); });
+  svg.addEventListener('pointermove', e => { if (!drag) return; const p = pt(e), old = S[drag]; S[drag] = [Math.max(24, Math.min(376, p[0])), Math.max(24, Math.min(276, p[1]))];
+    const C = [S.B[0] + S.D[0] - S.A[0], S.B[1] + S.D[1] - S.A[1]]; if (C[0] < 20 || C[0] > 380 || C[1] < 20 || C[1] > 280) { S[drag] = old; return; }
+    draw(); use(); });
+  const end = () => { drag = null; }; svg.addEventListener('pointerup', end); svg.addEventListener('pointercancel', end);
+  function paintTabs() { tabsBox.replaceChildren(tabs([['side', '변'], ['angle', '각'], ['diag', '대각선']], S.tab, k => { S.tab = k; paintTabs(); draw(); use(); })); }
+  paintTabs(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, svg, h('p', { class: 'note', text: '파란 점 A, B, D를 손가락으로 끌어 모양을 바꿔 보세요. C는 자동으로 따라와요.' }), read);
+}
+
+/* 3. 삼각형의 닮음 조건 */
+function wSim(use) {
+  const S = { tab: 'sss', sss: [6, 8, 12], sas: [6, 9, 90], aa: [60, 80, 1] };
+  const svg = h('s:svg', { viewBox: '0 0 400 300', role: 'img', 'aria-label': '삼각형 닮음 조건 탐색' });
+  const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), tabsBox = h('div'), ref = h('div', { class: 'note' });
+  const eq = (a, b) => Math.abs(a - b) < 1e-6;
+  // 점 계산: 한 변을 밑으로 놓은 삼각형. 꼭짓점 P,Q,R의 좌표(단위) 반환
+  const fromSides = (pq, qr, rp) => { // P(0,0), Q(pq,0), R: |PR|=rp, |QR|=qr
+    if (pq + qr <= rp || qr + rp <= pq || rp + pq <= qr) return null;
+    const x = (rp * rp - qr * qr + pq * pq) / (2 * pq), y = Math.sqrt(Math.max(0, rp * rp - x * x)); return [[0, 0], [pq, 0], [x, y]];
+  };
+  const fromSAS = (pq, pr, angP) => { const a = angP * Math.PI / 180; return [[0, 0], [pq, 0], [pr * Math.cos(a), pr * Math.sin(a)]]; };
+  const fromAng = (angP, angQ, k) => { // PQ = 10k 로 놓고 사인법칙
+    const P = angP * Math.PI / 180, Q = angQ * Math.PI / 180, Rr = Math.PI - P - Q, pq = 6 * k, pr = pq * Math.sin(Q) / Math.sin(Rr);
+    return [[0, 0], [pq, 0], [pr * Math.cos(P), pr * Math.sin(P)]];
+  };
+  function drawTri(pts, ox, oy, sc, names, color) {
+    const maxY = Math.max(...pts.map(p => p[1]));
+    const T = pts.map(p => [ox + p[0] * sc, oy - p[1] * sc + 0 * maxY]);
+    const g = h('s:g', {}, poly(T, { fill: color === 'g' ? 'var(--green-soft)' : 'var(--blue-soft)', stroke: color === 'g' ? 'var(--green)' : 'var(--blue)' }), T.map((p, i) => [dot(p, 3.5, color === 'g' ? 'var(--green)' : 'var(--blue)'), label(p[0] + (i === 0 ? -10 : i === 1 ? 10 : 0), p[1] + (i === 2 ? -9 : 15), names[i])]));
+    return g;
+  }
+  function draw() {
+    let T1, T2, refText, rows = [], verdictYes = null, vmsg = '';
+    if (S.tab === 'sss') {
+      T1 = fromSides(4, 5, 6); T2 = fromSides(...S.sss.slice(0, 1), S.sss[1], S.sss[2]);
+      refText = '△ABC: AB = 4, BC = 5, CA = 6. △DEF의 세 변을 조절해 보세요.';
+      const [de, ef, fd] = S.sss, r = [de / 4, ef / 5, fd / 6];
+      rows = [['DE : AB = ' + r1(de) + ' : 4', 1], ['EF : BC = ' + r1(ef) + ' : 5', 1], ['FD : CA = ' + r1(fd) + ' : 6', 1], ['비의 값 ' + r.map(x => r1(Math.round(x * 100) / 100)).join(', '), 0]];
+      if (!T2) { vmsg = '이 길이로는 삼각형이 만들어지지 않아요'; verdictYes = null; }
+      else if (eq(r[0], r[1]) && eq(r[1], r[2])) { verdictYes = true; vmsg = '세 쌍의 대응변의 비가 같아요 → 닮음 (SSS)'; }
+      else { verdictYes = false; vmsg = '세 비가 같지 않아서 닮음이 아니에요'; }
+    } else if (S.tab === 'sas') {
+      T1 = fromSAS(4, 6, 60); const [de, df, ad] = S.sas; T2 = fromSAS(de, df, ad);
+      refText = '△ABC: AB = 4, AC = 6, ∠A = 60°. △DEF의 두 변과 끼인각 ∠D를 조절해 보세요.';
+      const r = [de / 4, df / 6];
+      rows = [['DE : AB = ' + r1(de) + ' : 4', 1], ['DF : AC = ' + r1(df) + ' : 6', 1], ['∠D = ' + ad + '°', 1], ['∠A = 60°', 0]];
+      const sameR = eq(r[0], r[1]), sameA = ad === 60;
+      if (sameR && sameA) { verdictYes = true; vmsg = '두 변의 비가 같고 끼인각도 같아요 → 닮음 (SAS)'; }
+      else { verdictYes = false; vmsg = sameR ? '두 변의 비는 같지만 끼인각이 달라서 닮음이 아니에요' : sameA ? '끼인각은 같지만 두 변의 비가 달라서 닮음이 아니에요' : '두 변의 비도, 끼인각도 달라서 닮음이 아니에요'; }
+    } else {
+      T1 = fromAng(50, 60, 1); const [ae, af, k] = S.aa; T2 = fromAng(180 - ae - af, ae, k);
+      refText = '△ABC: ∠A = 50°, ∠B = 60°, ∠C = 70°. △DEF의 ∠E, ∠F를 조절해 보세요. (∠D는 자동으로 정해져요)';
+      const D = 180 - ae - af, same = [D === 50, ae === 60, af === 70], n = same.filter(Boolean).length;
+      rows = [['∠D = ' + D + '°', n && same[0] ? 1 : 0], ['∠E = ' + ae + '°', 1], ['∠F = ' + af + '°', 1], ['같은 대응각 ' + n + '쌍', 0]];
+      if (D <= 0) { verdictYes = null; vmsg = '각의 합이 180°를 넘어 삼각형이 안 돼요'; T2 = null; }
+      else if (n >= 2) { verdictYes = true; vmsg = '두 쌍의 대응각이 같아요 → 닮음 (AA)'; }
+      else { verdictYes = false; vmsg = '같은 대응각이 ' + n + '쌍뿐이라 닮음이라고 할 수 없어요'; }
+    }
+    // 공통 축척
+    const bb = p => p ? [Math.max(...p.map(q => q[0])) - Math.min(...p.map(q => q[0])), Math.max(...p.map(q => q[1]))] : [0, 0];
+    const b1 = bb(T1), b2 = bb(T2);
+    const sc = Math.min(165 / Math.max(b1[0], b2[0], 1), 120 / Math.max(b1[1], b2[1], 1));
+    svg.replaceChildren(drawTri(T1, 20 + 0 - Math.min(...T1.map(q => q[0])) * sc, 150, sc, ['A', 'B', 'C'], 'b'));
+    if (T2) svg.append(drawTri(T2, 215 - Math.min(...T2.map(q => q[0])) * sc, 150, sc, ['D', 'E', 'F'], 'g'));
+    svg.append(label(100, 20, '기준 △ABC', 'svgm'), label(300, 20, '조절하는 △DEF', 'svgm'));
+    ref.textContent = refText;
+    read.replaceChildren(...rows.map(([t, hi]) => h('span', { class: hi ? 'hi' : '', text: t })));
+    verdict.className = 'verdict' + (verdictYes === true ? ' yes' : verdictYes === false ? ' no' : ''); verdict.textContent = vmsg;
+  }
+  function paintCtl() {
+    ctl.replaceChildren();
+    const row = (...a) => ctl.append(h('div', { class: 'ctl' }, slider(...a)));
+    if (S.tab === 'sss') { ['DE', 'EF', 'FD'].forEach((n, i) => row(n, 1, 18, 1, S.sss[i], v => String(v), v => { S.sss[i] = v; draw(); use(); })); }
+    else if (S.tab === 'sas') { row('DE', 1, 18, 1, S.sas[0], v => String(v), v => { S.sas[0] = v; draw(); use(); }); row('DF', 1, 18, 1, S.sas[1], v => String(v), v => { S.sas[1] = v; draw(); use(); }); row('∠D', 30, 120, 5, S.sas[2], v => v + '°', v => { S.sas[2] = v; draw(); use(); }); }
+    else { row('∠E', 30, 100, 5, S.aa[0], v => v + '°', v => { S.aa[0] = v; draw(); use(); }); row('∠F', 30, 100, 5, S.aa[1], v => v + '°', v => { S.aa[1] = v; draw(); use(); }); row('크기', 0.5, 3, 0.5, S.aa[2], v => '×' + v, v => { S.aa[2] = v; draw(); use(); }); }
+  }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['sss', 'SSS'], ['sas', 'SAS'], ['aa', 'AA']], S.tab, k => { S.tab = k; paintTabs(); paintCtl(); draw(); use(); })); }
+  paintTabs(); paintCtl(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, ref, svg, verdict, ctl, read);
+}
+
+/* 4. 경우의 수 */
+function wCount(use) {
+  const S = { tab: 'sum', a: 3, b: 2, n: 3, m: 4 };
+  const body = h('div'), tabsBox = h('div');
+  function draw() {
+    body.replaceChildren();
+    if (S.tab === 'sum') {
+      body.append(h('p', { class: 'note', text: '서울 → 대전. 기차 또는 버스 중 하나를 골라 한 번 가요.' }),
+        h('div', { class: 'ctl' }, slider('기차 (편)', 1, 6, 1, S.a, v => String(v), v => { S.a = v; draw(); use(); })),
+        h('div', { class: 'ctl' }, slider('버스 (편)', 1, 6, 1, S.b, v => String(v), v => { S.b = v; draw(); use(); })),
+        h('div', { class: 'chips' }, Array.from({ length: S.a }, (_, i) => h('span', { text: '기차 ' + (i + 1) }))),
+        h('div', { class: 'chips gold' }, Array.from({ length: S.b }, (_, i) => h('span', { text: '버스 ' + (i + 1) }))),
+        h('div', { class: 'verdict yes', text: '한 번 가는 방법: ' + S.a + ' + ' + S.b + ' = ' + (S.a + S.b) + '가지' }));
+    } else {
+      body.append(h('p', { class: 'note', text: '상의를 고르고 이어서 하의를 골라 한 벌을 만들어요.' }),
+        h('div', { class: 'ctl' }, slider('상의 (벌)', 1, 5, 1, S.n, v => String(v), v => { S.n = v; draw(); use(); })),
+        h('div', { class: 'ctl' }, slider('하의 (벌)', 1, 5, 1, S.m, v => String(v), v => { S.m = v; draw(); use(); })));
+      const g = h('div', { class: 'grid-combo', style: 'grid-template-columns:repeat(' + S.m + ',minmax(0,1fr))' });
+      for (let i = 1; i <= S.n; i++) for (let j = 1; j <= S.m; j++) g.append(h('span', { text: '상' + i + '·하' + j }));
+      body.append(g, h('div', { class: 'verdict yes', text: '옷차림: ' + S.n + ' × ' + S.m + ' = ' + (S.n * S.m) + '가지' }));
+    }
+  }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['sum', '또는 (합)'], ['prod', '그리고 (곱)']], S.tab, k => { S.tab = k; paintTabs(); draw(); use(); })); }
+  paintTabs(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, body);
+}
+
+/* 5. 닮은 도형 */
+function wFig(use) {
+  const S = { tab: 'same', k: 2, kx: 2, ky: 1 };
+  const svg = h('s:svg', { viewBox: '0 0 400 300', role: 'img', 'aria-label': '닮은 도형 탐색' });
+  const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), tabsBox = h('div');
+  const P0 = [[0, 0], [4, 0], [5, 2.5], [2, 4], [-1, 2]], NM = ['A', 'B', 'C', 'D', 'E'];
+  function draw() {
+    const kx = S.tab === 'same' ? S.k : S.kx, ky = S.tab === 'same' ? S.k : S.ky;
+    const P1 = P0.map(p => [p[0] * kx, p[1] * ky]);
+    const sc = Math.min(370 / (6 + 6 * kx + 1.5), 255 / Math.max(4, 4 * ky)), y0 = 280, x0 = 15 + sc;
+    const T0 = P0.map(p => [x0 + p[0] * sc, y0 - p[1] * sc]), off = x0 + 6 * sc + 0.8 * sc + sc;
+    const T1 = P1.map(p => [off + p[0] * sc, y0 - p[1] * sc]);
+    svg.replaceChildren(poly(T0), poly(T1, { fill: 'var(--green-soft)', stroke: 'var(--green)' }));
+    NM.forEach((n, i) => { const p = T0[i], c = [T0.reduce((a, q) => a + q[0], 0) / 5, T0.reduce((a, q) => a + q[1], 0) / 5], dx = p[0] - c[0], dy = p[1] - c[1], L = Math.hypot(dx, dy) || 1; svg.append(label(p[0] + dx / L * 12, p[1] + dy / L * 12 + 4, n)); });
+    NM.forEach((n, i) => { const p = T1[i], c = [T1.reduce((a, q) => a + q[0], 0) / 5, T1.reduce((a, q) => a + q[1], 0) / 5], dx = p[0] - c[0], dy = p[1] - c[1], L = Math.hypot(dx, dy) || 1; svg.append(label(p[0] + dx / L * 12, p[1] + dy / L * 12 + 4, n + '′')); });
+    const L0 = i => dist(P0[i], P0[(i + 1) % 5]), L1 = i => dist(P1[i], P1[(i + 1) % 5]);
+    const items = [0, 1, 2].map(i => [NM[i] + NM[i + 1] + ' → ' + NM[i] + '′' + NM[i + 1] + '′ : ' + r1(L1(i) / L0(i)) + '배', 1]);
+    const ang = i => angleAt(P0[i], P0[(i + 4) % 5], P0[(i + 1) % 5]), ang1 = i => angleAt(P1[i], P1[(i + 4) % 5], P1[(i + 1) % 5]);
+    items.push(['∠B = ' + r1(ang(1)) + '°', 0], ['∠B′ = ' + r1(ang1(1)) + '°', 0]);
+    read.replaceChildren(...items.map(([t, hi]) => h('span', { class: hi ? 'hi' : '', text: t })));
+    const same = Math.abs(kx - ky) < 1e-9;
+    verdict.className = 'verdict ' + (same ? 'yes' : 'no'); verdict.textContent = same ? '대응변의 비가 모두 같고 대응각도 같아요 → 닮음' : '변마다 늘어난 배수가 달라서 닮음이 아니에요';
+  }
+  function paintCtl() { ctl.replaceChildren(); const row = (...a) => ctl.append(h('div', { class: 'ctl' }, slider(...a)));
+    if (S.tab === 'same') row('배율', 0.5, 2, 0.5, S.k, v => '×' + v, v => { S.k = v; draw(); use(); });
+    else { row('가로', 0.5, 2, 0.5, S.kx, v => '×' + v, v => { S.kx = v; draw(); use(); }); row('세로', 0.5, 2, 0.5, S.ky, v => '×' + v, v => { S.ky = v; draw(); use(); }); } }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['same', '같은 비율로'], ['stretch', '가로·세로 따로']], S.tab, k => { S.tab = k; paintTabs(); paintCtl(); draw(); use(); })); }
+  paintTabs(); paintCtl(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, svg, verdict, ctl, read);
+}
+
+/* 6. 삼각형에서 평행선과 선분의 길이의 비 */
+function wPar(use) {
+  const S = { tab: 'par', t: 0.6, s: 0.4 };
+  const svg = h('s:svg', { viewBox: '0 0 400 300', role: 'img', 'aria-label': '평행선과 선분의 길이의 비 탐색' });
+  const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), tabsBox = h('div');
+  const A = [200, 30], B = [60, 265], C = [350, 265], lerp = (p, q, t) => [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t];
+  function draw() {
+    const t = S.t, s = S.tab === 'par' ? S.t : S.s, D = lerp(A, B, t), E = lerp(A, C, s);
+    svg.replaceChildren(poly([A, B, C]), seg(D, E, { stroke: 'var(--red)', 'stroke-width': 3 }), dot(A), dot(B), dot(C), dot(D, 5, 'var(--red)'), dot(E, 5, 'var(--red)'),
+      label(A[0], A[1] - 10, 'A'), label(B[0] - 12, B[1] + 6, 'B'), label(C[0] + 12, C[1] + 6, 'C'), label(D[0] - 13, D[1] + 4, 'D'), label(E[0] + 13, E[1] + 4, 'E'));
+    const n = v => Math.round(v * 10), parallel = Math.abs(t - s) < 1e-9;
+    const items = [['AD : DB = ' + n(t) + ' : ' + (10 - n(t)), 1], ['AE : EC = ' + n(s) + ' : ' + (10 - n(s)), 1], ['AD : AB = ' + n(t) + ' : 10', 0], ['AE : AC = ' + n(s) + ' : 10', 0], ['DE : BC = ' + r1(Math.round(dist(D, E) / dist(B, C) * 100) / 100 * 10) + ' : 10', 0]];
+    read.replaceChildren(...items.map(([x, hi]) => h('span', { class: hi ? 'hi' : '', text: x })));
+    verdict.className = 'verdict ' + (parallel ? 'yes' : 'no'); verdict.textContent = parallel ? 'AD : DB = AE : EC → DE ∥ BC' : 'AD : DB ≠ AE : EC → DE와 BC는 평행하지 않아요';
+  }
+  function paintCtl() { ctl.replaceChildren(); const row = (...a) => ctl.append(h('div', { class: 'ctl' }, slider(...a)));
+    row('D 위치', 0.1, 0.9, 0.1, S.t, v => 'AD = ' + Math.round(v * 10) + '/10', v => { S.t = v; draw(); use(); });
+    if (S.tab === 'free') row('E 위치', 0.1, 0.9, 0.1, S.s, v => 'AE = ' + Math.round(v * 10) + '/10', v => { S.s = v; draw(); use(); }); }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['par', '평행하게'], ['free', '자유롭게']], S.tab, k => { S.tab = k; paintTabs(); paintCtl(); draw(); use(); })); }
+  paintTabs(); paintCtl(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, svg, verdict, ctl, h('p', { class: 'note', text: '"평행하게"에서는 E가 자동으로 따라와요. "자유롭게"에서는 E를 따로 움직여 보세요.' }), read);
+}
+
+/* 7. 피타고라스 정리 */
+function wPyth(use) {
+  const S = { tab: 'sq', a: 3, b: 4, ang: 70 };
+  const svg = h('s:svg', { viewBox: '0 0 400 300', role: 'img', 'aria-label': '피타고라스 정리 탐색' });
+  const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), tabsBox = h('div');
+  function draw() {
+    svg.replaceChildren();
+    if (S.tab === 'sq') {
+      const { a, b } = S, c = Math.hypot(a, b), sc = Math.min(370 / (a + 2 * b), 270 / (2 * a + b)), ox = 15 + b * sc + (370 - (a + 2 * b) * sc) / 2, oy = 15 + (a + b) * sc + (270 - (2 * a + b) * sc) / 2;
+      const P = (x, y) => [ox + x * sc, oy - y * sc], Cc = P(0, 0), B = P(a, 0), A = P(0, b), nx = b / c, ny = a / c;
+      const sqa = [Cc, B, P(a, -a), P(0, -a)], sqb = [Cc, A, P(-b, b), P(-b, 0)], sqc = [A, B, P(a + c * nx, c * ny), P(c * nx, b + c * ny)];
+      svg.append(poly(sqa, { fill: 'var(--blue-soft)', 'fill-opacity': .8 }), poly(sqb, { fill: 'var(--green-soft)' }), poly(sqc, { fill: 'var(--red-soft)', stroke: 'var(--red)' }), poly([Cc, B, A], { fill: 'var(--paper)', stroke: 'var(--ink)' }),
+        h('s:path', { d: 'M' + (Cc[0] + 10) + ' ' + Cc[1] + ' v-10 h-10', fill: 'none', stroke: 'var(--ink)', 'stroke-width': 1.5 }));
+      const cen = q => [q.reduce((s, p) => s + p[0], 0) / 4, q.reduce((s, p) => s + p[1], 0) / 4 + 4];
+      const lb = (q, side, t) => label(...cen(q), side * sc < 60 ? t.replace(' = ', '=') : t, side * sc < 60 ? 'svgm' : 'svgt');
+      svg.append(lb(sqa, a, 'a² = ' + a * a), lb(sqb, b, 'b² = ' + b * b), lb(sqc, c, 'c² = ' + r1(a * a + b * b)));
+      read.replaceChildren(...[['a = ' + a, 0], ['b = ' + b, 0], ['c = ' + r1(c), 0], ['a² + b² = ' + (a * a + b * b), 1], ['c² = ' + r1(c * c), 1]].map(([t, hi]) => h('span', { class: hi ? 'hi' : '', text: t })));
+      verdict.className = 'verdict yes'; verdict.textContent = 'a² + b² = c² (' + a * a + ' + ' + b * b + ' = ' + r1(a * a + b * b) + ')';
+    } else {
+      const a = 3, b = 4, ang = S.ang, rad = ang * Math.PI / 180, c2 = a * a + b * b - 2 * a * b * Math.cos(rad), sc = 38;
+      const C0 = [90, 235], B = [C0[0] + a * sc, C0[1]], A = [C0[0] + b * sc * Math.cos(rad), C0[1] - b * sc * Math.sin(rad)];
+      svg.append(poly([C0, B, A]), label(C0[0] - 12, C0[1] + 6, 'C'), label(B[0] + 12, B[1] + 6, 'B'), label(A[0], A[1] - 10, 'A'), dot(C0), dot(B), dot(A),
+        label(200, 285, 'a = 3, b = 4 로 고정하고 ∠C만 바꿔요', 'svgm'));
+      read.replaceChildren(...[['∠C = ' + ang + '°', 1], ['a² + b² = 25', 0], ['c² = ' + r1(c2), 1]].map(([t, hi]) => h('span', { class: hi ? 'hi' : '', text: t })));
+      const d = Math.abs(c2 - 25) < 1e-6 ? 0 : c2 < 25 ? -1 : 1;
+      verdict.className = 'verdict ' + (d === 0 ? 'yes' : 'no'); verdict.textContent = d === 0 ? '∠C = 90° → a² + b² = c²' : d < 0 ? '∠C < 90° → c² < a² + b² (예각)' : '∠C > 90° → c² > a² + b² (둔각)';
+    }
+  }
+  function paintCtl() { ctl.replaceChildren(); const row = (...a) => ctl.append(h('div', { class: 'ctl' }, slider(...a)));
+    if (S.tab === 'sq') { row('a', 3, 12, 1, S.a, v => String(v), v => { S.a = v; draw(); use(); }); row('b', 3, 12, 1, S.b, v => String(v), v => { S.b = v; draw(); use(); }); }
+    else row('∠C', 50, 130, 5, S.ang, v => v + '°', v => { S.ang = v; draw(); use(); }); }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['sq', '정사각형 넓이'], ['ang', '각 C 바꾸기']], S.tab, k => { S.tab = k; paintTabs(); paintCtl(); draw(); use(); })); }
+  paintTabs(); paintCtl(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, svg, verdict, ctl, read);
+}
+
+/* 8. 평행선 사이의 선분의 길이의 비 */
+function wPl(use) {
+  const S = { tab: 'par', t: 0.4, q: 0, y1: 120, y2: 160 };
+  const svg = h('s:svg', { viewBox: '0 0 400 300', role: 'img', 'aria-label': '평행선 사이의 선분의 길이의 비 탐색' });
+  const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), tabsBox = h('div');
+  const yl = 45, yn = 255, K = 20; // 20px = 1cm
+  const hit = (P, Q, yA, yB, x) => { // 직선(x1,y1)-(x2,y2)와 직선 y = yA + (yB-yA)*(x-20)/360 의 교점
+    const dx = Q[0] - P[0], dy = Q[1] - P[1], sl = (yB - yA) / 360;
+    const t = (yA + sl * (P[0] - 20) - P[1]) / (dy - sl * dx); return [P[0] + dx * t, P[1] + dy * t]; };
+  function draw() {
+    const par = S.tab === 'par', ym = yl + (yn - yl) * S.t;
+    const y1 = par ? ym : S.y1, y2 = par ? ym : S.y2;
+    const P = [[110, 20], [90 + S.q * 0.4, 280]], Q = [[300, 20], [310 + S.q, 280]];
+    const pts = (L) => [hit(L[0], L[1], yl, yl, 0), hit(L[0], L[1], y1, y2, 0), hit(L[0], L[1], yn, yn, 0)];
+    const [A, B, C] = pts(P), [A2, B2, C2] = pts(Q);
+    svg.replaceChildren(
+      seg([20, yl], [380, yl], { stroke: 'var(--blue)', 'stroke-width': 2.5 }), seg([20, y1], [380, y2], { stroke: par ? 'var(--blue)' : 'var(--red)', 'stroke-width': 2.5 }), seg([20, yn], [380, yn], { stroke: 'var(--blue)', 'stroke-width': 2.5 }),
+      seg(P[0], P[1]), seg(Q[0], Q[1]), dot(A), dot(B), dot(C), dot(A2), dot(B2), dot(C2),
+      label(A[0] - 12, A[1] - 6, 'A'), label(B[0] - 12, B[1] - 6, 'B'), label(C[0] - 12, C[1] + 16, 'C'), label(A2[0] + 14, A2[1] - 6, 'A′'), label(B2[0] + 14, B2[1] - 6, 'B′'), label(C2[0] + 14, C2[1] + 16, 'C′'),
+      label(372, yl - 8, 'l'), label(372, Math.min(y1, y2) - 8 > yl + 12 ? Math.min(y1, y2) - 8 : y2 + 16, 'm'), label(372, yn - 8, 'n'), label(P[0][0] - 10, 18, 'p'), label(Q[0][0] + 10, 18, 'q'));
+    const ab = dist(A, B) / K, bc = dist(B, C) / K, ab2 = dist(A2, B2) / K, bc2 = dist(B2, C2) / K, f = v => r1(Math.round(v * 10) / 10);
+    const r = ab / bc, r2 = ab2 / bc2, same = Math.abs(r - r2) < 0.015;
+    read.replaceChildren(...[['AB = ' + f(ab) + ' cm', 0], ['BC = ' + f(bc) + ' cm', 0], ['A′B′ = ' + f(ab2) + ' cm', 0], ['B′C′ = ' + f(bc2) + ' cm', 0], ['AB ÷ BC = ' + (Math.round(r * 100) / 100), 1], ['A′B′ ÷ B′C′ = ' + (Math.round(r2 * 100) / 100), 1]].map(([x, hi]) => h('span', { class: hi ? 'hi' : '', text: x })));
+    verdict.className = 'verdict ' + (same ? 'yes' : 'no'); verdict.textContent = same ? 'AB : BC = A′B′ : B′C′ (비가 같아요)' : 'AB : BC ≠ A′B′ : B′C′ (비가 달라졌어요)';
+  }
+  function paintCtl() { ctl.replaceChildren(); const row = (...a) => ctl.append(h('div', { class: 'ctl' }, slider(...a)));
+    if (S.tab === 'par') row('m 높이', 0.2, 0.8, 0.05, S.t, v => Math.round(v * 100) + '%', v => { S.t = v; draw(); use(); });
+    else { row('m 왼쪽', 90, 210, 5, S.y1, v => String(v), v => { S.y1 = v; draw(); use(); }); row('m 오른쪽', 90, 210, 5, S.y2, v => String(v), v => { S.y2 = v; draw(); use(); }); }
+    row('q 기울기', -60, 60, 10, S.q, v => String(v), v => { S.q = v; draw(); use(); }); }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['par', 'l ∥ m ∥ n'], ['free', 'm 기울이기']], S.tab, k => { S.tab = k; paintTabs(); paintCtl(); draw(); use(); })); }
+  paintTabs(); paintCtl(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, svg, verdict, ctl, h('p', { class: 'note', text: '"m 기울이기"에서 m의 양 끝 높이를 서로 다르게 하면 m은 l, n과 평행하지 않게 돼요.' }), read);
+}
+
+/* 9. 삼각형의 무게중심 */
+function wCen(use) {
+  const S = { tab: 'med', ax: 190, ay: 60 };
+  const svg = h('s:svg', { viewBox: '0 0 400 300', role: 'img', 'aria-label': '삼각형의 무게중심 탐색' });
+  const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), tabsBox = h('div');
+  const mid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2], area = (p, q, r) => Math.abs((q[0] - p[0]) * (r[1] - p[1]) - (r[0] - p[0]) * (q[1] - p[1])) / 2 / 400;
+  function draw() {
+    const A = [S.ax, S.ay], B = [60, 250], C = [340, 250], D = mid(B, C), E = mid(A, C), F = mid(A, B), G = [(A[0] + B[0] + C[0]) / 3, (A[1] + B[1] + C[1]) / 3];
+    svg.replaceChildren();
+    if (S.tab === 'area') {
+      const cols = ['var(--blue-soft)', 'var(--green-soft)', 'var(--red-soft)', 'var(--gold-soft)', 'var(--blue-soft)', 'var(--green-soft)'];
+      const tr = [[A, F, G], [F, B, G], [B, D, G], [D, C, G], [C, E, G], [E, A, G]];
+      tr.forEach((t, i) => svg.append(poly(t, { fill: cols[i], stroke: 'var(--ink2)', 'stroke-width': 1.5 })));
+      svg.append(poly([A, B, C], { fill: 'none' }));
+      tr.forEach((t, i) => svg.append(label((t[0][0] + t[1][0] + t[2][0]) / 3, (t[0][1] + t[1][1] + t[2][1]) / 3 + 4, '①②③④⑤⑥'[i], 'svgm')));
+      const ar = tr.map(t => area(...t)), tot = area(A, B, C);
+      read.replaceChildren(...ar.map((v, i) => h('span', { class: 'hi', text: '①②③④⑤⑥'[i] + ' = ' + r1(v) + ' cm²' })), h('span', { text: '전체 = ' + r1(tot) + ' cm²' }));
+      verdict.className = 'verdict yes'; verdict.textContent = '여섯 삼각형의 넓이가 모두 같고, 각각 전체의 1/6이에요';
+    } else {
+      svg.append(poly([A, B, C]), seg(A, D, { stroke: 'var(--red)', 'stroke-width': 2.2 }), seg(B, E, { stroke: 'var(--red)', 'stroke-width': 2.2 }), seg(C, F, { stroke: 'var(--red)', 'stroke-width': 2.2 }),
+        tick(B, D), tick(D, C), tick(A, E), tick(E, C), tick(A, F), tick(F, B), dot(A), dot(B), dot(C), dot(D, 3.5, 'var(--red)'), dot(E, 3.5, 'var(--red)'), dot(F, 3.5, 'var(--red)'), dot(G, 6, 'var(--gold)'),
+        label(A[0], A[1] - 10, 'A'), label(B[0] - 12, B[1] + 6, 'B'), label(C[0] + 12, C[1] + 6, 'C'), label(D[0], D[1] + 20, 'D'), label(E[0] + 13, E[1], 'E'), label(F[0] - 13, F[1], 'F'), label(G[0] + 13, G[1] + 18, 'G'));
+      const u = 20, d = (p, q) => dist(p, q) / u, ag = d(A, G), gd = d(G, D), bg = d(B, G), ge = d(G, E), cg = d(C, G), gf = d(G, F);
+      read.replaceChildren(...[['AG = ' + r1(ag), 0], ['GD = ' + r1(gd), 0], ['BG = ' + r1(bg), 0], ['GE = ' + r1(ge), 0], ['CG = ' + r1(cg), 0], ['GF = ' + r1(gf), 0], ['AG ÷ GD = ' + (Math.round(ag / gd * 100) / 100), 1], ['BG ÷ GE = ' + (Math.round(bg / ge * 100) / 100), 1], ['CG ÷ GF = ' + (Math.round(cg / gf * 100) / 100), 1]].map(([x, hi]) => h('span', { class: hi ? 'hi' : '', text: x })));
+      verdict.className = 'verdict yes'; verdict.textContent = '세 중선은 한 점 G에서 만나고, 꼭짓점 쪽 : 변 쪽 = 2 : 1';
+    }
+  }
+  function paintCtl() { ctl.replaceChildren(); const row = (...a) => ctl.append(h('div', { class: 'ctl' }, slider(...a)));
+    row('A 가로', 80, 320, 10, S.ax, v => String(v), v => { S.ax = v; draw(); use(); }); row('A 높이', 40, 170, 10, S.ay, v => String(250 - v), v => { S.ay = v; draw(); use(); }); }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['med', '중선'], ['area', '넓이']], S.tab, k => { S.tab = k; paintTabs(); draw(); use(); })); }
+  paintTabs(); paintCtl(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, svg, verdict, ctl, h('p', { class: 'note', text: 'A를 움직여 삼각형의 모양을 바꿔도 같은 결과가 나오는지 확인해 보세요.' }), read);
+}
+
+/* 10. 닮은 도형의 넓이와 부피의 비 */
+function wRat(use) {
+  const S = { tab: 'area', m: 1, n: 2 };
+  const svg = h('s:svg', { viewBox: '0 0 400 300', role: 'img', 'aria-label': '닮은 도형의 넓이와 부피의 비 탐색' });
+  const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), tabsBox = h('div');
+  function draw() {
+    const { m, n } = S; svg.replaceChildren();
+    if (S.tab === 'area') {
+      const a = 3, b = 2, u = Math.min(42, 360 / ((m + n) * a + 1.5), 250 / (Math.max(m, n) * b + 1)), base = 235;
+      const x1 = 200 - ((m + n) * a * u + 24) / 2; let x = x1;
+      [[m, 'var(--blue-soft)', 'P'], [n, 'var(--green-soft)', 'Q']].forEach(([k, col, nm]) => {
+        const W = k * a * u, H = k * b * u;
+        svg.append(h('s:rect', { x, y: base - H, width: W, height: H, fill: col, stroke: 'var(--ink)', 'stroke-width': 2 }));
+        if (u * 1 >= 7) for (let i = 1; i < k * a; i++) svg.append(seg([x + i * u, base - H], [x + i * u, base], { stroke: 'var(--line)', 'stroke-width': .8, opacity: .6 }));
+        if (u * 1 >= 7) for (let j = 1; j < k * b; j++) svg.append(seg([x, base - j * u], [x + W, base - j * u], { stroke: 'var(--line)', 'stroke-width': .8, opacity: .6 }));
+        svg.append(label(x + W / 2, base + 22, nm + ': 가로 ' + k * a + ', 세로 ' + k * b, 'svgm')); x += W + 24; });
+      const A1 = m * m * a * b, A2 = n * n * a * b;
+      read.replaceChildren(...[['닮음비 ' + m + ' : ' + n, 1], ['P의 넓이 = ' + A1, 0], ['Q의 넓이 = ' + A2, 0], ['넓이의 비 = ' + A1 + ' : ' + A2, 1], ['m² : n² = ' + m * m + ' : ' + n * n, 1]].map(([t, hi]) => h('span', { class: hi ? 'hi' : '', text: t })));
+      verdict.className = 'verdict yes'; verdict.textContent = '닮음비 ' + m + ' : ' + n + ' → 넓이의 비 ' + m * m + ' : ' + n * n + ' (칸 수 기준)';
+    } else {
+      const ux = Math.min(34, 360 / ((m + n) * 2.5 + 2)), uy = Math.min(34, 230 / (Math.max(m, n) * 1.5 + .5)), u = Math.min(ux, uy), base = 245, off = 0.5;
+      let x = 200 - (((m + n) * 2.5) * u + 20) / 2;
+      [[m, 'var(--blue-soft)', 'P'], [n, 'var(--green-soft)', 'Q']].forEach(([k, col, nm]) => {
+        const W = 2 * k * u, H = k * u, dx = off * k * u, dy = off * k * u;
+        const f = [[x, base], [x + W, base], [x + W, base - H], [x, base - H]], top = [[x, base - H], [x + W, base - H], [x + W + dx, base - H - dy], [x + dx, base - H - dy]], side = [[x + W, base], [x + W + dx, base - dy], [x + W + dx, base - H - dy], [x + W, base - H]];
+        svg.append(poly(f, { fill: col, stroke: 'var(--ink)', 'stroke-width': 2 }), poly(top, { fill: col, 'fill-opacity': .7, stroke: 'var(--ink)', 'stroke-width': 2 }), poly(side, { fill: col, 'fill-opacity': .5, stroke: 'var(--ink)', 'stroke-width': 2 }),
+          label(x + W / 2, base + 22, nm + ': ' + 2 * k + '×' + k + '×' + k, 'svgm')); x += W + dx + 20; });
+      const V1 = 2 * m * m * m, V2 = 2 * n * n * n;
+      read.replaceChildren(...[['닮음비 ' + m + ' : ' + n, 1], ['P의 부피 = ' + V1, 0], ['Q의 부피 = ' + V2, 0], ['부피의 비 = ' + V1 + ' : ' + V2, 1], ['m³ : n³ = ' + m ** 3 + ' : ' + n ** 3, 1]].map(([t, hi]) => h('span', { class: hi ? 'hi' : '', text: t })));
+      verdict.className = 'verdict yes'; verdict.textContent = '닮음비 ' + m + ' : ' + n + ' → 부피의 비 ' + m ** 3 + ' : ' + n ** 3 + ' (단위 상자 수 기준)';
+    }
+  }
+  function paintCtl() { ctl.replaceChildren(); const row = (...a) => ctl.append(h('div', { class: 'ctl' }, slider(...a)));
+    const mx = S.tab === 'area' ? 5 : 4;
+    row('m', 1, mx, 1, S.m, v => String(v), v => { S.m = v; draw(); use(); }); row('n', 1, mx, 1, S.n, v => String(v), v => { S.n = v; draw(); use(); }); }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['area', '넓이'], ['vol', '부피']], S.tab, k => { S.tab = k; S.m = Math.min(S.m, k === 'area' ? 5 : 4); S.n = Math.min(S.n, k === 'area' ? 5 : 4); paintTabs(); paintCtl(); draw(); use(); })); }
+  paintTabs(); paintCtl(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, svg, verdict, ctl, h('p', { class: 'note', text: '기준 도형(직사각형 3×2, 직육면체 2×1×1)을 m배, n배 한 도형이에요. 넓이는 칸의 수, 부피는 단위 상자의 수로 세어요.' }), read);
+}
+
+const WIDGETS = { iso: wIso, para: wPara, sim: wSim, count: wCount, fig: wFig, par: wPar, pyth: wPyth, pl: wPl, cen: wCen, rat: wRat };
+
+/* ===== 앱 ===== */
+const KEY = 'gaenyeom-v1', TKEY = 'gaenyeom-teacher-v1';
+const STEPS = ['질문', '탐색', '일반화', '정리', '확인', '내 말로'];
+const OPS_URL = 'https://claude.ai/artifact/CKBVf3g7ThJ4NUVjWu5oST';
+let DB = { v: 1, cur: null, profiles: [] }, TD = { v: 1, students: {} };
+let view = 'home', vparam = null, curStep = 0, tsel = null, toastT = null;
+const $ = (s, r = document) => r.querySelector(s);
+const pct = v => Math.round(v * 100);
+const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+function load() { try { const o = JSON.parse(localStorage.getItem(KEY)); if (o && o.profiles) DB = o; } catch (e) { } try { const o = JSON.parse(localStorage.getItem(TKEY)); if (o && o.students) TD = o; } catch (e) { } }
+function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) { } }
+function tsave() { try { localStorage.setItem(TKEY, JSON.stringify(TD)); } catch (e) { } }
+const me = () => DB.profiles.find(p => p.id === DB.cur) || null;
+const lno = l => ['Ⅳ', 'Ⅴ', 'Ⅵ'][l.unit] + '-' + (l.wsLabel || l.ws) + '차시';
+const lessonOf = id => LESSONS.find(l => l.id === id);
+function lst(p, id) { return p.ls[id] || (p.ls[id] = { step: 0, pred: null, task: {}, gen: {}, chk: {}, refl: ['', ''], done: false, upd: 0, use: 0 }); }
+const status = (p, l) => { const s = p.ls[l.id]; if (!s || (!s.step && s.pred == null)) return 'new'; return s.done ? 'done' : 'doing'; };
+const firstScore = (l, s) => { const n = l.checks.length; let c = 0; l.checks.forEach((_, i) => { const x = s.chk[i]; if (x && x.first) c++; }); return [c, n]; };
+function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2400); }
+function copyText(text, ok) { try { navigator.clipboard.writeText(text).then(() => toast(ok || '복사했어요'), () => toast('복사하지 못했어요. 직접 선택해 복사해 주세요.')); } catch (e) { toast('복사하지 못했어요. 직접 선택해 복사해 주세요.'); } }
+const turtle = (n = 34) => h('span', { html: '<svg viewBox="0 0 40 40" width="' + n + '" height="' + n + '" aria-hidden="true"><ellipse cx="20" cy="22" rx="14" ry="10" fill="var(--green)"/><path d="M12 22l4-6h8l4 6-4 6h-8z" fill="none" stroke="var(--paper)" stroke-width="1.6"/><circle cx="35" cy="19" r="4.5" fill="var(--green)"/><circle cx="36.4" cy="17.8" r="1" fill="var(--paper)"/><rect x="9" y="29" width="5" height="6" rx="2" fill="var(--green)"/><rect x="24" y="29" width="5" height="6" rx="2" fill="var(--green)"/><path d="M6 24l-4 3" stroke="var(--green)" stroke-width="3" stroke-linecap="round"/></svg>' });
+const brand = () => h('div', { class: 'brand' }, turtle(), h('span', { text: '개념 탐구 노트' }));
+
+/* ---------- 자동 연동 ---------- */
+const Sync = {
+  db: null, uid: null, edit: false, state: 'init', msg: '', last: null, timer: null,
+  async init() {
+    try {
+      if (!window.claude || !claude.use) { this.state = 'off'; return; }
+      this.db = await claude.use('db'); const user = await claude.use('user');
+      this.uid = user ? await user.id() : null; this.edit = user ? await user.canEdit() : false;
+      if (!this.db || !this.uid) { this.state = 'off'; this.db = null; return; }
+      this.state = 'on'; if (this.edit) this.listen();
+    } catch (e) { this.state = 'off'; } finally { refreshSync(); }
+  },
+  listen() {
+    try {
+      this.db.collection('reports').onSnapshot(snap => {
+        let changed = false;
+        snap.docs.forEach(d => { const ps = (d.data() || {}).profiles || {};
+          Object.keys(ps).forEach(pid => { const rep = ps[pid]; if (!rep || rep.v !== 2 || !rep.id || !rep.name || typeof rep.ls !== 'object') return;
+            const ex = TD.students[rep.id]; if (!ex || ex.rep.at < rep.at) { TD.students[rep.id] = { rep, fb: ex ? ex.fb : '' }; changed = true; } }); });
+        this.last = Date.now(); if (changed) tsave(); refreshSync();
+      }, e => { this.state = 'err'; this.msg = '학생 기록을 읽지 못했어요 (' + (e && e.code) + ')'; refreshSync(); });
+    } catch (e) { }
+  },
+  push(p, now) { if (this.state !== 'on' || !this.db) return; clearTimeout(this.timer); this.timer = setTimeout(() => this.send(p.id), now ? 0 : 1500); },
+  async send(pid) {
+    const p = DB.profiles.find(x => x.id === pid); if (!p || !this.db) return;
+    try {
+      const ref = this.db.doc('reports/' + this.uid), cur = await ref.get();
+      const data = cur.exists ? JSON.parse(JSON.stringify(cur.data())) : { profiles: {} }; data.profiles = data.profiles || {};
+      data.profiles[p.id] = makeReport(p); await ref.set(data); this.last = Date.now(); this.state = 'on'; this.msg = '';
+    } catch (e) { this.state = 'err'; this.msg = e && e.code === 'invalid_argument' ? '이 계정은 보기 전용이라 보낼 수 없어요. 선생님께 "참여자" 권한을 요청하세요.' : '보내지 못했어요. 잠시 뒤 다시 시도해 주세요.'; }
+    refreshSync();
+  },
+  label() {
+    if (this.state === 'on') return this.edit ? '학생 기록 자동 수신 중 — 학생이 학습하면 여기에 바로 나타나요' : (this.last ? '자동 연동 중 · 마지막 전송 ' + new Date(this.last).toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' }) : '자동 연동 중');
+    if (this.state === 'err') return this.msg; if (this.state === 'init') return '연동 확인 중…';
+    return view === 'teacher' ? '자동 연동 꺼짐 — 학생이 보낸 제출 코드를 아래에 붙여 넣으면 돼요 (여러 줄 한꺼번에 가능)' : '이 패드에 자동 저장돼요. 차시를 끝내면 아래에서 "제출 코드"를 만들어 선생님께 보내 주세요.';
+  }
+};
+const syncBar = () => h('div', { class: 'syncline ' + Sync.state }, h('span', { class: 'dot' }), h('span', { text: Sync.label() }));
+function refreshSync() { if (view === 'teacher' && !tsel) { const a = document.activeElement; if (a && a.tagName === 'TEXTAREA' && a.value) return; render(); } else if (view === 'home' || view === 'welcome') { const b = $('#syncslot'); if (b) b.replaceChildren(syncBar()); } }
+
+/* ---------- 보고서 / 코드 ---------- */
+function makeReport(p) {
+  const ls = {};
+  Object.keys(p.ls).forEach(id => { const l = lessonOf(id), s = p.ls[id]; if (!l || !l.checks) return;
+    if (!s.step && s.pred == null) return; const [c, n] = firstScore(l, s);
+    ls[id] = { s: s.step, d: s.done ? 1 : 0, c: [c, n], p: s.pred != null ? l.pred.opts[s.pred] : '', r: s.refl, u: s.upd }; });
+  return { v: 2, id: p.id, name: p.name, cls: p.cls || '', at: Date.now(), day: today(), ls };
+}
+const b64u = bytes => { let s = ''; for (let i = 0; i < bytes.length; i += 8192) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192)); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
+const unb64u = str => { const s = atob(str.replace(/-/g, '+').replace(/_/g, '/')), b = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) b[i] = s.charCodeAt(i); return b; };
+async function packReport(p) {
+  const bytes = new TextEncoder().encode(JSON.stringify(makeReport(p)));
+  if (typeof CompressionStream !== 'undefined') { try { const cs = new CompressionStream('deflate-raw'), w = cs.writable.getWriter(); w.write(bytes); w.close(); return 'GN2z.' + b64u(new Uint8Array(await new Response(cs.readable).arrayBuffer())); } catch (e) { } }
+  return 'GN2.' + b64u(bytes);
+}
+async function unpackReport(code) {
+  const m = /^GN2(z?)\.([A-Za-z0-9_-]+)$/.exec(code.trim()); if (!m) throw new Error('형식');
+  let bytes = unb64u(m[2]);
+  if (m[1] === 'z') { const ds = new DecompressionStream('deflate-raw'), w = ds.writable.getWriter(); w.write(bytes); w.close(); bytes = new Uint8Array(await new Response(ds.readable).arrayBuffer()); }
+  const rep = JSON.parse(new TextDecoder().decode(bytes)); if (!rep || rep.v !== 2 || !rep.id || !rep.name || typeof rep.ls !== 'object') throw new Error('내용'); return rep;
+}
+
+/* ---------- 라우터 ---------- */
+function go(v, param) { view = v; vparam = param; if (v === 'lesson') curStep = Math.min(param.step, STEPS.length - 1); render(); window.scrollTo(0, 0); }
+function render() {
+  const app = $('#app'); app.replaceChildren();
+  const p = me();
+  if (view === 'teacher') return app.append(viewTeacher());
+  if (!p) view = 'welcome';
+  if (view === 'welcome') return app.append(viewWelcome());
+  if (view === 'lesson' && vparam) return app.append(viewLesson(p, lessonOf(vparam.id)));
+  view = 'home'; app.append(viewHome(p));
+}
+
+/* ---------- 시작 / 학생 선택 ---------- */
+function viewWelcome() {
+  const name = h('input', { class: 'in', id: 'nm', placeholder: '이름', maxlength: '12', autocomplete: 'off' });
+  const cls = h('input', { class: 'in', id: 'cl', placeholder: '예: 2-3', maxlength: '6', autocomplete: 'off' });
+  const go1 = () => { const nm = name.value.trim(); if (!nm) { toast('이름을 입력해 주세요'); name.focus(); return; }
+    const p = { id: 'p' + Date.now().toString(36) + Math.floor(Math.random() * 900 + 100), name: nm, cls: cls.value.trim(), ls: {}, created: today() };
+    DB.profiles.push(p); DB.cur = p.id; save(); Sync.push(p); go('home'); };
+  const list = DB.profiles.length ? h('section', { class: 'card' }, h('h2', { class: 'h2', text: '이어서 하기' }), h('div', { class: 'pcards' }, DB.profiles.map(p =>
+    h('button', { class: 'btn pcard', onclick: () => { DB.cur = p.id; save(); go('home'); } }, h('b', { text: p.name }), h('span', { class: 'chip gray', text: p.cls || '반 없음' })))), null) : null;
+  return h('div', { class: 'welcome' }, h('div', { class: 'top' }, brand()),
+    h('section', { class: 'card' }, h('h1', { class: 'h1', text: '중2 수학 2학기' }), h('p', { class: 'note', text: '개념을 직접 만져 보고, 내 말로 정리하는 노트예요.' }),
+      h('div', { class: 'fieldrow' }, h('div', {}, h('label', { class: 'l', for: 'nm', text: '이름' }), name), h('div', {}, h('label', { class: 'l', for: 'cl', text: '반' }), cls)),
+      h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'button', text: '시작하기', onclick: go1 }))),
+    list, h('div', { id: 'syncslot' }, syncBar()),
+    h('button', { class: 'link', onclick: () => go('teacher'), text: '교사용 화면' }));
+}
+
+/* ---------- 홈 ---------- */
+function viewHome(p) {
+  const ready = LESSONS.filter(l => l.ready), done = ready.filter(l => status(p, l) === 'done').length;
+  const next = ready.find(l => status(p, l) !== 'done');
+  return h('div', {}, h('header', { class: 'top' }, brand(), h('div', { class: 'row', style: 'margin:0' },
+    h('span', { class: 'chip', text: p.name + (p.cls ? ' · ' + p.cls : '') }), h('button', { class: 'btn sm ghost', onclick: () => { DB.cur = null; save(); go('welcome'); }, text: '학생 바꾸기' }))),
+    h('section', { class: 'card hero' }, h('div', {}, h('h1', { class: 'h1', text: '오늘은 어떤 개념을 탐구해 볼까요?' }),
+      h('p', { class: 'note', text: '열린 차시 ' + ready.length + '개 중 ' + done + '개를 끝냈어요. 나머지 차시는 선생님이 순서대로 열어 줄 거예요.' }),
+      h('div', { class: 'bar', role: 'progressbar', 'aria-valuenow': pct(done / ready.length), 'aria-valuemin': '0', 'aria-valuemax': '100' }, h('i', { style: 'width:' + pct(done / ready.length) + '%' }))),
+      next ? h('button', { class: 'btn primary', onclick: () => go('lesson', { id: next.id, step: lst(p, next.id).step }), text: (status(p, next) === 'new' ? '시작: ' : '이어서: ') + lno(next) + ' ' + next.title }) : null),
+    h('div', { class: 'units' }, UNITS.map(u => h('section', { class: 'unit' }, h('h2', { text: u.name }), h('p', { class: 'sub', text: u.sub }),
+      h('div', { class: 'lgrid' }, LESSONS.filter(l => l.unit === u.id).map(l => lcard(p, l)))))),
+    h('div', { id: 'syncslot' }, syncBar()),
+    submitCard(p),
+    h('div', { class: 'row' }, h('a', { class: 'btn ghost', href: OPS_URL, target: '_blank', rel: 'noopener', text: '연산 연습하러 가기 ↗' }), h('button', { class: 'link', onclick: () => go('teacher'), text: '교사용 화면' })));
+}
+function submitCard(p) {
+  const out = h('textarea', { class: 'in', rows: '3', readonly: true, hidden: true, 'aria-label': '제출 코드' });
+  const copy = h('button', { class: 'btn', type: 'button', hidden: true, text: '코드 복사', onclick: () => { out.select(); copyText(out.value, '복사했어요. 선생님께 보내 주세요'); } });
+  const mk = h('button', { class: 'btn', type: 'button', text: '제출 코드 만들기', onclick: async () => { mk.disabled = true; try { out.value = await packReport(p); out.hidden = false; copy.hidden = false; out.select(); } catch (e) { toast('코드를 만들지 못했어요'); } mk.disabled = false; } });
+  return h('section', { class: 'card', style: 'margin-top:14px' }, h('h2', { class: 'h2', text: '선생님께 진도 보내기' }), h('p', { class: 'note', text: (Sync.state === 'on' ? '자동으로 전달되고 있어요. 안 보이면 코드를 만들어 직접 보내도 돼요.' : '차시를 끝낼 때마다 코드를 만들어 선생님께 보내 주세요. 이름과 풀이 기록이 담겨요. 새로 만들면 이전 기록까지 모두 들어 있어요.') }), h('div', { class: 'row', style: 'margin:0' }, mk, copy), out);
+}
+function lcard(p, l) {
+  const st = status(p, l), s = p.ls[l.id];
+  const chip = !l.ready ? h('span', { class: 'chip gray', text: '준비 중' }) : st === 'done' ? h('span', { class: 'chip green', text: '완료 · 확인 ' + firstScore(l, s)[0] + '/' + l.checks.length }) : st === 'doing' ? h('span', { class: 'chip gold', text: '진행 중 ' + (Math.min(s.step, 5) + 1) + '/6' }) : h('span', { class: 'chip', text: '시작하기' });
+  return h('button', { class: 'lcard' + (l.ready ? '' : ' soon') + (st === 'done' ? ' done' : ''), disabled: !l.ready, onclick: () => go('lesson', { id: l.id, step: lst(p, l.id).step }) },
+    h('div', { class: 'row', style: 'margin:0;justify-content:space-between' }, h('span', { class: 'no', text: lno(l) + ' · ' + l.lens }), chip), h('div', { class: 't', text: l.title }), h('div', { class: 'q', text: l.q }), l.el ? h('div', { class: 'note', style: 'margin:6px 0 0;font-size:12px', text: '시험 범위 · ' + l.el + ' (' + l.src + ')' }) : null);
+}
+
+/* ---------- 차시 ---------- */
+function viewLesson(p, l) {
+  const s = lst(p, l.id);
+  const stepBox = h('div'), stepper = h('div', { class: 'stepper', role: 'tablist' });
+  const touch = () => { s.upd = Date.now(); save(); Sync.push(p); };
+  const unlocked = i => i <= s.step;
+  const advance = to => { if (to > s.step) s.step = to; touch(); curStep = to; paintAll(); window.scrollTo(0, 0); };
+  function paintStepper() { stepper.replaceChildren(...STEPS.map((n, i) => h('button', { type: 'button', role: 'tab', class: (i === curStep ? 'on ' : '') + (i < s.step || s.done ? 'ok' : ''), disabled: !unlocked(i), 'aria-selected': i === curStep ? 'true' : 'false', onclick: () => { curStep = i; paintAll(); }, text: (i + 1) + ' ' + n }))); }
+  function paintAll() { paintStepper(); stepBox.replaceChildren([stepQ, stepExplore, stepGen, stepSum, stepCheck, stepRefl][curStep](p, l, s, advance, touch, () => go('home'))); }
+  paintAll();
+  return h('div', {}, h('header', { class: 'top' }, h('div', { class: 'row', style: 'margin:0' }, h('button', { class: 'btn sm ghost', onclick: () => go('home'), text: '← 차시 목록' }), h('b', { text: lno(l) + ' · ' + l.title })), brand()), stepper, stepBox);
+}
+const nextBtn = (label, enabled, fn) => h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'button', disabled: !enabled, text: label, onclick: fn }));
+
+function stepQ(p, l, s, advance, touch) {
+  const box = h('div'); const optsEl = h('div', { class: 'opts' }); const nb = h('div');
+  function paint() {
+    optsEl.replaceChildren(...l.pred.opts.map((o, i) => h('button', { type: 'button', class: 'opt' + (s.pred === i ? ' sel' : ''), text: o, onclick: () => { s.pred = i; touch(); paint(); } })));
+    nb.replaceChildren(nextBtn('탐색하러 가기', s.pred != null, () => advance(Math.max(s.step, 1))));
+  }
+  paint();
+  return h('section', { class: 'card' }, h('span', { class: 'chip', text: '핵심 개념 · ' + l.lens }), h('div', { class: 'qbig', text: l.q }),
+    h('p', { class: 'note', text: '먼저 예상해 봐요. 맞아도 틀려도 괜찮아요. 탐색한 뒤에 예상과 비교해 볼 거예요.' }), h('p', { style: 'font-weight:600', text: l.pred.ask }), optsEl, nb);
+}
+
+function stepExplore(p, l, s, advance, touch) {
+  const need = 3; const taskBox = h('div'), nb = h('div');
+  const widget = WIDGETS[l.widget](() => { s.use = (s.use || 0) + 1; if (s.use <= need) paintNb(); if (s.use === need || s.use % 10 === 0) touch(); });
+  const allOk = () => l.tasks.every((_, i) => s.task[i]);
+  function paintNb() { nb.replaceChildren(...[nextBtn('일반화로 가기', allOk() && (s.use || 0) >= need, () => advance(Math.max(s.step, 2))), (s.use || 0) < need ? h('p', { class: 'note', text: '도형이나 슬라이더를 몇 번 움직여 보면 열려요.' }) : null].filter(Boolean)); }
+  function paintTasks() {
+    taskBox.replaceChildren(...l.tasks.map((t, i) => {
+      const ok = s.task[i], wrong = s.taskWrong && s.taskWrong[i];
+      return h('div', { class: 'task' }, h('p', { style: 'font-weight:600;margin:0 0 8px', text: (i + 1) + '. ' + t.ask }),
+        h('div', { class: 'opts' }, t.opts.map((o, j) => h('button', { type: 'button', class: 'opt' + (ok && j === t.ans ? ' good' : wrong === j ? ' bad' : ''), disabled: !!ok,
+          text: o, onclick: () => { if (j === t.ans) { s.task[i] = true; if (s.taskWrong) delete s.taskWrong[i]; } else { s.taskWrong = Object.assign(s.taskWrong || {}, { [i]: j }); } touch(); paintTasks(); paintNb(); } }))),
+        ok ? h('div', { class: 'fb good', text: t.why }) : wrong != null ? h('div', { class: 'fb hint', text: '다시 도형을 움직여서 확인해 보세요.' }) : null);
+    }));
+  }
+  paintTasks(); paintNb();
+  return h('div', { class: 'cols' }, widget, h('section', { class: 'card' }, h('h2', { class: 'h2', text: '움직이며 발견하기' }), taskBox, nb));
+}
+
+function stepGen(p, l, s, advance, touch) {
+  const list = h('div'), nb = h('div');
+  const allOk = () => l.gen.items.every((_, i) => s.gen[i]);
+  function paint() {
+    list.replaceChildren(...l.gen.items.map((it, i) => {
+      const ok = s.gen[i], wr = s.genWrong && s.genWrong[i];
+      const blank = h('span', { class: 'blank' }, ok ? h('button', { type: 'button', class: 'good', disabled: true, text: it.opts[it.ans] }) : it.opts.map((o, j) => h('button', { type: 'button', class: wr === j ? 'bad' : '', text: o,
+        onclick: () => { if (j === it.ans) { s.gen[i] = true; if (s.genWrong) delete s.genWrong[i]; } else s.genWrong = Object.assign(s.genWrong || {}, { [i]: j }); touch(); paint(); } })));
+      return h('div', { class: 'genitem gen' }, it.pre, blank, it.post, wr != null && !ok ? h('div', { class: 'fb hint', text: '탐색에서 직접 확인한 것을 떠올려 보세요. (위의 "탐색" 단계로 돌아가도 돼요)' }) : null);
+    }));
+    nb.replaceChildren(nextBtn('정리하러 가기', allOk(), () => advance(Math.max(s.step, 3))));
+  }
+  paint();
+  return h('section', { class: 'card' }, h('h2', { class: 'h2', text: '발견을 문장으로' }), h('p', { class: 'note', text: l.gen.lead }), list, nb);
+}
+
+function stepSum(p, l, s, advance) {
+  const pr = s.pred != null ? l.pred.opts[s.pred] : null;
+  return h('div', {}, h('section', { class: 'card sumcard' }, h('h2', { class: 'h2', text: '정리: ' + l.sum.title }),
+    l.sum.defs.map(([a, b]) => h('div', { class: 'def' }, h('b', { text: a }), ' — ' + b)),
+    h('ul', { class: 'points' }, l.sum.points.map(t => h('li', { text: t }))),
+    h('div', { class: 'fb hint', text: '주의: ' + l.sum.note })),
+    pr ? h('section', { class: 'card', style: 'margin-top:12px' }, h('p', { class: 'note', style: 'margin:0', text: '처음 내 예상' }), h('p', { style: 'margin:2px 0 0;font-weight:600', text: '"' + pr + '"' }), h('p', { class: 'note', text: '정리한 내용과 비교하면 어땠나요? 마지막 단계에서 적어 볼 수 있어요.' })) : null,
+    nextBtn('확인 문제 풀기', true, () => advance(Math.max(s.step, 4))));
+}
+
+function normNum(str) { const t = String(str).replace(/[−–]/g, '-').replace(/,/g, '').trim(); const m = /^-?\d+(\.\d+)?/.exec(t); return m ? parseFloat(m[0]) : NaN; }
+function stepCheck(p, l, s, advance, touch) {
+  const list = h('div', { class: 'checks' }), nb = h('div');
+  const allOk = () => l.checks.every((_, i) => s.chk[i] && s.chk[i].ok);
+  function paint() {
+    list.replaceChildren(...l.checks.map((c, i) => {
+      const x = s.chk[i] || (s.chk[i] = { tries: 0, ok: false, first: false, show: false });
+      let ctrl;
+      if (c.opts) ctrl = h('div', { class: 'opts' }, c.opts.map((o, j) => h('button', { type: 'button', class: 'opt' + (x.ok && j === c.ans ? ' good' : x.pick === j && !x.ok ? ' bad' : ''), disabled: x.ok || x.show, text: o,
+        onclick: () => submit(i, j) })));
+      else { const inp = h('input', { class: 'in', id: 'chk' + i, inputmode: 'decimal', autocomplete: 'off', 'aria-label': '답', value: x.val || '', disabled: x.ok || x.show });
+        inp.addEventListener('keydown', e => { if (e.key === 'Enter') submit(i, inp.value); });
+        ctrl = h('div', { class: 'ans' }, inp, c.unit ? h('span', { text: c.unit }) : null, h('button', { class: 'btn', type: 'button', disabled: x.ok || x.show, text: '확인', onclick: () => submit(i, inp.value) })); }
+      return h('div', { class: 'card chk' }, h('div', { class: 'qt', text: (i + 1) + '. ' + c.q }), ctrl,
+        x.ok ? h('div', { class: 'fb good', text: '정답! ' + c.why }) : x.show ? h('div', { class: 'fb hint', text: '정답 확인: ' + c.why }) : x.tries ? h('div', { class: 'fb bad', text: '아쉬워요. 힌트: ' + c.hint }) : null,
+        !x.ok && !x.show && x.tries >= 2 ? h('button', { class: 'btn sm', type: 'button', text: '정답 보기', onclick: () => { x.show = true; x.ok = true; touch(); paint(); } }) : null);
+    }));
+    nb.replaceChildren(nextBtn('내 말로 정리하러 가기', allOk(), () => advance(Math.max(s.step, 5))));
+  }
+  function submit(i, v) {
+    const c = l.checks[i], x = s.chk[i]; if (x.ok) return;
+    let good; if (c.opts) { good = v === c.ans; x.pick = v; } else { x.val = String(v); const n = normNum(v); if (isNaN(n)) { toast('숫자로 답을 써 주세요'); return; } good = Math.abs(n - c.ans) < 1e-9; }
+    x.tries++; if (good) { x.ok = true; if (x.tries === 1) x.first = true; } touch(); paint();
+  }
+  paint();
+  const [fc] = firstScore(l, s);
+  return h('div', {}, h('section', { class: 'card' }, h('h2', { class: 'h2', text: '확인 문제' }), h('p', { class: 'note', text: '풀면서 막히면 힌트가 나와요. 두 번 틀리면 정답을 볼 수 있어요.' })), h('div', { style: 'height:12px' }), list, nb);
+}
+
+function stepRefl(p, l, s, advance, touch, home) {
+  const nb = h('div'), box = h('div');
+  const okLen = () => (s.refl[0] || '').trim().length >= 10;
+  function paintNb() {
+    if (s.done) { const [c, n] = firstScore(l, s); nb.replaceChildren(h('div', { class: 'card done-box', style: 'margin-top:12px' }, h('div', { class: 'stamp', text: '○' }), h('div', {}, h('b', { text: lno(l) + '를 끝냈어요!' }), h('p', { class: 'note', style: 'margin:2px 0 0', text: '확인 문제 첫 시도 ' + c + '/' + n + (Sync.state === 'on' ? ' · 선생님께 자동으로 전달돼요.' : ' · 홈 화면 아래에서 제출 코드를 만들어 보내 주세요.') })), h('button', { class: 'btn primary', onclick: home, text: '차시 목록으로' }))); return; }
+    nb.replaceChildren(...[nextBtn('이 차시 끝내기', okLen(), () => { s.done = true; touch(); Sync.push(p, true); paintNb(); }), okLen() ? null : h('p', { class: 'note', text: '첫 번째 질문에 10자 이상 써 주세요.' })].filter(Boolean));
+  }
+  box.append(...l.refl.map((q, i) => { const ta = h('textarea', { class: 'in', id: 'refl' + i, placeholder: i === 0 ? '여기에 내 말로 써 보세요' : '', 'aria-label': q }); ta.value = s.refl[i] || '';
+    ta.addEventListener('input', () => { s.refl[i] = ta.value; s.upd = Date.now(); save(); Sync.push(p); if (i === 0) paintNb(); });
+    return h('div', { class: 'card', style: i ? 'margin-top:12px' : '' }, h('label', { class: 'l', for: 'refl' + i, style: 'font-size:1rem;color:var(--ink)', text: (i === 0 ? '내 말로 설명하기' : '남은 궁금증') + ' — ' + q }), ta); }));
+  paintNb();
+  return h('div', {}, box, nb);
+}
+
+/* ---------- 교사용 ---------- */
+function analyze(rep) {
+  const rows = LESSONS.filter(l => l.ready).map(l => { const r = rep.ls[l.id]; return { l, r }; });
+  const done = rows.filter(x => x.r && x.r.d).length;
+  const tot = rows.reduce((a, x) => a + (x.r ? x.r.c[1] : 0), 0), ok = rows.reduce((a, x) => a + (x.r ? x.r.c[0] : 0), 0);
+  const weak = rows.filter(x => x.r && x.r.d && x.r.c[1] && x.r.c[0] / x.r.c[1] < 0.6);
+  const stuck = rows.filter(x => x.r && !x.r.d && x.r.s >= 4);
+  return { rows, done, tot, ok, weak, stuck };
+}
+function draftFeedback(rep) {
+  const a = analyze(rep), L = [];
+  L.push(rep.name + ' 학생, 지금까지 ' + a.done + '개 차시를 마쳤어요.' + (a.tot ? ' 확인 문제는 첫 시도에서 ' + pct(a.ok / a.tot) + '를 맞혔어요.' : ''));
+  if (a.weak.length) L.push(a.weak.map(x => '「' + x.l.title + '」').join(', ') + '은(는) 첫 시도 정답률이 낮아요. 정리 단계를 한 번 더 읽고 확인 문제를 다시 풀어 봐요.');
+  if (a.stuck.length) L.push(a.stuck.map(x => '「' + x.l.title + '」').join(', ') + '을(를) 거의 다 했는데 마무리하지 못했어요. 내 말로 정리하는 단계까지 이어 가 봐요.');
+  const conf = a.rows.filter(x => x.r && x.r.r && x.r.r[1] && !/^\s*(없음|없어요|없습니다)\s*$/.test(x.r.r[1]));
+  if (conf.length) L.push('남은 궁금증으로 적은 내용(' + conf.map(x => lno(x.l)).join(', ') + ')은 수업에서 함께 이야기해 봐요.');
+  L.push('(여기에 개인별 칭찬이나 다음 목표를 한 줄 적어 주세요.)');
+  return L.join(' ');
+}
+function elTable(list) {
+  const els = LESSONS.filter(l => l.ready && l.el);
+  if (!els.length || !list.length) return null;
+  return h('section', { class: 'card', style: 'margin-top:12px' }, h('h2', { class: 'h2', text: '평가 요소별 현황 (2회고사 범위)' }),
+    h('p', { class: 'note', text: '평가 요소는 임시 표시예요. 평가계획이 정해지면 요소 이름만 바꾸면 돼요. 정답률은 차시를 마친 학생의 확인 문제 첫 시도 기준이에요.' }),
+    h('div', { class: 'tscroll' }, h('table', { class: 'mx' }, h('thead', {}, h('tr', {}, ['평가 요소', '차시', '완료', '첫 시도 정답률'].map(t => h('th', { text: t })))),
+      h('tbody', {}, els.map(l => { let d = 0, ok = 0, n = 0; list.forEach(a => { const x = a.rows.find(y => y.l.id === l.id); if (x && x.r && x.r.d) { d++; ok += x.r.c[0]; n += x.r.c[1]; } });
+        const rate = n ? ok / n : null;
+        return h('tr', {}, h('td', { text: l.el }), h('td', { text: lno(l) }), h('td', { text: d + '/' + list.length }), h('td', {}, rate == null ? '–' : h('span', { class: 'cell ' + (rate < .6 ? 'p' : 'd'), text: pct(rate) + '%' }))); })))));
+}
+function viewTeacher() {
+  const rec = tsel && TD.students[tsel];
+  const wrap = h('div', {}, h('header', { class: 'top' }, h('div', { class: 'row', style: 'margin:0' }, h('button', { class: 'btn sm ghost', onclick: () => { if (rec) { tsel = null; render(); } else go(DB.cur ? 'home' : 'welcome'); }, text: rec ? '← 학급 목록' : '← 학생 화면' }), h('b', { text: rec ? rec.rep.name + ' 학생' : '교사용 · 학급 진도' })), brand()));
+  wrap.append(syncBar());
+  if (rec) { wrap.append(...teacherDetail(rec)); return wrap; }
+  const rows = Object.values(TD.students).map(x => ({ rep: x.rep, a: analyze(x.rep) })).sort((a, b) => (a.rep.cls || '').localeCompare(b.rep.cls || '', 'ko') || a.rep.name.localeCompare(b.rep.name, 'ko'));
+  const ready = LESSONS.filter(l => l.ready);
+  const ta = h('textarea', { class: 'in', id: 't-in', rows: '3', placeholder: '학생이 보낸 제출 코드를 붙여 넣으세요. 여러 명이면 줄을 바꿔 한꺼번에 붙여도 돼요.', 'aria-label': '제출 코드' });
+  const imp = h('button', { class: 'btn primary', type: 'button', text: '불러오기', onclick: async () => {
+    const codes = ta.value.match(/GN2z?\.[A-Za-z0-9_-]+/g) || []; if (!codes.length) { toast('제출 코드를 찾지 못했어요'); return; }
+    let add = 0, upd = 0, bad = 0;
+    for (const c of codes) { try { const rep = await unpackReport(c), ex = TD.students[rep.id]; if (ex && ex.rep.at >= rep.at) continue; TD.students[rep.id] = { rep, fb: ex ? ex.fb : '' }; ex ? upd++ : add++; } catch (e) { bad++; } }
+    tsave(); render(); toast('추가 ' + add + '명 · 갱신 ' + upd + '명' + (bad ? ' · 읽지 못함 ' + bad : '')); } });
+  const importCard = h('section', { class: 'card', style: 'margin-top:12px' }, h('h2', { class: 'h2', text: '제출 코드 불러오기' }), h('p', { class: 'note', text: '자동 연동이 안 되는 학생은 학생 화면 설정에서 만든 코드를 보내면 돼요. ' }), ta, h('div', { class: 'row' }, imp));
+  if (!rows.length) return (wrap.append(h('section', { class: 'card' }, h('p', { text: '아직 불러온 학생이 없어요. 학생이 차시를 시작하면 이곳에 나타나요.' })), importCard), wrap);
+  wrap.append(h('div', { class: 'tscroll card' }, h('table', { class: 'mx' }, h('thead', {}, h('tr', {}, h('th', { text: '학생' }), ready.map(l => h('th', { title: l.title, text: lno(l) })), h('th', { text: '첫 시도 정답률' }))),
+    h('tbody', {}, rows.map(r => h('tr', { onclick: () => { tsel = r.rep.id; render(); } }, h('td', {}, h('b', { text: r.rep.name }), ' ', h('span', { class: 'chip gray', text: r.rep.cls || '-' })),
+      r.a.rows.map(x => h('td', {}, !x.r ? h('span', { class: 'cell n', text: '–' }) : x.r.d ? h('span', { class: 'cell d', text: '✓ ' + x.r.c[0] + '/' + x.r.c[1] }) : h('span', { class: 'cell p', text: (Math.min(x.r.s, 5) + 1) + '/6' }))),
+      h('td', { text: r.a.tot ? pct(r.a.ok / r.a.tot) + '%' : '–' })))))),
+    elTable(rows.map(r => r.a)),
+    h('p', { class: 'note', text: '✓는 차시 완료(확인 문제 첫 시도 정답 수), 노란 칸은 진행 중인 단계예요.' }), importCard);
+  return wrap;
+}
+function teacherDetail(rec) {
+  const rep = rec.rep, a = analyze(rep), out = [];
+  out.push(h('section', { class: 'card' }, h('div', { class: 'row', style: 'margin:0' }, h('span', { class: 'chip gray', text: rep.cls || '반 없음' }), h('span', { class: 'note', style: 'margin:0', text: '완료 ' + a.done + '/' + a.rows.length + ' · 첫 시도 ' + (a.tot ? pct(a.ok / a.tot) + '%' : '–') }))));
+  a.rows.forEach(x => { const r = x.r;
+    out.push(h('section', { class: 'card', style: 'margin-top:12px' }, h('div', { class: 'row', style: 'margin:0;justify-content:space-between' }, h('div', {}, h('b', { text: lno(x.l) + ' · ' + x.l.title }), x.l.el ? h('div', { class: 'note', style: 'margin:2px 0 0;font-size:12px', text: '평가 요소 · ' + x.l.el }) : null), !r ? h('span', { class: 'chip gray', text: '미시작' }) : r.d ? h('span', { class: 'chip green', text: '완료 · 확인 ' + r.c[0] + '/' + r.c[1] }) : h('span', { class: 'chip gold', text: '진행 ' + (Math.min(r.s, 5) + 1) + '/6' })),
+      r && r.p ? h('div', { class: 'refl' }, h('small', { text: '처음 예상' }), r.p) : null,
+      r && r.r && r.r[0] ? h('div', { class: 'refl' }, h('small', { text: '내 말로 설명하기' }), r.r[0]) : null,
+      r && r.r && r.r[1] ? h('div', { class: 'refl' }, h('small', { text: '남은 궁금증' }), r.r[1]) : null)); });
+  const fb = h('textarea', { class: 'in', id: 't-fb', rows: '7', 'aria-label': '피드백 글' }); fb.value = rec.fb || draftFeedback(rep); fb.addEventListener('input', () => { rec.fb = fb.value; tsave(); });
+  out.push(h('section', { class: 'card', style: 'margin-top:12px' }, h('h2', { class: 'h2', text: '피드백 초안' }), h('p', { class: 'note', text: '기록으로 만든 초안이에요. 고치면 자동으로 저장돼요.' }), fb,
+    h('div', { class: 'row' }, h('button', { class: 'btn primary', text: '복사', onclick: () => copyText(fb.value, '피드백을 복사했어요') }), h('button', { class: 'btn', text: '초안 다시 만들기', onclick: () => { fb.value = draftFeedback(rep); rec.fb = ''; tsave(); toast('초안을 다시 만들었어요'); } }))));
+  return out;
+}
+
+/* ---------- 시작 ---------- */
+load();
+if (DB.profiles.length && !DB.profiles.some(p => p.id === DB.cur)) DB.cur = DB.profiles.length === 1 ? DB.profiles[0].id : null;
+view = DB.cur ? 'home' : 'welcome'; if (location.hash === '#teacher') view = 'teacher';
+render(); Sync.init();
+window.__app = { DB: () => DB, TD: () => TD, go, render, makeReport, packReport, unpackReport, LESSONS };
+
+})();
+</script>
+</body></html>
