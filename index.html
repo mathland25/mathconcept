@@ -927,6 +927,8 @@ const onLn = (p, q, y) => { const t = (y - p[1]) / (q[1] - p[1]); return [p[0] +
 /* ===== 앱 ===== */
 const KEY = 'gaenyeom-v1', TKEY = 'gaenyeom-teacher-v1';
 const STEPS = ['질문', '탐색', '일반화', '정리', '확인', '내 말로'];
+/* 구글 폼 자동 제출 설정 (비어 있으면 제출 코드 방식만 사용) */
+const FORM = { action: '', entry: '' };
 const OPS_URL = 'https://claude.ai/artifact/CKBVf3g7ThJ4NUVjWu5oST';
 let DB = { v: 1, cur: null, profiles: [] }, TD = { v: 1, students: {} };
 let view = 'home', vparam = null, curStep = 0, tsel = null, toastT = null;
@@ -1012,6 +1014,14 @@ async function unpackReport(code) {
 }
 
 /* ---------- 라우터 ---------- */
+async function formSend(p, quiet) {
+  if (!FORM.action || !FORM.entry) return false;
+  try {
+    const code = await packReport(p), body = new URLSearchParams(); body.append(FORM.entry, code);
+    await fetch(FORM.action, { method: 'POST', mode: 'no-cors', body });
+    p.sent = Date.now(); save(); if (!quiet) toast('선생님께 제출했어요'); return true;
+  } catch (e) { if (!quiet) toast('제출하지 못했어요. 인터넷을 확인하고 다시 눌러 주세요'); return false; }
+}
 function go(v, param) { view = v; vparam = param; if (v === 'lesson') curStep = Math.min(param.step, STEPS.length - 1); render(); window.scrollTo(0, 0); }
 function render() {
   const app = $('#app'); app.replaceChildren();
@@ -1060,6 +1070,12 @@ function submitCard(p) {
   const out = h('textarea', { class: 'in', rows: '3', readonly: true, hidden: true, 'aria-label': '제출 코드' });
   const copy = h('button', { class: 'btn', type: 'button', hidden: true, text: '코드 복사', onclick: () => { out.select(); copyText(out.value, '복사했어요. 선생님께 보내 주세요'); } });
   const mk = h('button', { class: 'btn', type: 'button', text: '제출 코드 만들기', onclick: async () => { mk.disabled = true; try { out.value = await packReport(p); out.hidden = false; copy.hidden = false; out.select(); } catch (e) { toast('코드를 만들지 못했어요'); } mk.disabled = false; } });
+  if (FORM.action && FORM.entry) {
+    const last = h('p', { class: 'note', style: 'margin:6px 0 0', text: p.sent ? '마지막 제출: ' + new Date(p.sent).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '아직 제출하지 않았어요.' });
+    const send = h('button', { class: 'btn primary', type: 'button', text: '선생님께 제출하기', onclick: async () => { send.disabled = true; const ok = await formSend(p); if (ok) last.textContent = '방금 제출했어요. (차시를 끝낼 때도 자동으로 제출돼요)'; send.disabled = false; } });
+    const det = h('details', { style: 'margin-top:10px' }, h('summary', { class: 'note', text: '제출이 안 될 때: 코드로 직접 보내기' }), h('div', { class: 'row', style: 'margin:8px 0 0' }, mk, copy), out);
+    return h('section', { class: 'card', style: 'margin-top:14px' }, h('h2', { class: 'h2', text: '선생님께 진도 보내기' }), h('p', { class: 'note', text: '버튼을 한 번 누르면 이름과 풀이 기록이 선생님께 전달돼요. 차시를 끝낼 때도 자동으로 보내요.' }), h('div', { class: 'row', style: 'margin:0' }, send), last, det);
+  }
   return h('section', { class: 'card', style: 'margin-top:14px' }, h('h2', { class: 'h2', text: '선생님께 진도 보내기' }), h('p', { class: 'note', text: (Sync.state === 'on' ? '자동으로 전달되고 있어요. 안 보이면 코드를 만들어 직접 보내도 돼요.' : '차시를 끝낼 때마다 코드를 만들어 선생님께 보내 주세요. 이름과 풀이 기록이 담겨요. 새로 만들면 이전 기록까지 모두 들어 있어요.') }), h('div', { class: 'row', style: 'margin:0' }, mk, copy), out);
 }
 function lcard(p, l) {
@@ -1171,8 +1187,8 @@ function stepRefl(p, l, s, advance, touch, home) {
   const nb = h('div'), box = h('div');
   const okLen = () => (s.refl[0] || '').trim().length >= 10;
   function paintNb() {
-    if (s.done) { const [c, n] = firstScore(l, s); nb.replaceChildren(h('div', { class: 'card done-box', style: 'margin-top:12px' }, h('div', { class: 'stamp', text: '○' }), h('div', {}, h('b', { text: lno(l) + '를 끝냈어요!' }), h('p', { class: 'note', style: 'margin:2px 0 0', text: '확인 문제 첫 시도 ' + c + '/' + n + (Sync.state === 'on' ? ' · 선생님께 자동으로 전달돼요.' : ' · 홈 화면 아래에서 제출 코드를 만들어 보내 주세요.') })), h('button', { class: 'btn primary', onclick: home, text: '차시 목록으로' }))); return; }
-    nb.replaceChildren(...[nextBtn('이 차시 끝내기', okLen(), () => { s.done = true; touch(); Sync.push(p, true); paintNb(); }), okLen() ? null : h('p', { class: 'note', text: '첫 번째 질문에 10자 이상 써 주세요.' })].filter(Boolean));
+    if (s.done) { const [c, n] = firstScore(l, s); nb.replaceChildren(h('div', { class: 'card done-box', style: 'margin-top:12px' }, h('div', { class: 'stamp', text: '○' }), h('div', {}, h('b', { text: lno(l) + '를 끝냈어요!' }), h('p', { class: 'note', style: 'margin:2px 0 0', text: '확인 문제 첫 시도 ' + c + '/' + n + (Sync.state === 'on' ? ' · 선생님께 자동으로 전달돼요.' : (FORM.action ? ' · 선생님께 자동으로 제출했어요. (홈 화면에서 다시 제출할 수 있어요)' : ' · 홈 화면 아래에서 제출 코드를 만들어 보내 주세요.')) })), h('button', { class: 'btn primary', onclick: home, text: '차시 목록으로' }))); return; }
+    nb.replaceChildren(...[nextBtn('이 차시 끝내기', okLen(), () => { s.done = true; touch(); Sync.push(p, true); formSend(p, true); paintNb(); }), okLen() ? null : h('p', { class: 'note', text: '첫 번째 질문에 10자 이상 써 주세요.' })].filter(Boolean));
   }
   box.append(...l.refl.map((q, i) => { const ta = h('textarea', { class: 'in', id: 'refl' + i, placeholder: i === 0 ? '여기에 내 말로 써 보세요' : '', 'aria-label': q }); ta.value = s.refl[i] || '';
     ta.addEventListener('input', () => { s.refl[i] = ta.value; s.upd = Date.now(); save(); Sync.push(p); if (i === 0) paintNb(); });
