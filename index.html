@@ -1015,7 +1015,7 @@ async function unpackReport(code) {
 
 /* ---------- 라우터 ---------- */
 /* 응답 시트 CSV 게시 주소 (교사용 화면 자동 가져오기). 비어 있으면 붙여넣기만 사용 */
-const SHEET_CSV = '';
+const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQyOJTJaDyblGIOZwX4RYLuB9S9DDGTJkszb-Kz7tVMbLt_6-SDL8XY2_kAk3oPToZRu6sZVddAVKz4/pub?gid=93813440&single=true&output=csv';
 let sheetBusy = false, sheetAt = 0;
 async function importCodes(text) {
   const codes = text.match(/GN2z?\.[A-Za-z0-9_-]+/g) || []; let add = 0, upd = 0, bad = 0;
