@@ -928,7 +928,7 @@ const onLn = (p, q, y) => { const t = (y - p[1]) / (q[1] - p[1]); return [p[0] +
 const KEY = 'gaenyeom-v1', TKEY = 'gaenyeom-teacher-v1';
 const STEPS = ['질문', '탐색', '일반화', '정리', '확인', '내 말로'];
 /* 구글 폼 자동 제출 설정 (비어 있으면 제출 코드 방식만 사용) */
-const FORM = { action: '', entry: '' };
+const FORM = { action: 'https://docs.google.com/forms/d/e/1FAIpQLSfAkQAEwjacgFf4YnDSVAsvu6KTlMedfOyeA4vDSFv3-7luBQ/formResponse', entry: 'entry.1381249599' };
 const OPS_URL = 'https://claude.ai/artifact/CKBVf3g7ThJ4NUVjWu5oST';
 let DB = { v: 1, cur: null, profiles: [] }, TD = { v: 1, students: {} };
 let view = 'home', vparam = null, curStep = 0, tsel = null, toastT = null;
