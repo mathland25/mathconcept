@@ -1355,7 +1355,31 @@ function elTable(list) {
         const rate = n ? ok / n : null;
         return h('tr', {}, h('td', { text: l.el }), h('td', { text: lno(l) }), h('td', { text: d + '/' + list.length }), h('td', {}, rate == null ? '–' : h('span', { class: 'cell ' + (rate < .6 ? 'p' : 'd'), text: pct(rate) + '%' }))); })))));
 }
+/* 교사용 화면 잠금 (화면 가림막 수준: 비밀번호는 암호화된 값으로만 들어 있음) */
+const TPW = '77aaf6696fe83c2a93b1bffa6dba83d81830efc2949294c59129d245102b3f9f';
+function sha256hex(str) {
+  const w = new TextEncoder().encode(str), rr = (x, n) => (x >>> n) | (x << (32 - n)), K = [], Hh = [];
+  for (let c = 2, n = 0; n < 64; c++) { let p = true; for (let d = 2; d * d <= c; d++) if (c % d === 0) { p = false; break; } if (p) { if (n < 8) Hh[n] = (Math.pow(c, 1 / 2) % 1 * 4294967296) | 0; K[n++] = (Math.pow(c, 1 / 3) % 1 * 4294967296) | 0; } }
+  const bl = w.length * 8, len = ((w.length + 9 + 63) >> 6) << 6, m = new Uint8Array(len); m.set(w); m[w.length] = 0x80;
+  const dv = new DataView(m.buffer); dv.setUint32(len - 4, bl >>> 0); dv.setUint32(len - 8, Math.floor(bl / 4294967296));
+  for (let o = 0; o < len; o += 64) { const W = new Array(64); for (let i = 0; i < 16; i++) W[i] = dv.getUint32(o + i * 4);
+    for (let i = 16; i < 64; i++) { const s0 = rr(W[i - 15], 7) ^ rr(W[i - 15], 18) ^ (W[i - 15] >>> 3), s1 = rr(W[i - 2], 17) ^ rr(W[i - 2], 19) ^ (W[i - 2] >>> 10); W[i] = (W[i - 16] + s0 + W[i - 7] + s1) | 0; }
+    let [a, b, c, d, e, f, g, hh] = Hh;
+    for (let i = 0; i < 64; i++) { const S1 = rr(e, 6) ^ rr(e, 11) ^ rr(e, 25), ch = (e & f) ^ (~e & g), t1 = (hh + S1 + ch + K[i] + W[i]) | 0, S0 = rr(a, 2) ^ rr(a, 13) ^ rr(a, 22), mj = (a & b) ^ (a & c) ^ (b & c), t2 = (S0 + mj) | 0; hh = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0; }
+    Hh[0] = (Hh[0] + a) | 0; Hh[1] = (Hh[1] + b) | 0; Hh[2] = (Hh[2] + c) | 0; Hh[3] = (Hh[3] + d) | 0; Hh[4] = (Hh[4] + e) | 0; Hh[5] = (Hh[5] + f) | 0; Hh[6] = (Hh[6] + g) | 0; Hh[7] = (Hh[7] + hh) | 0; }
+  return Hh.map(x => (x >>> 0).toString(16).padStart(8, '0')).join('');
+}
+const tOpen = () => { try { return sessionStorage.getItem('gn-t-ok') === TPW; } catch (e) { return false; } };
+function viewLock() {
+  const pw = h('input', { class: 'in', type: 'password', id: 't-pw', placeholder: '비밀번호', autocomplete: 'off', 'aria-label': '교사용 비밀번호' }), msg = h('p', { class: 'note', style: 'color:var(--red);min-height:1.2em;margin:6px 0 0' });
+  const go2 = () => { if (sha256hex('mathconcept:' + pw.value) === TPW) { try { sessionStorage.setItem('gn-t-ok', TPW); } catch (e) { } render(); } else { msg.textContent = '비밀번호가 맞지 않아요'; pw.value = ''; } };
+  pw.addEventListener('keydown', e => { if (e.key === 'Enter') go2(); });
+  return h('div', {}, h('header', { class: 'top' }, h('div', { class: 'row', style: 'margin:0' }, h('b', { text: '교사용' })), brand()),
+    h('section', { class: 'card', style: 'margin-top:12px' }, h('h2', { class: 'h2', text: '교사용 화면' }), h('p', { class: 'note', text: '선생님만 들어갈 수 있어요. 비밀번호를 입력해 주세요.' }), h('div', { class: 'row' }, pw, h('button', { class: 'btn primary', type: 'button', text: '열기', onclick: go2 })), msg,
+      h('div', { class: 'row' }, h('button', { class: 'btn sm ghost', type: 'button', text: '← 학생 화면', onclick: () => { location.hash = ''; go(DB.cur ? 'home' : 'welcome'); } }))));
+}
 function viewTeacher() {
+  if (!tOpen()) return viewLock();
   const rec = tsel && TD.students[tsel];
   const wrap = h('div', {}, h('header', { class: 'top' }, h('div', { class: 'row', style: 'margin:0' }, h('button', { class: 'btn sm ghost', onclick: () => { if (rec) { tsel = null; render(); } else go(DB.cur ? 'home' : 'welcome'); }, text: rec ? '← 학급 목록' : '← 학생 화면' }), h('b', { text: rec ? rec.rep.name + ' 학생' : '교사용 · 학급 진도' })), brand()));
   wrap.append(syncBar());
