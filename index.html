@@ -349,6 +349,29 @@ LESSONS.forEach(l => { if (l.refl) l.refl = l.refl.map(q => q.replace(/\s*\(없�
 /* ===== Ⅴ. 도형의 닮음 — 학습지 5, 6, 7차시 + 평가 요소 표시 ===== */
 const GEN_REFL = '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요.';
 LESSONS.push(
+{ id: 'l17', unit: 1, sub: '직각삼각형', title: '직각삼각형의 닮음', q: '직각삼각형의 직각 꼭짓점에서 빗변에 수선을 그으면, 생긴 삼각형들은 어떤 관계일까?', lens: '닮음 · 대응', ready: true, widget: 'rt',
+  pred: { ask: '∠A = 90°인 직각삼각형 ABC의 꼭짓점 A에서 빗변 BC에 수선 AH를 그으면 삼각형이 3개 생겨요. 이 삼각형들은 어떤 관계일 것 같아요?', opts: ['모두 닮음이다', '모두 합동이다', '아무 관계도 없다', '모르겠다'] },
+  tasks: [
+    { ask: '"△ABC · △HBA" 탭에서 슬라이더를 끝까지 밀어 두 삼각형을 겹쳐 보세요. 직각 말고 두 삼각형이 공통으로 가진 각은?', opts: ['∠B', '∠C', '∠BAH'], ans: 0, why: '겹쳐 보면 ∠B는 두 삼각형이 함께 가지고 있어요. 직각 하나와 ∠B가 같으므로 AA 닮음이에요. (△ABC ∽ △HBA)' },
+    { ask: '"△ABC · △HAC" 탭에서 겹쳐 보세요. 두 삼각형이 공통으로 가진 각은?', opts: ['∠B', '∠C', '∠HAC'], ans: 1, why: '∠C를 함께 가지고 있고 직각도 하나씩 있어서 AA 닮음이에요. (△ABC ∽ △HAC)' },
+    { ask: '"△ABH · △CAH" 탭에서 겹쳐 보세요. 두 삼각형이 닮음인 까닭은?', opts: ['직각이 하나씩 같고 ∠BAH = ∠C이므로 AA 닮음', '변의 길이가 같으므로 합동', '모양이 비슷해 보이기 때문'], ans: 0, why: '∠BAH = 90° − ∠B = ∠C예요. 직각도 하나씩 같으므로 AA 닮음이에요. (△ABH ∽ △CAH)' }
+  ],
+  gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+    { pre: '△ABC와 △HBA는 직각 하나와 ∠B가 같으므로', opts: ['SSS 닮음', 'SAS 닮음', 'AA 닮음'], ans: 2, post: '이다.' },
+    { pre: '△ABC ∽ △HBA이므로 BC : AB = AB :', opts: ['HB', 'HA', 'AC'], ans: 0, post: '이다.' },
+    { pre: '따라서 AB² =', opts: ['BH × BC', 'BH × HC', 'BC²'], ans: 0, post: '이다.' },
+    { pre: '△ABH ∽ △CAH이므로 BH : AH = AH : CH이고, AH² = BH ×', opts: ['CH', 'BC', 'AB'], ans: 0, post: '이다.' }
+  ] },
+  sum: { title: '직각삼각형의 닮음', defs: [['수선의 발', '한 점에서 직선에 수선을 그을 때 직선과 만나는 점 (여기서는 H)'], ['빗변', '직각의 맞은편 변 (여기서는 BC)']],
+    points: ['∠A = 90°인 직각삼각형 ABC에서 A에서 빗변 BC에 내린 수선의 발을 H라 하면 △ABC ∽ △HBA ∽ △HAC (AA 닮음)이다.', 'AB² = BH × BC,  AC² = CH × CB,  AH² = BH × CH', '비를 세울 때는 직각 꼭짓점부터 같은 방향으로 맞추고, 같은 자리에 오는 꼭짓점을 대응시킨다.'],
+    note: '닮음 기호는 대응하는 꼭짓점 순서대로 써야 해요. △ABC ∽ △HBA처럼 A↔H, B↔B, C↔A를 순서대로 쓰면 비도 바르게 세울 수 있어요.' },
+  checks: [
+    { q: '∠A = 90°인 직각삼각형 ABC에서 AH ⊥ BC입니다. AB = 6 cm, BH = 3 cm일 때 BC의 길이는?', unit: 'cm', ans: 12, hint: 'AB² = BH × BC를 이용해요.', why: '36 = 3 × BC이므로 BC = 12 cm' },
+    { q: '∠A = 90°인 직각삼각형 ABC에서 AH ⊥ BC입니다. BH = 4 cm, CH = 9 cm일 때 AH의 길이는?', unit: 'cm', ans: 6, hint: 'AH² = BH × CH를 이용해요.', why: 'AH² = 4 × 9 = 36이므로 AH = 6 cm' },
+    { q: '∠A = 90°인 직각삼각형 ABC에서 AH ⊥ BC입니다. BC = 25 cm, CH = 9 cm일 때 AC의 길이는?', unit: 'cm', ans: 15, hint: 'AC² = CH × CB를 이용해요.', why: 'AC² = 9 × 25 = 225이므로 AC = 15 cm' },
+    { q: '그림에서 △ABH와 닮은 삼각형을 대응하는 꼭짓점 순서대로 바르게 쓴 것은? (∠A = 90°, AH ⊥ BC)', opts: ['△ABH ∽ △CAH', '△ABH ∽ △ACH', '△ABH ∽ △HAC'], ans: 0, hint: '직각 꼭짓점 H끼리 대응시키고, ∠BAH와 같은 크기의 ∠C를 찾아봐요.', why: '직각 H ↔ H, ∠BAH = ∠C이므로 A ↔ C, B ↔ A로 대응해요. 따라서 △ABH ∽ △CAH예요.' }
+  ],
+  refl: ['직각삼각형에서 수선으로 나뉜 삼각형들이 닮음이 되는 까닭을 "같은 각"이라는 말을 써서 설명해 보세요.', GEN_REFL] },
 { id: 'l14', unit: 1, title: '평행선 사이의 선분의 길이의 비', q: '평행선이 두 직선을 자르면, 잘린 선분의 길이는 어떤 관계가 있을까?', lens: '비례 · 평행', ready: true, widget: 'pl',
   pred: { ask: '평행한 세 직선 l, m, n이 두 직선 p, q와 만날 때, p 위의 AB : BC와 q 위의 A′B′ : B′C′는 어떨 것 같아요?', opts: ['AB : BC = A′B′ : B′C′', 'AB = A′B′, BC = B′C′', '아무 관계도 없다', '모르겠다'] },
   tasks: [
@@ -421,14 +444,14 @@ LESSONS.push(
 
 /* 차시 순서: 선생님 학습지(5단원 1~8차시) 순서 */
 (() => {
-  const ord = ['l01','l02','l03','l04','l05','l06','l07','l08','l14','l15','l16','l09','l10','l11','l12','l13'];
+  const ord = ['l01','l02','l03','l04','l05','l06','l07','l17','l08','l14','l15','l16','l09','l10','l11','l12','l13'];
   const m = Object.fromEntries(LESSONS.map(l => [l.id, l]));
   LESSONS.splice(0, LESSONS.length, ...ord.map(id => m[id]));
   const cnt = {};
   LESSONS.forEach((l, i) => { l.no = i + 1; cnt[l.unit] = (cnt[l.unit] || 0) + 1; l.ws = cnt[l.unit]; });
-  const T = { l06: ['닮은 도형의 성질', '교과서 192~197쪽'], l07: ['삼각형의 닮음 조건', '교과서 203~205쪽'], l08: ['삼각형에서 평행선과 선분의 길이의 비 · 중점연결정리', '학습지 3·4차시'], l14: ['평행선 사이의 선분의 길이의 비', '교과서 218~220쪽'], l15: ['삼각형의 무게중심', '교과서 221~223쪽'], l16: ['닮은 도형의 넓이와 부피의 비', '교과서 198~201쪽'], l09: ['피타고라스 정리', '학습지 8차시'] };
+  const T = { l06: ['닮은 도형의 성질', '교과서 192~197쪽'], l07: ['삼각형의 닮음 조건', '교과서 203~205쪽'], l08: ['삼각형에서 평행선과 선분의 길이의 비 · 중점연결정리', '학습지 3·4차시'], l14: ['평행선 사이의 선분의 길이의 비', '교과서 218~220쪽'], l15: ['삼각형의 무게중심', '교과서 221~223쪽'], l16: ['닮은 도형의 넓이와 부피의 비', '교과서 198~201쪽'], l09: ['피타고라스 정리', '학습지 8차시'], l17: ['직각삼각형에서의 닮음과 길이의 관계', '학습지 2차시'] };
   Object.entries(T).forEach(([id, [el, src]]) => { m[id].el = el; m[id].src = src; });
-  m.l08.ws = 3; // 학습지 3·4차시
+  m.l17.ws = 2; m.l08.ws = 3; // 학습지 3·4차시
   [m.l14, m.l15, m.l16, m.l09].forEach((l, i) => { l.ws = 5 + i; });
   m.l08.wsLabel = '3·4';
 })();
@@ -840,7 +863,61 @@ function wRat(use) {
   return h('div', { class: 'card widget' }, tabsBox, svg, verdict, ctl, h('p', { class: 'note', text: '기준 도형(직사각형 3×2, 직육면체 2×1×1)을 m배, n배 한 도형이에요. 넓이는 칸의 수, 부피는 단위 상자의 수로 세어요.' }), read);
 }
 
-const WIDGETS = { iso: wIso, para: wPara, sim: wSim, count: wCount, fig: wFig, par: wPar, pyth: wPyth, pl: wPl, cen: wCen, rat: wRat };
+
+function wRt(use) {
+  const S = { tab: 't1', t: 0, a: 5 };
+  const svg = h('s:svg', { viewBox: '0 0 400 300', role: 'img', 'aria-label': '직각삼각형에서 수선으로 나뉜 삼각형의 닮음 탐색' });
+  const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), tabsBox = h('div');
+  const U = 20, B0 = [60, 150];
+  const CFG = {
+    t1: { X: ['A', 'B', 'C'], Y: ['H', 'B', 'A'], r: 0, rel: ['BC', 'AB', 'HB'], eq: ['AB²', 'BH × BC'] },
+    t2: { X: ['A', 'B', 'C'], Y: ['H', 'A', 'C'], r: 0, rel: ['BC', 'AC', 'HC'], eq: ['AC²', 'CH × CB'] },
+    t3: { X: ['C', 'A', 'H'], Y: ['A', 'B', 'H'], r: 2, rel: ['BH', 'AH', 'CH'], eq: ['AH²', 'BH × CH'] }
+  };
+  const geo = () => { const a = S.a, b = 13 - a, hh = Math.sqrt(a * b), H = [B0[0] + a * U, 150]; return { B: B0, C: [B0[0] + 13 * U, 150], H, A: [H[0], 150 - hh * U], a, b, hh }; };
+  const away = (p, c, d) => { const v = [p[0] - c[0], p[1] - c[1]], L = Math.hypot(...v) || 1; return [p[0] + v[0] / L * d, p[1] + v[1] / L * d]; };
+  const cen = P => [P.reduce((s, p) => s + p[0], 0) / P.length, P.reduce((s, p) => s + p[1], 0) / P.length];
+  const cross = P => (P[1][0] - P[0][0]) * (P[2][1] - P[0][1]) - (P[1][1] - P[0][1]) * (P[2][0] - P[0][0]);
+  const rot = (w, an) => [w[0] * Math.cos(an) - w[1] * Math.sin(an), w[0] * Math.sin(an) + w[1] * Math.cos(an)];
+  const rtm = (V, p, q) => { const u = [p[0] - V[0], p[1] - V[1]], w = [q[0] - V[0], q[1] - V[1]], lu = Math.hypot(...u), lw = Math.hypot(...w), s = 11, uu = [u[0] / lu * s, u[1] / lu * s], ww = [w[0] / lw * s, w[1] / lw * s];
+    return h('s:path', { d: 'M' + (V[0] + uu[0]) + ' ' + (V[1] + uu[1]) + ' l' + ww[0] + ' ' + ww[1] + ' l' + (-uu[0]) + ' ' + (-uu[1]), fill: 'none', stroke: 'var(--ink)', 'stroke-width': 1.5 }); };
+  const colored = (x, y, t, c) => { const n = label(x, y + 5, t, 'svgt'); n.setAttribute('fill', c); return n; };
+  const len = (G, nm) => dist(G[nm[0]], G[nm[1]]) / U;
+  function draw() {
+    const G = geo(), cfg = CFG[S.tab], X = cfg.X.map(n => G[n]), Y0 = cfg.Y.map(n => G[n]), r = cfg.r, s = (r + 1) % 3, t = S.t;
+    const u = [Y0[s][0] - Y0[r][0], Y0[s][1] - Y0[r][1]], v = [X[s][0] - X[r][0], X[s][1] - X[r][1]], au = Math.atan2(u[1], u[0]), av = Math.atan2(v[1], v[0]), refl = cross(Y0) * cross(X) < 0;
+    let th = av - au; while (th > Math.PI) th -= 2 * Math.PI; while (th <= -Math.PI) th += 2 * Math.PI;
+    const s1 = refl ? Math.min(1, t / .65) : t, s2 = refl ? Math.max(0, (t - .65) / .35) : 0, e = [Math.cos(av), Math.sin(av)];
+    const Mv = w => { let w1 = rot(w, th * s1); if (refl) { const k = w1[0] * e[0] + w1[1] * e[1], par = [k * e[0], k * e[1]], pp = [w1[0] - par[0], w1[1] - par[1]], f = 1 - 2 * s2; w1 = [par[0] + f * pp[0], par[1] + f * pp[1]]; } return w1; };
+    const p0 = [Y0[r][0], Y0[r][1] + 140], anc = [p0[0] + (X[r][0] - p0[0]) * t, p0[1] + (X[r][1] - p0[1]) * t];
+    const Yt = Y0.map(p => { const q = Mv([p[0] - Y0[r][0], p[1] - Y0[r][1]]); return [anc[0] + q[0], anc[1] + q[1]]; });
+    const cx = cen(X), cy = cen(Yt), ox = cen([G.A, G.B, G.C]);
+    svg.replaceChildren(
+      poly([G.A, G.B, G.C], { fill: 'none', stroke: 'var(--line)', 'stroke-width': 1.5 }),
+      seg(G.A, G.H, { stroke: 'var(--ink3, var(--ink2))', 'stroke-dasharray': '5 4', 'stroke-width': 1.5 }),
+      poly(X, { fill: 'var(--blue-soft)', 'fill-opacity': .75, stroke: 'var(--blue)', 'stroke-width': 2.5 }),
+      poly(Yt, { fill: 'var(--red-soft)', 'fill-opacity': .7, stroke: 'var(--red)', 'stroke-width': 2.5 }),
+      rtm(X[r], X[(r + 1) % 3], X[(r + 2) % 3]), rtm(Yt[r], Yt[(r + 1) % 3], Yt[(r + 2) % 3]),
+      ...X.map((p, i) => { const q = away(p, cx, 15); return colored(q[0], q[1], cfg.X[i], 'var(--blue)'); }),
+      ...Yt.map((p, i) => { const q = i === r && t > .85 ? away(p, cy, -22) : away(p, cy, 15); return colored(q[0], q[1] + (i === r && t > .85 ? 4 : 0), cfg.Y[i], 'var(--red)'); }));
+    const L = cfg.rel.map(n => len(G, n)), f = x => r1(Math.round(x * 10) / 10), g2 = x => String(Math.round(x * 100) / 100);
+    const e1 = L[1] * L[1], e2 = cfg.eq[1] === 'BH × BC' ? G.a * 13 : cfg.eq[1] === 'CH × CB' ? G.b * 13 : G.a * G.b;
+    const e1v = cfg.eq[0] === 'AB²' ? len(G, 'AB') ** 2 : cfg.eq[0] === 'AC²' ? len(G, 'AC') ** 2 : len(G, 'AH') ** 2;
+    read.replaceChildren(...[[cfg.rel[0] + ' = ' + f(L[0]) + ' cm', 0], [cfg.rel[1] + ' = ' + f(L[1]) + ' cm', 0], [cfg.rel[2] + ' = ' + f(L[2]) + ' cm', 0],
+      [cfg.rel[0] + ' ÷ ' + cfg.rel[1] + ' = ' + g2(L[0] / L[1]), 1], [cfg.rel[1] + ' ÷ ' + cfg.rel[2] + ' = ' + g2(L[1] / L[2]), 1],
+      [cfg.eq[0] + ' = ' + f(e1v), 1], [cfg.eq[1] + ' = ' + f(e2), 1]].map(([x, hi]) => h('span', { class: hi ? 'hi' : '', text: x })));
+    if (t < .98) { verdict.className = 'verdict'; verdict.textContent = '슬라이더를 끝까지 밀어서 빨간 삼각형을 파란 삼각형과 같은 방향으로 겹쳐 보세요.'; }
+    else { verdict.className = 'verdict yes'; verdict.textContent = cfg.X.map((n, i) => n + '↔' + cfg.Y[i]).join('  ') + ' 대응 → ' + cfg.rel[0] + ' : ' + cfg.rel[1] + ' = ' + cfg.rel[1] + ' : ' + cfg.rel[2] + ', 그래서 ' + cfg.eq[0] + ' = ' + cfg.eq[1]; }
+  }
+  function paintCtl() { ctl.replaceChildren(); const row = (...a) => ctl.append(h('div', { class: 'ctl' }, slider(...a)));
+    row('겹쳐 보기', 0, 1, 0.02, S.t, v => Math.round(v * 100) + '%', v => { S.t = v; draw(); use(); });
+    row('BH 길이', 3, 10, 1, S.a, v => v + ' cm', v => { S.a = v; draw(); use(); }); }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['t1', '△ABC · △HBA'], ['t2', '△ABC · △HAC'], ['t3', '△ABH · △CAH']], S.tab, k => { S.tab = k; S.t = 0; paintTabs(); paintCtl(); draw(); use(); })); }
+  paintTabs(); paintCtl(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, svg, verdict, ctl, h('p', { class: 'note', text: '직각 표시(ㄴ)가 있는 꼭짓점끼리 먼저 겹쳐요. 빨간 삼각형이 돌고 뒤집히며 파란 삼각형과 같은 방향이 되면, 같은 자리에 오는 꼭짓점이 서로 대응해요. ∠A = 90°이고 AH ⊥ BC인 삼각형이에요.' }), read);
+}
+
+const WIDGETS = { iso: wIso, para: wPara, sim: wSim, count: wCount, fig: wFig, par: wPar, pyth: wPyth, pl: wPl, cen: wCen, rat: wRat, rt: wRt };
 
 /* ===== 확인 문제용 그림 ===== */
 function F(o) {
@@ -886,6 +963,13 @@ const onLn = (p, q, y) => { const t = (y - p[1]) / (q[1] - p[1]); return [p[0] +
   put('l04', 0, () => F({ P: pg, poly: [['A', 'B', 'C', 'D']], par: [['A', 'D'], ['B', 'C']], ang: [['A', 'B', 'D', '110°'], ['B', 'A', 'C', '?']], alt: '평행사변형 ABCD, ∠A = 110°' }));
   put('l04', 1, () => F({ P: pg, poly: [['A', 'B', 'C', 'D']], txt: [['A', 'B', '7 cm', 15], ['B', 'C', '5 cm', 15]], alt: '평행사변형 ABCD, AB = 7, BC = 5' }));
   put('l04', 2, () => F({ P: Object.assign({ O: [120, 72.5] }, pg), poly: [['A', 'B', 'C', 'D']], seg: [['A', 'C', 'r'], ['B', 'D', 'r']], txt: [[120, 150, 'AC = 12 cm,  BD = 8 cm']], alt: '평행사변형의 두 대각선과 교점 O' }));
+
+  const rA = { A: [80, 48], B: [20, 140], C: [220, 140], H: [80, 140] };
+  const rb = { fill: [[['A', 'B', 'H'], 'rgba(232,180,90,.5)']] };
+  put('l17', 0, () => F({ w: 240, P: rA, poly: [['A', 'B', 'C']], seg: [['A', 'H', 'd']], rt: [['A', 'B', 'C'], ['H', 'A', 'B']], txt: [['A', 'B', 'AB = 6', 26], [52, 128, 'BH = 3'], [150, 166, 'BC = ?']], alt: '직각삼각형 ABC와 수선 AH, AB = 6, BH = 3' }));
+  put('l17', 1, () => F({ w: 240, P: rA, poly: [['A', 'B', 'C']], seg: [['A', 'H', 'd']], rt: [['A', 'B', 'C'], ['H', 'A', 'B']], txt: [[52, 128, 'BH = 4'], [150, 166, 'CH = 9'], [112, 98, 'AH = ?']], alt: '직각삼각형 ABC와 수선 AH, BH = 4, CH = 9' }));
+  put('l17', 2, () => F({ w: 240, P: rA, poly: [['A', 'B', 'C']], seg: [['A', 'H', 'd']], rt: [['A', 'B', 'C'], ['H', 'A', 'B']], txt: [['A', 'C', 'AC = ?', 26], [150, 128, 'CH = 9'], [120, 172, 'BC = 25']], h: 180, alt: '직각삼각형 ABC와 수선 AH, BC = 25, CH = 9' }));
+  put('l17', 3, () => F({ w: 240, P: rA, poly: [['A', 'B', 'C']], seg: [['A', 'H', 'd']], rt: [['A', 'B', 'C'], ['H', 'A', 'B']], fill: rb.fill, alt: '직각삼각형 ABC, 수선 AH, 삼각형 ABH 강조' }));
   const tA = { A: [30, 55], B: [10, 125], C: [90, 125] }, tD = { D: [165, 25], E: [130, 130], F: [250, 130] };
   put('l06', 0, () => F({ w: 270, P: Object.assign({}, tA, tD), poly: [['A', 'B', 'C'], ['D', 'E', 'F']], txt: [['A', 'B', '6 cm'], ['B', 'C', '8 cm', 16], ['D', 'E', '9 cm'], ['E', 'F', '? cm', 16]], alt: '닮은 두 삼각형 ABC, DEF' }));
   put('l06', 1, () => F({ w: 270, P: Object.assign({}, tA, tD), poly: [['A', 'B', 'C'], ['D', 'E', 'F']], ang: [['A', 'B', 'C', '70°'], ['B', 'C', 'A', '50°'], ['F', 'D', 'E', '?']], alt: '닮은 두 삼각형, ∠A = 70°, ∠B = 50°' }));
@@ -965,7 +1049,7 @@ function load() { try { const o = JSON.parse(localStorage.getItem(KEY)); if (o &
 function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) { } }
 function tsave() { try { localStorage.setItem(TKEY, JSON.stringify(TD)); } catch (e) { } }
 const me = () => DB.profiles.find(p => p.id === DB.cur) || null;
-const lno = l => ['Ⅳ', 'Ⅴ', 'Ⅵ'][l.unit] + '-' + (l.wsLabel || l.ws) + '차시';
+const lno = l => ['Ⅳ', 'Ⅴ', 'Ⅵ'][l.unit] + '-' + (l.wsLabel || l.ws) + '차시' + (l.sub ? ' ' + l.sub : '');
 const lessonOf = id => LESSONS.find(l => l.id === id);
 function lst(p, id) { return p.ls[id] || (p.ls[id] = { step: 0, pred: null, task: {}, gen: {}, chk: {}, refl: ['', ''], done: false, upd: 0, use: 0 }); }
 const status = (p, l) => { const s = p.ls[l.id]; if (!s || (!s.step && s.pred == null)) return 'new'; return s.done ? 'done' : 'doing'; };
