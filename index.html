@@ -992,7 +992,7 @@ const Sync = {
       this.db.collection('reports').onSnapshot(snap => {
         let changed = false;
         snap.docs.forEach(d => { const ps = (d.data() || {}).profiles || {};
-          Object.keys(ps).forEach(pid => { const rep = ps[pid]; if (!rep || rep.v !== 2 || !rep.id || !rep.name || typeof rep.ls !== 'object') return;
+          Object.keys(ps).forEach(pid => { const rep = ps[pid]; if (!rep || rep.v !== 2 || !rep.id || !rep.name || typeof rep.ls !== 'object' || (rep.app && rep.app !== 'concept')) return;
             if (addRep(rep)) changed = true; }); });
         this.last = Date.now(); if (changed) tsave(); refreshSync();
       }, e => { this.state = 'err'; this.msg = '학생 기록을 읽지 못했어요 (' + (e && e.code) + ')'; refreshSync(); });
@@ -1023,7 +1023,7 @@ function makeReport(p) {
   Object.keys(p.ls).forEach(id => { const l = lessonOf(id), s = p.ls[id]; if (!l || !l.checks) return;
     if (!s.step && s.pred == null) return; const [c, n] = firstScore(l, s);
     ls[id] = { s: s.step, d: s.done ? 1 : 0, c: [c, n], p: s.pred != null ? l.pred.opts[s.pred] : '', r: s.refl, u: s.upd }; });
-  return { v: 2, id: p.id, name: p.name, cls: p.cls || '', at: Date.now(), day: today(), ls };
+  return { v: 2, app: 'concept', id: p.id, name: p.name, cls: p.cls || '', at: Date.now(), day: today(), ls };
 }
 const b64u = bytes => { let s = ''; for (let i = 0; i < bytes.length; i += 8192) s += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192)); return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
 const unb64u = str => { const s = atob(str.replace(/-/g, '+').replace(/_/g, '/')), b = new Uint8Array(s.length); for (let i = 0; i < s.length; i++) b[i] = s.charCodeAt(i); return b; };
@@ -1036,7 +1036,7 @@ async function unpackReport(code) {
   const m = /^GN2(z?)\.([A-Za-z0-9_-]+)$/.exec(code.trim()); if (!m) throw new Error('형식');
   let bytes = unb64u(m[2]);
   if (m[1] === 'z') { const ds = new DecompressionStream('deflate-raw'), w = ds.writable.getWriter(); w.write(bytes); w.close(); bytes = new Uint8Array(await new Response(ds.readable).arrayBuffer()); }
-  const rep = JSON.parse(new TextDecoder().decode(bytes)); if (!rep || rep.v !== 2 || !rep.id || !rep.name || typeof rep.ls !== 'object') throw new Error('내용'); return rep;
+  const rep = JSON.parse(new TextDecoder().decode(bytes)); if (!rep || rep.v !== 2 || !rep.id || !rep.name || typeof rep.ls !== 'object') throw new Error('내용'); if (rep.app && rep.app !== 'concept') throw new Error('다른 앱'); return rep;
 }
 
 /* ---------- 라우터 ---------- */
