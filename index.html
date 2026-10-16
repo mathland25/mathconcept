@@ -1275,7 +1275,7 @@ function viewTeacher() {
   wrap.append(syncBar());
   if (SHEET_CSV && !rec) wrap.append(h('div', { class: 'row' }, h('button', { class: 'btn sm', type: 'button', text: '시트에서 새로고침', onclick: () => sheetPull(true) }), h('span', { class: 'note', style: 'margin:0', text: '열 때 자동으로 가져와요' })));
   if (rec) { wrap.append(...teacherDetail(rec)); return wrap; }
-  const rows = Object.keys(TD.students).map(k => ({ key: k, rep: TD.students[k].rep, a: analyze(TD.students[k].rep) })).sort((a, b) => (a.rep.cls || '').localeCompare(b.rep.cls || '', 'ko') || a.rep.name.localeCompare(b.rep.name, 'ko'));
+  const rows = Object.keys(TD.students).map(k => ({ key: k, rep: TD.students[k].rep, a: analyze(TD.students[k].rep) })).sort((a, b) => ((a.rep.cls ? 0 : 1) - (b.rep.cls ? 0 : 1)) || (a.rep.cls || '').localeCompare(b.rep.cls || '', 'ko', { numeric: true }) || a.rep.name.localeCompare(b.rep.name, 'ko'));
   const ready = LESSONS.filter(l => l.ready);
   const ta = h('textarea', { class: 'in', id: 't-in', rows: '3', placeholder: '학생이 보낸 제출 코드를 붙여 넣으세요. 여러 명이면 줄을 바꿔 한꺼번에 붙여도 돼요.', 'aria-label': '제출 코드' });
   const imp = h('button', { class: 'btn primary', type: 'button', text: '불러오기', onclick: async () => {
@@ -1284,7 +1284,7 @@ function viewTeacher() {
   if (SHEET_CSV && !sheetAt) setTimeout(() => sheetPull(false), 0);
   const importCard = h('section', { class: 'card', style: 'margin-top:12px' }, h('h2', { class: 'h2', text: '제출 코드 불러오기' }), h('p', { class: 'note', text: '자동 연동이 안 되는 학생은 학생 화면 설정에서 만든 코드를 보내면 돼요. ' }), ta, h('div', { class: 'row' }, imp));
   if (!rows.length) return (wrap.append(h('section', { class: 'card' }, h('p', { text: '아직 불러온 학생이 없어요. 학생이 차시를 시작하면 이곳에 나타나요.' })), importCard), wrap);
-  const clsList = [...new Set(rows.map(r => r.rep.cls || '반 없음'))];
+  const clsList = [...new Set(rows.map(r => r.rep.cls || '반 없음'))].sort((x, y) => (x === '반 없음') - (y === '반 없음') || x.localeCompare(y, 'ko', { numeric: true }));
   if (tcls !== '전체' && !clsList.includes(tcls)) tcls = '전체';
   const shown = rows.filter(r => tcls === '전체' || (r.rep.cls || '반 없음') === tcls);
   wrap.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:6px' }, ['전체', ...clsList].map(c => h('button', { class: 'btn sm' + (c === tcls ? ' primary' : ''), type: 'button', text: c === '전체' ? '전체 ' + rows.length + '명' : c + ' · ' + rows.filter(r => (r.rep.cls || '반 없음') === c).length + '명', onclick: () => { tcls = c; render(); } }))));
