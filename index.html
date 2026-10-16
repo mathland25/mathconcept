@@ -966,6 +966,7 @@ const onLn = (p, q, y) => { const t = (y - p[1]) / (q[1] - p[1]); return [p[0] +
 
   const rA = { A: [80, 48], B: [20, 140], C: [220, 140], H: [80, 140] };
   const rb = { fill: [[['A', 'B', 'H'], 'rgba(232,180,90,.5)']] };
+  L.l17.pred.fig = () => F({ w: 240, P: rA, poly: [['A', 'B', 'C']], seg: [['A', 'H', 'r']], rt: [['A', 'B', 'C'], ['H', 'A', 'B']], txt: [[120, 176, '∠A = 90°,  AH ⊥ BC']], h: 184, alt: '∠A = 90°인 직각삼각형 ABC에서 A에서 빗변 BC에 내린 수선 AH' });
   put('l17', 0, () => F({ w: 240, P: rA, poly: [['A', 'B', 'C']], seg: [['A', 'H', 'd']], rt: [['A', 'B', 'C'], ['H', 'A', 'B']], txt: [['A', 'B', 'AB = 6', 26], [52, 128, 'BH = 3'], [150, 166, 'BC = ?']], alt: '직각삼각형 ABC와 수선 AH, AB = 6, BH = 3' }));
   put('l17', 1, () => F({ w: 240, P: rA, poly: [['A', 'B', 'C']], seg: [['A', 'H', 'd']], rt: [['A', 'B', 'C'], ['H', 'A', 'B']], txt: [[52, 128, 'BH = 4'], [150, 166, 'CH = 9'], [112, 98, 'AH = ?']], alt: '직각삼각형 ABC와 수선 AH, BH = 4, CH = 9' }));
   put('l17', 2, () => F({ w: 240, P: rA, poly: [['A', 'B', 'C']], seg: [['A', 'H', 'd']], rt: [['A', 'B', 'C'], ['H', 'A', 'B']], txt: [['A', 'C', 'AC = ?', 26], [150, 128, 'CH = 9'], [120, 172, 'BC = 25']], h: 180, alt: '직각삼각형 ABC와 수선 AH, BC = 25, CH = 9' }));
@@ -1234,7 +1235,7 @@ function stepQ(p, l, s, advance, touch) {
   }
   paint();
   return h('section', { class: 'card' }, h('span', { class: 'chip', text: '핵심 개념 · ' + l.lens }), h('div', { class: 'qbig', text: l.q }),
-    h('p', { class: 'note', text: '먼저 예상해 봐요. 맞아도 틀려도 괜찮아요. 탐색한 뒤에 예상과 비교해 볼 거예요.' }), h('p', { style: 'font-weight:600', text: l.pred.ask }), optsEl, nb);
+    h('p', { class: 'note', text: '먼저 예상해 봐요. 맞아도 틀려도 괜찮아요. 탐색한 뒤에 예상과 비교해 볼 거예요.' }), h('p', { style: 'font-weight:600', text: l.pred.ask }), l.pred.fig ? l.pred.fig() : null, optsEl, nb);
 }
 
 function stepExplore(p, l, s, advance, touch) {
