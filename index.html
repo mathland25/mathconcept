@@ -866,7 +866,7 @@ function wRat(use) {
 
 function wRt(use) {
   const S = { tab: 't1', t: 0, a: 5 };
-  const svg = h('s:svg', { viewBox: '0 0 400 300', role: 'img', 'aria-label': '직각삼각형에서 수선으로 나뉜 삼각형의 닮음 탐색' });
+  const svg = h('s:svg', { viewBox: '0 0 400 346', role: 'img', 'aria-label': '직각삼각형에서 수선으로 나뉜 삼각형의 닮음 탐색' });
   const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), tabsBox = h('div');
   const U = 20, B0 = [60, 150];
   const CFG = {
@@ -889,7 +889,7 @@ function wRt(use) {
     let th = av - au; while (th > Math.PI) th -= 2 * Math.PI; while (th <= -Math.PI) th += 2 * Math.PI;
     const s1 = refl ? Math.min(1, t / .65) : t, s2 = refl ? Math.max(0, (t - .65) / .35) : 0, e = [Math.cos(av), Math.sin(av)];
     const Mv = w => { let w1 = rot(w, th * s1); if (refl) { const k = w1[0] * e[0] + w1[1] * e[1], par = [k * e[0], k * e[1]], pp = [w1[0] - par[0], w1[1] - par[1]], f = 1 - 2 * s2; w1 = [par[0] + f * pp[0], par[1] + f * pp[1]]; } return w1; };
-    const p0 = [Y0[r][0], Y0[r][1] + 140], anc = [p0[0] + (X[r][0] - p0[0]) * t, p0[1] + (X[r][1] - p0[1]) * t];
+    const p0 = [Y0[r][0], Y0[r][1] + 175], anc = [p0[0] + (X[r][0] - p0[0]) * t, p0[1] + (X[r][1] - p0[1]) * t];
     const Yt = Y0.map(p => { const q = Mv([p[0] - Y0[r][0], p[1] - Y0[r][1]]); return [anc[0] + q[0], anc[1] + q[1]]; });
     const cx = cen(X), cy = cen(Yt), ox = cen([G.A, G.B, G.C]);
     svg.replaceChildren(
@@ -897,6 +897,7 @@ function wRt(use) {
       seg(G.A, G.H, { stroke: 'var(--ink3, var(--ink2))', 'stroke-dasharray': '5 4', 'stroke-width': 1.5 }),
       poly(X, { fill: 'var(--blue-soft)', 'fill-opacity': .75, stroke: 'var(--blue)', 'stroke-width': 2.5 }),
       poly(Yt, { fill: 'var(--red-soft)', 'fill-opacity': .7, stroke: 'var(--red)', 'stroke-width': 2.5 }),
+      ...['A', 'B', 'C', 'H'].filter(n => !cfg.X.includes(n)).flatMap(n => { const q = n === 'H' ? [G.H[0], G.H[1] + 17] : away(G[n], ox, 16); return [dot(G[n], 4, n === 'H' ? 'var(--blue)' : 'var(--ink2)'), colored(q[0], q[1], n, n === 'H' ? 'var(--blue)' : 'var(--ink2)')]; }),
       rtm(X[r], X[(r + 1) % 3], X[(r + 2) % 3]), rtm(Yt[r], Yt[(r + 1) % 3], Yt[(r + 2) % 3]),
       ...X.map((p, i) => { const q = away(p, cx, 15); return colored(q[0], q[1], cfg.X[i], 'var(--blue)'); }),
       ...Yt.map((p, i) => { const q = i === r && t > .85 ? away(p, cy, -22) : away(p, cy, 15); return colored(q[0], q[1] + (i === r && t > .85 ? 4 : 0), cfg.Y[i], 'var(--red)'); }));
