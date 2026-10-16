@@ -358,17 +358,17 @@ LESSONS.push(
   ],
   gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
     { pre: '△ABC와 △HBA는 직각 하나와 ∠B가 같으므로', opts: ['SSS 닮음', 'SAS 닮음', 'AA 닮음'], ans: 2, post: '이다.' },
-    { pre: '△ABC ∽ △HBA이므로 BC : AB = AB :', opts: ['HB', 'HA', 'AC'], ans: 0, post: '이다.' },
-    { pre: '따라서 AB² =', opts: ['BH × BC', 'BH × HC', 'BC²'], ans: 0, post: '이다.' },
+    { pre: '△ABC ∽ △HBA이므로 BC : AB = AB :', opts: ['BH', 'AH', 'AC'], ans: 0, post: '이다.' },
+    { pre: '따라서 AB² =', opts: ['BH × BC', 'BH × CH', 'BC²'], ans: 0, post: '이다.' },
     { pre: '△ABH ∽ △CAH이므로 BH : AH = AH : CH이고, AH² = BH ×', opts: ['CH', 'BC', 'AB'], ans: 0, post: '이다.' }
   ] },
   sum: { title: '직각삼각형의 닮음', defs: [['수선의 발', '한 점에서 직선에 수선을 그을 때 직선과 만나는 점 (여기서는 H)'], ['빗변', '직각의 맞은편 변 (여기서는 BC)']],
-    points: ['∠A = 90°인 직각삼각형 ABC에서 A에서 빗변 BC에 내린 수선의 발을 H라 하면 △ABC ∽ △HBA ∽ △HAC (AA 닮음)이다.', 'AB² = BH × BC,  AC² = CH × CB,  AH² = BH × CH', '비를 세울 때는 직각 꼭짓점부터 같은 방향으로 맞추고, 같은 자리에 오는 꼭짓점을 대응시킨다.'],
+    points: ['∠A = 90°인 직각삼각형 ABC에서 A에서 빗변 BC에 내린 수선의 발을 H라 하면 △ABC ∽ △HBA ∽ △HAC (AA 닮음)이다.', 'AB² = BH × BC,  AC² = CH × BC,  AH² = BH × CH', '비를 세울 때는 직각 꼭짓점부터 같은 방향으로 맞추고, 같은 자리에 오는 꼭짓점을 대응시킨다.'],
     note: '닮음 기호는 대응하는 꼭짓점 순서대로 써야 해요. △ABC ∽ △HBA처럼 A↔H, B↔B, C↔A를 순서대로 쓰면 비도 바르게 세울 수 있어요.' },
   checks: [
     { q: '∠A = 90°인 직각삼각형 ABC에서 AH ⊥ BC입니다. AB = 6 cm, BH = 3 cm일 때 BC의 길이는?', unit: 'cm', ans: 12, hint: 'AB² = BH × BC를 이용해요.', why: '36 = 3 × BC이므로 BC = 12 cm' },
     { q: '∠A = 90°인 직각삼각형 ABC에서 AH ⊥ BC입니다. BH = 4 cm, CH = 9 cm일 때 AH의 길이는?', unit: 'cm', ans: 6, hint: 'AH² = BH × CH를 이용해요.', why: 'AH² = 4 × 9 = 36이므로 AH = 6 cm' },
-    { q: '∠A = 90°인 직각삼각형 ABC에서 AH ⊥ BC입니다. BC = 25 cm, CH = 9 cm일 때 AC의 길이는?', unit: 'cm', ans: 15, hint: 'AC² = CH × CB를 이용해요.', why: 'AC² = 9 × 25 = 225이므로 AC = 15 cm' },
+    { q: '∠A = 90°인 직각삼각형 ABC에서 AH ⊥ BC입니다. BC = 25 cm, CH = 9 cm일 때 AC의 길이는?', unit: 'cm', ans: 15, hint: 'AC² = CH × BC를 이용해요.', why: 'AC² = 9 × 25 = 225이므로 AC = 15 cm' },
     { q: '그림에서 △ABH와 닮은 삼각형을 대응하는 꼭짓점 순서대로 바르게 쓴 것은? (∠A = 90°, AH ⊥ BC)', opts: ['△ABH ∽ △CAH', '△ABH ∽ △ACH', '△ABH ∽ △HAC'], ans: 0, hint: '직각 꼭짓점 H끼리 대응시키고, ∠BAH와 같은 크기의 ∠C를 찾아봐요.', why: '직각 H ↔ H, ∠BAH = ∠C이므로 A ↔ C, B ↔ A로 대응해요. 따라서 △ABH ∽ △CAH예요.' }
   ],
   refl: ['직각삼각형에서 수선으로 나뉜 삼각형들이 닮음이 되는 까닭을 "같은 각"이라는 말을 써서 설명해 보세요.', GEN_REFL] },
@@ -870,8 +870,8 @@ function wRt(use) {
   const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), tabsBox = h('div');
   const U = 20, B0 = [60, 150];
   const CFG = {
-    t1: { X: ['A', 'B', 'C'], Y: ['H', 'B', 'A'], r: 0, rel: ['BC', 'AB', 'HB'], eq: ['AB²', 'BH × BC'] },
-    t2: { X: ['A', 'B', 'C'], Y: ['H', 'A', 'C'], r: 0, rel: ['BC', 'AC', 'HC'], eq: ['AC²', 'CH × CB'] },
+    t1: { X: ['A', 'B', 'C'], Y: ['H', 'B', 'A'], r: 0, rel: ['BC', 'AB', 'BH'], eq: ['AB²', 'BH × BC'] },
+    t2: { X: ['A', 'B', 'C'], Y: ['H', 'A', 'C'], r: 0, rel: ['BC', 'AC', 'CH'], eq: ['AC²', 'CH × BC'] },
     t3: { X: ['C', 'A', 'H'], Y: ['A', 'B', 'H'], r: 2, rel: ['BH', 'AH', 'CH'], eq: ['AH²', 'BH × CH'] }
   };
   const geo = () => { const a = S.a, b = 13 - a, hh = Math.sqrt(a * b), H = [B0[0] + a * U, 150]; return { B: B0, C: [B0[0] + 13 * U, 150], H, A: [H[0], 150 - hh * U], a, b, hh }; };
@@ -902,7 +902,7 @@ function wRt(use) {
       ...X.map((p, i) => { const q = away(p, cx, 15); return colored(q[0], q[1], cfg.X[i], 'var(--blue)'); }),
       ...Yt.map((p, i) => { const q = i === r && t > .85 ? away(p, cy, -22) : away(p, cy, 15); return colored(q[0], q[1] + (i === r && t > .85 ? 4 : 0), cfg.Y[i], 'var(--red)'); }));
     const L = cfg.rel.map(n => len(G, n)), f = x => r1(Math.round(x * 10) / 10), g2 = x => String(Math.round(x * 100) / 100);
-    const e1 = L[1] * L[1], e2 = cfg.eq[1] === 'BH × BC' ? G.a * 13 : cfg.eq[1] === 'CH × CB' ? G.b * 13 : G.a * G.b;
+    const e1 = L[1] * L[1], e2 = cfg.eq[1] === 'BH × BC' ? G.a * 13 : cfg.eq[1] === 'CH × BC' ? G.b * 13 : G.a * G.b;
     const e1v = cfg.eq[0] === 'AB²' ? len(G, 'AB') ** 2 : cfg.eq[0] === 'AC²' ? len(G, 'AC') ** 2 : len(G, 'AH') ** 2;
     read.replaceChildren(...[[cfg.rel[0] + ' = ' + f(L[0]) + ' cm', 0], [cfg.rel[1] + ' = ' + f(L[1]) + ' cm', 0], [cfg.rel[2] + ' = ' + f(L[2]) + ' cm', 0],
       [cfg.rel[0] + ' ÷ ' + cfg.rel[1] + ' = ' + g2(L[0] / L[1]), 1], [cfg.rel[1] + ' ÷ ' + cfg.rel[2] + ' = ' + g2(L[1] / L[2]), 1],
