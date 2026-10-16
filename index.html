@@ -1176,8 +1176,7 @@ function viewWelcome() {
     h('section', { class: 'card' }, h('h1', { class: 'h1', text: '중2 수학 2학기' }), h('p', { class: 'note', text: '개념을 직접 만져 보고, 내 말로 정리하는 노트예요.' }),
       h('div', { class: 'fieldrow' }, h('div', {}, h('label', { class: 'l', for: 'nm', text: '이름' }), name), h('div', {}, h('label', { class: 'l', for: 'cl', text: '반' }), cls)),
       h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'button', text: '시작하기', onclick: go1 }))),
-    list, h('div', { id: 'syncslot' }, syncBar()),
-    h('button', { class: 'link', onclick: () => go('teacher'), text: '교사용 화면' }));
+    list, h('div', { id: 'syncslot' }, syncBar()));
 }
 
 /* ---------- 홈 ---------- */
@@ -1194,7 +1193,7 @@ function viewHome(p) {
       h('div', { class: 'lgrid' }, LESSONS.filter(l => l.unit === u.id).map(l => lcard(p, l)))))),
     h('div', { id: 'syncslot' }, syncBar()),
     submitCard(p),
-    h('div', { class: 'row' }, h('a', { class: 'btn ghost', href: OPS_URL, target: '_blank', rel: 'noopener', text: '연산 연습하러 가기 ↗' }), h('button', { class: 'link', onclick: () => go('teacher'), text: '교사용 화면' })));
+    h('div', { class: 'row' }, h('a', { class: 'btn ghost', href: OPS_URL, target: '_blank', rel: 'noopener', text: '연산 연습하러 가기 ↗' })));
 }
 function submitCard(p) {
   const out = h('textarea', { class: 'in', rows: '3', readonly: true, hidden: true, 'aria-label': '제출 코드' });
