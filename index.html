@@ -931,11 +931,29 @@ const STEPS = ['질문', '탐색', '일반화', '정리', '확인', '내 말로'
 const FORM = { action: 'https://docs.google.com/forms/d/e/1FAIpQLSfAkQAEwjacgFf4YnDSVAsvu6KTlMedfOyeA4vDSFv3-7luBQ/formResponse', entry: 'entry.1381249599' };
 const OPS_URL = 'https://claude.ai/artifact/CKBVf3g7ThJ4NUVjWu5oST';
 let DB = { v: 1, cur: null, profiles: [] }, TD = { v: 1, students: {} };
-let view = 'home', vparam = null, curStep = 0, tsel = null, toastT = null;
+let view = 'home', vparam = null, curStep = 0, tsel = null, tcls = '전체', toastT = null;
 const $ = (s, r = document) => r.querySelector(s);
 const pct = v => Math.round(v * 100);
 const today = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
-function load() { try { const o = JSON.parse(localStorage.getItem(KEY)); if (o && o.profiles) DB = o; } catch (e) { } try { const o = JSON.parse(localStorage.getItem(TKEY)); if (o && o.students) TD = o; } catch (e) { } }
+/* 학생 식별: 이름+반이 같으면 같은 학생으로 보고 기록을 합친다 */
+const skey = r => String(r.name || '').replace(/\s+/g, '').toLowerCase() + '|' + String(r.cls || '').replace(/\s+/g, '').replace(/[학년반]/g, '').replace(/[-–—.]/g, '-').toLowerCase();
+function mergeLs(oldR, newR) {
+  const out = {}, ids = new Set([...Object.keys(oldR.ls || {}), ...Object.keys(newR.ls || {})]), newer = newR.at >= oldR.at ? newR : oldR;
+  ids.forEach(id => { const x = oldR.ls[id], y = newR.ls[id]; if (!x || !y) { out[id] = x || y; return; }
+    if ((x.d || 0) !== (y.d || 0)) out[id] = x.d ? x : y; else if ((x.s || 0) !== (y.s || 0)) out[id] = (x.s || 0) > (y.s || 0) ? x : y; else out[id] = newer.ls[id]; });
+  return out;
+}
+function addRep(rep) {
+  rep.name = String(rep.name).replace(/\s+/g, ''); rep.cls = String(rep.cls || '').replace(/\s+/g, '');
+  const k = skey(rep), ex = TD.students[k];
+  if (!ex) { TD.students[k] = { rep, fb: '' }; return 'add'; }
+  const nl = mergeLs(ex.rep, rep), newer = rep.at >= ex.rep.at ? rep : ex.rep, merged = { ...newer, ls: nl, at: Math.max(ex.rep.at, rep.at) };
+  if (JSON.stringify(nl) === JSON.stringify(ex.rep.ls) && merged.at === ex.rep.at) return null;
+  if (JSON.stringify(nl) === JSON.stringify(ex.rep.ls)) { ex.rep.at = merged.at; return null; }
+  ex.rep = merged; return 'upd';
+}
+function rekeyTD() { const old = TD.students; TD.students = {}; Object.values(old).forEach(x => { const k = skey(x.rep), ex = TD.students[k]; if (!ex) TD.students[k] = x; else { addRep(x.rep); if (x.fb && !TD.students[k].fb) TD.students[k].fb = x.fb; } }); }
+function load() { try { const o = JSON.parse(localStorage.getItem(KEY)); if (o && o.profiles) DB = o; } catch (e) { } try { const o = JSON.parse(localStorage.getItem(TKEY)); if (o && o.students) TD = o; } catch (e) { } rekeyTD(); }
 function save() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) { } }
 function tsave() { try { localStorage.setItem(TKEY, JSON.stringify(TD)); } catch (e) { } }
 const me = () => DB.profiles.find(p => p.id === DB.cur) || null;
@@ -967,7 +985,7 @@ const Sync = {
         let changed = false;
         snap.docs.forEach(d => { const ps = (d.data() || {}).profiles || {};
           Object.keys(ps).forEach(pid => { const rep = ps[pid]; if (!rep || rep.v !== 2 || !rep.id || !rep.name || typeof rep.ls !== 'object') return;
-            const ex = TD.students[rep.id]; if (!ex || ex.rep.at < rep.at) { TD.students[rep.id] = { rep, fb: ex ? ex.fb : '' }; changed = true; } }); });
+            if (addRep(rep)) changed = true; }); });
         this.last = Date.now(); if (changed) tsave(); refreshSync();
       }, e => { this.state = 'err'; this.msg = '학생 기록을 읽지 못했어요 (' + (e && e.code) + ')'; refreshSync(); });
     } catch (e) { }
@@ -1019,7 +1037,7 @@ const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQyOJTJaDyblG
 let sheetBusy = false, sheetAt = 0;
 async function importCodes(text) {
   const codes = text.match(/GN2z?\.[A-Za-z0-9_-]+/g) || []; let add = 0, upd = 0, bad = 0;
-  for (const c of codes) { try { const rep = await unpackReport(c), ex = TD.students[rep.id]; if (ex && ex.rep.at >= rep.at) continue; TD.students[rep.id] = { rep, fb: ex ? ex.fb : '' }; ex ? upd++ : add++; } catch (e) { bad++; } }
+  for (const c of codes) { try { const r = addRep(await unpackReport(c)); if (r === 'add') add++; else if (r === 'upd') upd++; } catch (e) { bad++; } }
   if (add || upd) tsave(); return { n: codes.length, add, upd, bad };
 }
 async function sheetPull(manual) {
@@ -1249,7 +1267,7 @@ function viewTeacher() {
   wrap.append(syncBar());
   if (SHEET_CSV && !rec) wrap.append(h('div', { class: 'row' }, h('button', { class: 'btn sm', type: 'button', text: '시트에서 새로고침', onclick: () => sheetPull(true) }), h('span', { class: 'note', style: 'margin:0', text: '열 때 자동으로 가져와요' })));
   if (rec) { wrap.append(...teacherDetail(rec)); return wrap; }
-  const rows = Object.values(TD.students).map(x => ({ rep: x.rep, a: analyze(x.rep) })).sort((a, b) => (a.rep.cls || '').localeCompare(b.rep.cls || '', 'ko') || a.rep.name.localeCompare(b.rep.name, 'ko'));
+  const rows = Object.keys(TD.students).map(k => ({ key: k, rep: TD.students[k].rep, a: analyze(TD.students[k].rep) })).sort((a, b) => (a.rep.cls || '').localeCompare(b.rep.cls || '', 'ko') || a.rep.name.localeCompare(b.rep.name, 'ko'));
   const ready = LESSONS.filter(l => l.ready);
   const ta = h('textarea', { class: 'in', id: 't-in', rows: '3', placeholder: '학생이 보낸 제출 코드를 붙여 넣으세요. 여러 명이면 줄을 바꿔 한꺼번에 붙여도 돼요.', 'aria-label': '제출 코드' });
   const imp = h('button', { class: 'btn primary', type: 'button', text: '불러오기', onclick: async () => {
@@ -1258,12 +1276,20 @@ function viewTeacher() {
   if (SHEET_CSV && !sheetAt) setTimeout(() => sheetPull(false), 0);
   const importCard = h('section', { class: 'card', style: 'margin-top:12px' }, h('h2', { class: 'h2', text: '제출 코드 불러오기' }), h('p', { class: 'note', text: '자동 연동이 안 되는 학생은 학생 화면 설정에서 만든 코드를 보내면 돼요. ' }), ta, h('div', { class: 'row' }, imp));
   if (!rows.length) return (wrap.append(h('section', { class: 'card' }, h('p', { text: '아직 불러온 학생이 없어요. 학생이 차시를 시작하면 이곳에 나타나요.' })), importCard), wrap);
-  wrap.append(h('div', { class: 'tscroll card' }, h('table', { class: 'mx' }, h('thead', {}, h('tr', {}, h('th', { text: '학생' }), ready.map(l => h('th', { title: l.title, text: lno(l) })), h('th', { text: '첫 시도 정답률' }))),
-    h('tbody', {}, rows.map(r => h('tr', { onclick: () => { tsel = r.rep.id; render(); } }, h('td', {}, h('b', { text: r.rep.name }), ' ', h('span', { class: 'chip gray', text: r.rep.cls || '-' })),
-      r.a.rows.map(x => h('td', {}, !x.r ? h('span', { class: 'cell n', text: '–' }) : x.r.d ? h('span', { class: 'cell d', text: '✓ ' + x.r.c[0] + '/' + x.r.c[1] }) : h('span', { class: 'cell p', text: (Math.min(x.r.s, 5) + 1) + '/6' }))),
-      h('td', { text: r.a.tot ? pct(r.a.ok / r.a.tot) + '%' : '–' })))))),
-    elTable(rows.map(r => r.a)),
-    h('p', { class: 'note', text: '✓는 차시 완료(확인 문제 첫 시도 정답 수), 노란 칸은 진행 중인 단계예요.' }), importCard);
+  const clsList = [...new Set(rows.map(r => r.rep.cls || '반 없음'))];
+  if (tcls !== '전체' && !clsList.includes(tcls)) tcls = '전체';
+  const shown = rows.filter(r => tcls === '전체' || (r.rep.cls || '반 없음') === tcls);
+  wrap.append(h('div', { class: 'row', style: 'flex-wrap:wrap;gap:6px' }, ['전체', ...clsList].map(c => h('button', { class: 'btn sm' + (c === tcls ? ' primary' : ''), type: 'button', text: c === '전체' ? '전체 ' + rows.length + '명' : c + ' · ' + rows.filter(r => (r.rep.cls || '반 없음') === c).length + '명', onclick: () => { tcls = c; render(); } }))));
+  (tcls === '전체' ? clsList : [tcls]).forEach(c => { const g = shown.filter(r => (r.rep.cls || '반 없음') === c); if (!g.length) return;
+    const done = g.reduce((s, r) => s + r.a.done, 0), tot = g.reduce((s, r) => s + r.a.tot, 0), ok = g.reduce((s, r) => s + r.a.ok, 0);
+    wrap.append(h('section', { class: 'card', style: 'margin-top:12px' }, h('div', { class: 'row', style: 'margin:0 0 8px;justify-content:space-between' }, h('b', { text: c + ' (' + g.length + '명)' }), h('span', { class: 'note', style: 'margin:0', text: '완료 ' + done + '/' + g.length * ready.length + ' 차시 · 첫 시도 ' + (tot ? pct(ok / tot) + '%' : '–') })),
+      h('div', { class: 'tscroll' }, h('table', { class: 'mx' }, h('thead', {}, h('tr', {}, h('th', { text: '학생' }), ready.map(l => h('th', { title: l.title, text: lno(l) })), h('th', { text: '첫 시도 정답률' }))),
+        h('tbody', {}, g.map(r => h('tr', { onclick: () => { tsel = r.key; render(); } }, h('td', {}, h('b', { text: r.rep.name })),
+          r.a.rows.map(x => h('td', {}, !x.r ? h('span', { class: 'cell n', text: '–' }) : x.r.d ? h('span', { class: 'cell d', text: '✓ ' + x.r.c[0] + '/' + x.r.c[1] }) : h('span', { class: 'cell p', text: (Math.min(x.r.s, 5) + 1) + '/6' }))),
+          h('td', { text: r.a.tot ? pct(r.a.ok / r.a.tot) + '%' : '–' }))))))));
+  });
+  wrap.append(elTable(shown.map(r => r.a)),
+    h('p', { class: 'note', text: '이름과 반이 같으면 같은 학생으로 보고 기록을 이어서 쌓아요. ✓는 차시 완료(확인 문제 첫 시도 정답 수), 노란 칸은 진행 중인 단계예요.' }), importCard);
   return wrap;
 }
 function teacherDetail(rec) {
