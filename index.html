@@ -1131,9 +1131,9 @@ async function unpackReport(code) {
 const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQyOJTJaDyblGIOZwX4RYLuB9S9DDGTJkszb-Kz7tVMbLt_6-SDL8XY2_kAk3oPToZRu6sZVddAVKz4/pub?gid=93813440&single=true&output=csv';
 let sheetBusy = false, sheetAt = 0;
 async function importCodes(text) {
-  const codes = text.match(/GN2z?\.[A-Za-z0-9_-]+/g) || []; let add = 0, upd = 0, bad = 0;
-  for (const c of codes) { try { const r = addRep(await unpackReport(c)); if (r === 'add') add++; else if (r === 'upd') upd++; } catch (e) { bad++; } }
-  if (add || upd) tsave(); return { n: codes.length, add, upd, bad };
+  const codes = text.match(/GN2z?\.[A-Za-z0-9_-]+/g) || []; let add = 0, upd = 0, bad = 0, other = 0;
+  for (const c of codes) { try { const r = addRep(await unpackReport(c)); if (r === 'add') add++; else if (r === 'upd') upd++; } catch (e) { if (e && e.message === '다른 앱') other++; else bad++; } }   // 다른 앱(연산 등) 코드는 읽지 못함으로 세지 않고 건너뛴다
+  if (add || upd) tsave(); return { n: codes.length - other, add, upd, bad, other };
 }
 async function sheetPull(manual) {
   if (!SHEET_CSV || sheetBusy) return; sheetBusy = true;
