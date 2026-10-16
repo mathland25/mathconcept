@@ -945,12 +945,20 @@ function mergeLs(oldR, newR) {
 }
 function addRep(rep) {
   rep.name = String(rep.name).replace(/\s+/g, ''); rep.cls = String(rep.cls || '').replace(/\s+/g, '');
-  const k = skey(rep), ex = TD.students[k];
+  let k = skey(rep); const mv = TD.moves && TD.moves[k]; if (mv && TD.students[mv]) { k = mv; rep.cls = TD.students[mv].rep.cls; }
+  const ex = TD.students[k];
   if (!ex) { TD.students[k] = { rep, fb: '' }; return 'add'; }
   const nl = mergeLs(ex.rep, rep), newer = rep.at >= ex.rep.at ? rep : ex.rep, merged = { ...newer, ls: nl, at: Math.max(ex.rep.at, rep.at) };
   if (JSON.stringify(nl) === JSON.stringify(ex.rep.ls) && merged.at === ex.rep.at) return null;
   if (JSON.stringify(nl) === JSON.stringify(ex.rep.ls)) { ex.rep.at = merged.at; return null; }
   ex.rep = merged; return 'upd';
+}
+function moveStudent(key, cls) {
+  const x = TD.students[key]; cls = String(cls || '').replace(/\s+/g, ''); if (!x || !cls) return null;
+  const rep = { ...x.rep, cls }, nk = skey(rep); if (nk === key) return key;
+  delete TD.students[key]; (TD.moves = TD.moves || {})[key] = nk;
+  const ex = TD.students[nk]; if (!ex) TD.students[nk] = { rep, fb: x.fb }; else { addRep(rep); if (x.fb && !ex.fb) ex.fb = x.fb; }
+  tsave(); return nk;
 }
 function rekeyTD() { const old = TD.students; TD.students = {}; Object.values(old).forEach(x => { const k = skey(x.rep), ex = TD.students[k]; if (!ex) TD.students[k] = x; else { addRep(x.rep); if (x.fb && !TD.students[k].fb) TD.students[k].fb = x.fb; } }); }
 function load() { try { const o = JSON.parse(localStorage.getItem(KEY)); if (o && o.profiles) DB = o; } catch (e) { } try { const o = JSON.parse(localStorage.getItem(TKEY)); if (o && o.students) TD = o; } catch (e) { } rekeyTD(); }
@@ -1295,6 +1303,9 @@ function viewTeacher() {
 function teacherDetail(rec) {
   const rep = rec.rep, a = analyze(rep), out = [];
   out.push(h('section', { class: 'card' }, h('div', { class: 'row', style: 'margin:0' }, h('span', { class: 'chip gray', text: rep.cls || '반 없음' }), h('span', { class: 'note', style: 'margin:0', text: '완료 ' + a.done + '/' + a.rows.length + ' · 첫 시도 ' + (a.tot ? pct(a.ok / a.tot) + '%' : '–') }))));
+  const mvIn = h('input', { class: 'in', placeholder: '예: 2-1', maxlength: '6', style: 'max-width:110px', 'aria-label': '옮길 반' });
+  out.push(h('section', { class: 'card', style: 'margin-top:12px' }, h('div', { class: 'row', style: 'margin:0;gap:8px;flex-wrap:wrap' }, h('b', { text: '반 옮기기' }), mvIn, h('button', { class: 'btn sm', type: 'button', text: '옮기기', onclick: () => { const nk = moveStudent(tsel, mvIn.value); if (!nk) { toast('옮길 반을 입력해 주세요'); return; } tsel = nk; render(); toast('반을 옮겼어요. 이 학생이 이전 반으로 다시 제출해도 새 반에 합쳐져요'); } })),
+    h('p', { class: 'note', text: '학생이 다음에 2-1반으로 접속해 제출해도 같은 이름이면 이 기록과 합쳐져요.' })));
   a.rows.forEach(x => { const r = x.r;
     out.push(h('section', { class: 'card', style: 'margin-top:12px' }, h('div', { class: 'row', style: 'margin:0;justify-content:space-between' }, h('div', {}, h('b', { text: lno(x.l) + ' · ' + x.l.title }), x.l.el ? h('div', { class: 'note', style: 'margin:2px 0 0;font-size:12px', text: '평가 요소 · ' + x.l.el }) : null), !r ? h('span', { class: 'chip gray', text: '미시작' }) : r.d ? h('span', { class: 'chip green', text: '완료 · 확인 ' + r.c[0] + '/' + r.c[1] }) : h('span', { class: 'chip gold', text: '진행 ' + (Math.min(r.s, 5) + 1) + '/6' })),
       r && r.p ? h('div', { class: 'refl' }, h('small', { text: '처음 예상' }), r.p) : null,
