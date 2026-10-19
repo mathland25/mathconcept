@@ -147,6 +147,16 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.6}
 
 .figbox{margin:8px 0 12px;max-width:340px}.qfig{width:100%;height:auto;display:block;background:var(--paper2);border:1px solid var(--line);border-radius:10px}.figcap{font-size:11px;color:var(--ink2);margin-top:4px}
 
+.pad{display:grid;gap:6px}
+.padhd{font-size:.86rem;color:var(--muted,#5b6470);font-weight:600}
+.padwrap{border:1.5px dashed #b9c4cf;border-radius:12px;overflow:hidden;background:#fff linear-gradient(#e8eef3 1px,transparent 1px) 0 0/100% 28px}
+.padcv{display:block;width:100%;aspect-ratio:600/360;touch-action:none;cursor:crosshair}
+.padtools{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pt{border:1.5px solid #c9d3dc;background:#fff;border-radius:10px;padding:6px 10px;font:inherit;font-size:.82rem;min-height:36px}
+.pt.on{border-color:#1d5fa0;background:#e7f0f9;font-weight:700}
+.pt.dot{width:36px;padding:0;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px #c9d3dc}
+.pt.dot.on{box-shadow:0 0 0 2.5px #1d5fa0}
+
 </style>
 <div id="app"></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -1288,6 +1298,36 @@ function stepSum(p, l, s, advance) {
     nextBtn('확인 문제 풀기', true, () => advance(Math.max(s.step, 4))));
 }
 
+
+/* ---------- 풀이 쓰기(필기) ---------- */
+const PW = 600, PH = 360, PCOL = { k: '#1f2937', b: '#1d5fa0', r: '#c0392b' };
+function inkPad(x) {
+  x.ink = x.ink || []; const st = { col: 'k', era: false };
+  const cv = h('canvas', { class: 'padcv', width: PW * 2, height: PH * 2, 'aria-label': '풀이 쓰는 칸' }), g = cv.getContext('2d');
+  function stroke(s) {
+    g.save(); g.scale(2, 2); g.lineCap = 'round'; g.lineJoin = 'round';
+    g.globalCompositeOperation = s.e ? 'destination-out' : 'source-over'; g.strokeStyle = PCOL[s.c] || PCOL.k; g.lineWidth = s.e ? 22 : 2.6;
+    const p = s.p; g.beginPath(); g.moveTo(p[0], p[1]); if (p.length === 2) g.lineTo(p[0] + .1, p[1]); for (let i = 2; i < p.length; i += 2) g.lineTo(p[i], p[i + 1]); g.stroke(); g.restore();
+  }
+  const redraw = () => { g.clearRect(0, 0, PW * 2, PH * 2); x.ink.forEach(stroke); };
+  let cur = null;
+  const pos = e => { const r = cv.getBoundingClientRect(); return [Math.round((e.clientX - r.left) / r.width * PW), Math.round((e.clientY - r.top) / r.height * PH)]; };
+  cv.addEventListener('pointerdown', e => { e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (_) { } cur = { c: st.col, e: st.era, p: pos(e) }; x.ink.push(cur); stroke(cur); });
+  cv.addEventListener('pointermove', e => { if (!cur) return; e.preventDefault(); const q = pos(e), p = cur.p, n = p.length; if (Math.abs(q[0] - p[n - 2]) + Math.abs(q[1] - p[n - 1]) < 2) return; p.push(q[0], q[1]); redraw(); });
+  const end = () => { if (cur) { cur = null; save(); } };
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end); cv.addEventListener('pointerleave', end);
+  const tools = h('div', { class: 'padtools' });
+  const btn = (txt, cls, fn) => h('button', { type: 'button', class: 'pt ' + (cls || ''), text: txt, onclick: fn });
+  function bar() {
+    tools.replaceChildren(
+      ...['k', 'b', 'r'].map(c => h('button', { type: 'button', class: 'pt dot' + (!st.era && st.col === c ? ' on' : ''), style: 'background:' + PCOL[c], 'aria-label': { k: '검정', b: '파랑', r: '빨강' }[c] + ' 펜', onclick: () => { st.col = c; st.era = false; bar(); } })),
+      btn('지우개', st.era ? 'on' : '', () => { st.era = !st.era; bar(); }),
+      btn('되돌리기', '', () => { x.ink.pop(); redraw(); save(); }),
+      btn('모두 지우기', '', () => { if (!x.ink.length || confirm('쓴 풀이를 모두 지울까요?')) { x.ink.length = 0; redraw(); save(); } }));
+  }
+  bar(); redraw();
+  return h('div', { class: 'pad' }, h('div', { class: 'padhd', text: '✏️ 풀이 쓰기 (손가락이나 펜으로 써 보세요)' }), h('div', { class: 'padwrap' }, cv), tools);
+}
 function normNum(str) { const t = String(str).replace(/[−–]/g, '-').replace(/,/g, '').trim(); const m = /^-?\d+(\.\d+)?/.exec(t); return m ? parseFloat(m[0]) : NaN; }
 function stepCheck(p, l, s, advance, touch) {
   const list = h('div', { class: 'checks' }), nb = h('div');
@@ -1301,7 +1341,7 @@ function stepCheck(p, l, s, advance, touch) {
       else { const inp = h('input', { class: 'in', id: 'chk' + i, inputmode: 'decimal', autocomplete: 'off', 'aria-label': '답', value: x.val || '', disabled: x.ok || x.show });
         inp.addEventListener('keydown', e => { if (e.key === 'Enter') submit(i, inp.value); });
         ctrl = h('div', { class: 'ans' }, inp, c.unit ? h('span', { text: c.unit }) : null, h('button', { class: 'btn', type: 'button', disabled: x.ok || x.show, text: '확인', onclick: () => submit(i, inp.value) })); }
-      return h('div', { class: 'card chk' }, h('div', { class: 'qt', text: (i + 1) + '. ' + c.q }), c.fig ? c.fig() : null, ctrl,
+      return h('div', { class: 'card chk' }, h('div', { class: 'qt', text: (i + 1) + '. ' + c.q }), c.fig ? c.fig() : null, inkPad(x), ctrl,
         x.ok ? h('div', { class: 'fb good', text: '정답! ' + c.why }) : x.show ? h('div', { class: 'fb hint', text: '정답 확인: ' + c.why }) : x.tries ? h('div', { class: 'fb bad', text: '아쉬워요. 힌트: ' + c.hint }) : null,
         !x.ok && !x.show && x.tries >= 2 ? h('button', { class: 'btn sm', type: 'button', text: '정답 보기', onclick: () => { x.show = true; x.ok = true; touch(); paint(); } }) : null);
     }));
