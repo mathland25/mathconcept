@@ -150,12 +150,17 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.6}
 .pad{display:grid;gap:6px}
 .padhd{font-size:.86rem;color:var(--muted,#5b6470);font-weight:600}
 .padwrap{border:1.5px dashed #b9c4cf;border-radius:12px;overflow:hidden;background:#fff linear-gradient(#e8eef3 1px,transparent 1px) 0 0/100% 28px}
-.padcv{display:block;width:100%;aspect-ratio:600/360;touch-action:none;cursor:crosshair}
+.padcv{display:block;width:100%;aspect-ratio:600/440;touch-action:none;cursor:crosshair}
 .padtools{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .pt{border:1.5px solid #c9d3dc;background:#fff;border-radius:10px;padding:6px 10px;font:inherit;font-size:.82rem;min-height:36px}
 .pt.on{border-color:#1d5fa0;background:#e7f0f9;font-weight:700}
 .pt.dot{width:36px;padding:0;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px #c9d3dc}
 .pt.dot.on{box-shadow:0 0 0 2.5px #1d5fa0}
+@media (min-width:700px){
+  .chk{grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);column-gap:18px;align-items:start}
+  .chk>*{grid-column:1}
+  .chk>.pad{grid-column:2;grid-row:1/span 8;position:sticky;top:12px}
+}
 
 </style>
 <div id="app"></div>
@@ -1303,7 +1308,7 @@ function stepSum(p, l, s, advance) {
 
 
 /* ---------- 풀이 쓰기(필기) ---------- */
-const PW = 600, PH = 360, PCOL = { k: '#1f2937', b: '#1d5fa0', r: '#c0392b' };
+const PW = 600, PH = 440, PCOL = { k: '#1f2937', b: '#1d5fa0', r: '#c0392b' };
 function inkPad(x) {
   x.ink = x.ink || []; const st = { col: 'k', era: false };
   const cv = h('canvas', { class: 'padcv', width: PW * 2, height: PH * 2, 'aria-label': '풀이 쓰는 칸' }), g = cv.getContext('2d');
