@@ -162,6 +162,19 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.6}
   .chk>.pad{grid-column:2;grid-row:1/span 8;position:sticky;top:12px}
 }
 
+.bcv{position:fixed;left:0;top:0;z-index:40;touch-action:none;pointer-events:none;display:none;cursor:crosshair}
+.bcv.on{display:block}
+.bbar{position:fixed;left:0;right:0;margin:0 auto;width:max-content;bottom:12px;z-index:45;display:none;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 16px);padding:8px 10px;background:rgba(255,255,255,.96);border:1.5px solid #c9d3dc;border-radius:16px;box-shadow:0 6px 24px rgba(0,0,0,.18)}
+.bbar.on{display:flex}
+.bt{border:1.5px solid #c9d3dc;background:#fff;border-radius:10px;padding:6px 12px;font:inherit;font-size:.95rem;min-height:44px}
+.bt.on{border-color:#1d5fa0;background:#e7f0f9;font-weight:700}
+.bt.x{background:#fdecea;border-color:#e6a8a1}
+.bt.dot{width:44px;padding:0;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 1.5px #c9d3dc}
+.bt.dot.on{box-shadow:0 0 0 3px #1d5fa0}
+.bfab{position:fixed;right:10px;bottom:84px;z-index:30;width:54px;height:54px;border-radius:50%;border:1.5px solid #c9d3dc;background:rgba(255,255,255,.95);box-shadow:0 3px 12px rgba(0,0,0,.18);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:1.25rem;line-height:1;padding:0}
+.bfab small{font-size:.62rem;margin-top:2px;color:#374151}
+.bfab.hide{display:none}
+
 </style>
 <div id="app"></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -1034,7 +1047,7 @@ const KEY = 'gaenyeom-v1', TKEY = 'gaenyeom-teacher-v1';
 const STEPS = ['질문', '탐색', '일반화', '정리', '확인', '내 말로'];
 /* 구글 폼 자동 제출 설정 (비어 있으면 제출 코드 방식만 사용) */
 const FORM = { action: 'https://docs.google.com/forms/d/e/1FAIpQLSfAkQAEwjacgFf4YnDSVAsvu6KTlMedfOyeA4vDSFv3-7luBQ/formResponse', entry: 'entry.1381249599' };
-const OPS_URL = 'https://mathland25.github.io/mathcalc/';
+const OPS_URL = 'https://claude.ai/artifact/CKBVf3g7ThJ4NUVjWu5oST';
 let DB = { v: 1, cur: null, profiles: [] }, TD = { v: 1, students: {} };
 let view = 'home', vparam = null, curStep = 0, tsel = null, tcls = '전체', toastT = null;
 const $ = (s, r = document) => r.querySelector(s);
@@ -1175,7 +1188,7 @@ async function formSend(p, quiet) {
     p.sent = Date.now(); save(); if (!quiet) toast('선생님께 제출했어요'); return true;
   } catch (e) { if (!quiet) toast('제출하지 못했어요. 인터넷을 확인하고 다시 눌러 주세요'); return false; }
 }
-function go(v, param) { view = v; vparam = param; if (v === 'lesson') curStep = Math.min(param.step, STEPS.length - 1); render(); window.scrollTo(0, 0); }
+function go(v, param) { try { Board.clear(); } catch (e) { } if (v === 'lesson' && isLocked(param.id)) { toast('선생님이 아직 열지 않은 차시예요'); v = 'home'; } view = v; vparam = param; if (v === 'lesson') curStep = Math.min(param.step, STEPS.length - 1); render(); window.scrollTo(0, 0); }
 function render() {
   const app = $('#app'); app.replaceChildren();
   const p = me();
@@ -1230,10 +1243,27 @@ function submitCard(p) {
   }
   return h('section', { class: 'card', style: 'margin-top:14px' }, h('h2', { class: 'h2', text: '선생님께 진도 보내기' }), h('p', { class: 'note', text: (Sync.state === 'on' ? '자동으로 전달되고 있어요. 안 보이면 코드를 만들어 직접 보내도 돼요.' : '차시를 끝낼 때마다 코드를 만들어 선생님께 보내 주세요. 이름과 풀이 기록이 담겨요. 새로 만들면 이전 기록까지 모두 들어 있어요.') }), h('div', { class: 'row', style: 'margin:0' }, mk, copy), out);
 }
+/* ---------- 차시 열람 설정(구글 시트 탭) ---------- */
+/* 시트의 '열람 설정' 탭을 웹에 게시한 CSV 주소. 비어 있으면 모든 차시가 열려 있어요. 읽지 못해도 모두 열려요. */
+const LOCK_CSV = '';
+let LOCKS = new Set(), lockAt = 0;
+try { const o = JSON.parse(sessionStorage.getItem('gn-locks')); if (o && Array.isArray(o.ids)) { LOCKS = new Set(o.ids); lockAt = o.at || 0; } } catch (e) { }
+const isLocked = id => LOCKS.has(id);
+async function pullLocks(force) {
+  if (!LOCK_CSV || (!force && Date.now() - lockAt < 45000)) return; lockAt = Date.now();
+  try {
+    const r = await fetch(LOCK_CSV + (LOCK_CSV.includes('?') ? '&' : '?') + 't=' + Date.now(), { cache: 'no-store' }); if (!r.ok) return;
+    const ids = []; (await r.text()).split(/\r?\n/).forEach(ln => { const m = /(?:^|[",\s])(l\d\d)(?:[",\s]|$)/.exec(ln); if (m && /잠/.test(ln) && !/열림/.test(ln)) ids.push(m[1]); });
+    const changed = ids.slice().sort().join() !== [...LOCKS].sort().join(); LOCKS = new Set(ids);
+    try { sessionStorage.setItem('gn-locks', JSON.stringify({ ids, at: Date.now() })); } catch (e) { }
+    if (changed && view === 'home') render();
+  } catch (e) { }
+}
+
 function lcard(p, l) {
   const st = status(p, l), s = p.ls[l.id];
-  const chip = !l.ready ? h('span', { class: 'chip gray', text: '준비 중' }) : st === 'done' ? h('span', { class: 'chip green', text: '완료 · 확인 ' + firstScore(l, s)[0] + '/' + l.checks.length }) : st === 'doing' ? h('span', { class: 'chip gold', text: '진행 중 ' + (Math.min(s.step, 5) + 1) + '/6' }) : h('span', { class: 'chip', text: '시작하기' });
-  return h('button', { class: 'lcard' + (l.ready ? '' : ' soon') + (st === 'done' ? ' done' : ''), disabled: !l.ready, onclick: () => go('lesson', { id: l.id, step: lst(p, l.id).step }) },
+  const lk = l.ready && isLocked(l.id), chip = lk ? h('span', { class: 'chip gray', text: '🔒 아직 열리지 않았어요' }) : !l.ready ? h('span', { class: 'chip gray', text: '준비 중' }) : st === 'done' ? h('span', { class: 'chip green', text: '완료 · 확인 ' + firstScore(l, s)[0] + '/' + l.checks.length }) : st === 'doing' ? h('span', { class: 'chip gold', text: '진행 중 ' + (Math.min(s.step, 5) + 1) + '/6' }) : h('span', { class: 'chip', text: '시작하기' });
+  return h('button', { class: 'lcard' + (l.ready && !lk ? '' : ' soon') + (st === 'done' ? ' done' : ''), disabled: !l.ready || lk, onclick: () => go('lesson', { id: l.id, step: lst(p, l.id).step }) },
     h('div', { class: 'row', style: 'margin:0;justify-content:space-between' }, h('span', { class: 'no', text: lno(l) + ' · ' + l.lens }), chip), h('div', { class: 't', text: l.title }), h('div', { class: 'q', text: l.q }), l.el ? h('div', { class: 'note', style: 'margin:6px 0 0;font-size:12px', text: '시험 범위 · ' + l.el + ' (' + l.src + ')' }) : null);
 }
 
@@ -1245,7 +1275,7 @@ function viewLesson(p, l) {
   const unlocked = i => i <= s.step;
   const advance = to => { if (to > s.step) s.step = to; touch(); curStep = to; paintAll(); window.scrollTo(0, 0); };
   function paintStepper() { stepper.replaceChildren(...STEPS.map((n, i) => h('button', { type: 'button', role: 'tab', class: (i === curStep ? 'on ' : '') + (i < s.step || s.done ? 'ok' : ''), disabled: !unlocked(i), 'aria-selected': i === curStep ? 'true' : 'false', onclick: () => { curStep = i; paintAll(); }, text: (i + 1) + ' ' + n }))); }
-  function paintAll() { paintStepper(); stepBox.replaceChildren([stepQ, stepExplore, stepGen, stepSum, stepCheck, stepRefl][curStep](p, l, s, advance, touch, () => go('home'))); }
+  function paintAll() { try { Board.clear(); } catch (e) { } paintStepper(); stepBox.replaceChildren([stepQ, stepExplore, stepGen, stepSum, stepCheck, stepRefl][curStep](p, l, s, advance, touch, () => go('home'))); }
   paintAll();
   return h('div', {}, h('header', { class: 'top' }, h('div', { class: 'row', style: 'margin:0' }, h('button', { class: 'btn sm ghost', onclick: () => go('home'), text: '← 차시 목록' }), h('b', { text: lno(l) + ' · ' + l.title })), brand()), stepper, stepBox);
 }
@@ -1480,11 +1510,54 @@ function teacherDetail(rec) {
   return out;
 }
 
+/* ---------- 판서(화면 위에 직접 쓰기) : 전자칠판·수업용 ---------- */
+const Board = (() => {
+  const COL = { k: '#111827', b: '#1d5fa0', r: '#d33a2c', g: '#1f9d55' };
+  const st = { on: false, pen: true, col: 'k', tool: 'pen' }, strokes = [];
+  let cv = null, g = null, bar = null, fab = null, cur = null, raf = 0;
+  const dpr = () => Math.min(window.devicePixelRatio || 1, 2);
+  function size() { if (!cv) return; const d = dpr(); cv.width = innerWidth * d; cv.height = innerHeight * d; cv.style.width = innerWidth + 'px'; cv.style.height = innerHeight + 'px'; redraw(); }
+  function one(s) {
+    const d = dpr(), sy = scrollY, p = s.p; if (!p.length) return;
+    g.save(); g.scale(d, d); g.lineCap = 'round'; g.lineJoin = 'round';
+    g.globalCompositeOperation = s.t === 'e' ? 'destination-out' : 'source-over';
+    g.strokeStyle = s.t === 'h' ? 'rgba(255,214,10,.38)' : COL[s.c] || COL.k; g.lineWidth = s.t === 'e' ? 40 : s.t === 'h' ? 24 : 4;
+    g.beginPath(); g.moveTo(p[0], p[1] - sy); if (p.length === 2) g.lineTo(p[0] + .1, p[1] - sy); for (let i = 2; i < p.length; i += 2) g.lineTo(p[i], p[i + 1] - sy); g.stroke(); g.restore();
+  }
+  function redraw() { if (!g) return; g.clearRect(0, 0, cv.width, cv.height); strokes.forEach(one); }
+  const later = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; redraw(); }); };
+  const pos = e => [Math.round(e.clientX), Math.round(e.clientY + scrollY)];
+  function build() {
+    cv = h('canvas', { class: 'bcv', 'aria-label': '판서 화면' }); g = cv.getContext('2d');
+    cv.addEventListener('pointerdown', e => { e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (_) { } cur = { t: st.tool === 'pen' ? 'p' : st.tool === 'hl' ? 'h' : 'e', c: st.col, p: pos(e) }; strokes.push(cur); one(cur); });
+    cv.addEventListener('pointermove', e => { if (!cur) return; e.preventDefault(); const q = pos(e), p = cur.p, n = p.length; if (Math.abs(q[0] - p[n - 2]) + Math.abs(q[1] - p[n - 1]) < 2) return; p.push(q[0], q[1]); redraw(); });
+    const end = () => { cur = null; }; cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+    bar = h('div', { class: 'bbar', role: 'toolbar', 'aria-label': '판서 도구' });
+    fab = h('button', { class: 'bfab', type: 'button', 'aria-label': '판서 켜기', onclick: () => open() }, h('span', { text: '✏️' }), h('small', { text: '판서' }));
+    document.body.append(cv, bar, fab); addEventListener('resize', size); addEventListener('scroll', later, { passive: true });
+  }
+  function paintBar() {
+    const b = (t, cls, fn, label) => h('button', { type: 'button', class: 'bt ' + (cls || ''), text: t, 'aria-label': label || t, onclick: fn });
+    bar.replaceChildren(
+      b(st.pen ? '✏️ 쓰기' : '👆 스크롤·조작', st.pen ? 'on' : '', () => { st.pen = !st.pen; apply(); }, st.pen ? '지금은 쓰기 모드 (누르면 스크롤·조작)' : '지금은 스크롤·조작 모드 (누르면 쓰기)'),
+      ...['k', 'b', 'r', 'g'].map(c => h('button', { type: 'button', class: 'bt dot' + (st.tool === 'pen' && st.col === c ? ' on' : ''), style: 'background:' + COL[c], 'aria-label': { k: '검정', b: '파랑', r: '빨강', g: '초록' }[c] + ' 펜', onclick: () => { st.col = c; st.tool = 'pen'; st.pen = true; apply(); } })),
+      b('🖍 형광펜', st.tool === 'hl' ? 'on' : '', () => { st.tool = 'hl'; st.col = st.col; st.pen = true; apply(); }),
+      b('지우개', st.tool === 'er' ? 'on' : '', () => { st.tool = 'er'; st.pen = true; apply(); }),
+      b('되돌리기', '', () => { strokes.pop(); redraw(); }),
+      b('모두 지우기', '', () => { strokes.length = 0; redraw(); }),
+      b('✕ 끝내기', 'x', () => close()));
+  }
+  function apply() { cv.style.pointerEvents = st.pen ? 'auto' : 'none'; paintBar(); }
+  function open() { if (!cv) build(); st.on = true; cv.classList.add('on'); bar.classList.add('on'); fab.classList.add('hide'); size(); apply(); }
+  function close() { st.on = false; strokes.length = 0; if (cv) { cv.classList.remove('on'); cv.style.pointerEvents = 'none'; bar.classList.remove('on'); fab.classList.remove('hide'); g.clearRect(0, 0, cv.width, cv.height); } }
+  return { init() { if (!cv) build(); }, clear() { if (cv && strokes.length) { strokes.length = 0; redraw(); } } };
+})();
+
 /* ---------- 시작 ---------- */
 load();
 if (DB.profiles.length && !DB.profiles.some(p => p.id === DB.cur)) DB.cur = DB.profiles.length === 1 ? DB.profiles[0].id : null;
 view = DB.cur ? 'home' : 'welcome'; if (location.hash === '#teacher') view = 'teacher';
-render(); Sync.init();
+render(); Sync.init(); Board.init(); pullLocks(true); setInterval(() => { if (!document.hidden) pullLocks(); }, 60000); document.addEventListener('visibilitychange', () => { if (!document.hidden) pullLocks(); });
 window.__app = { DB: () => DB, TD: () => TD, go, render, makeReport, packReport, unpackReport, LESSONS };
 
 })();
