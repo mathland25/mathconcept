@@ -1596,10 +1596,10 @@ const onLn = (p, q, y) => { const t = (y - p[1]) / (q[1] - p[1]); return [p[0] +
     return h('div', { class: 'figbox' }, h('s:svg', { viewBox: '-10 -10 290 195', class: 'qfig', role: 'img', 'aria-label': '가로대 5개인 사다리' }, seg(top[0], bot[0], { stroke: 'var(--gold)', 'stroke-width': 4 }), seg(top[1], bot[1], { stroke: 'var(--gold)', 'stroke-width': 4 }), rows.map(r => seg(r[0], r[1], { stroke: 'var(--gold)', 'stroke-width': 3 })), label(140, 10, '40 cm', 'svgm'), label(140, 160, '80 cm', 'svgm'), label(160, 74, '? cm', 'svgm', 'start')), h('div', { class: 'figcap', text: '※ 그림은 실제 크기와 다를 수 있어요.' })); });
   const G = [(T.A[0] + T.B[0] + T.C[0]) / 3, (T.A[1] + T.B[1] + T.C[1]) / 3], mid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2];
   const cP = Object.assign({ D: mid(T.B, T.C), E: mid(T.A, T.C), F: mid(T.A, T.B), G }, T);
-  put('l15', 0, () => F({ w: 270, P: cP, poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], tk: [['B', 'D'], ['D', 'C'], ['A', 'E'], ['E', 'C'], ['A', 'F'], ['F', 'B']], txt: [[135, 170, 'AD = 18 cm,  AG = ?']], h: 178, alt: '무게중심 G와 세 중선' }));
-  put('l15', 1, () => F({ w: 270, P: cP, poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], tk: [['A', 'E'], ['E', 'C']], txt: [[135, 170, 'EG = 5 cm,  BG = ?']], h: 178, alt: '무게중심 G, E는 AC의 중점' }));
-  put('l15', 2, () => F({ w: 270, P: cP, fill: [[['A', 'G', 'C'], 'var(--gold-soft)']], poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], txt: [[135, 170, '△GAC = 12 cm²  (노란 부분)']], h: 178, alt: '△GAC에 색칠' }));
-  put('l15', 3, () => F({ w: 270, P: cP, fill: [[['G', 'D', 'C', 'E'], 'var(--gold-soft)']], poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], txt: [[135, 170, '□GDCE = 40 cm²  (노란 부분)']], h: 178, alt: '□GDCE에 색칠' }));
+  put('l15', 0, () => F({ w: 270, P: cP, poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], tk: [['B', 'D'], ['D', 'C'], ['A', 'E'], ['E', 'C'], ['A', 'F'], ['F', 'B']], txt: [[147, 114, 'G'], [135, 170, 'AD = 18 cm,  AG = ?']], h: 178, alt: '무게중심 G와 세 중선' }));
+  put('l15', 1, () => F({ w: 270, P: cP, poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], tk: [['A', 'E'], ['E', 'C']], txt: [[147, 114, 'G'], [135, 170, 'EG = 5 cm,  BG = ?']], h: 178, alt: '무게중심 G, E는 AC의 중점' }));
+  put('l15', 2, () => F({ w: 270, P: cP, fill: [[['A', 'G', 'C'], 'var(--gold-soft)']], poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], txt: [[147, 114, 'G'], [135, 170, '△GAC = 12 cm²  (노란 부분)']], h: 178, alt: '△GAC에 색칠' }));
+  put('l15', 3, () => F({ w: 270, P: cP, fill: [[['G', 'D', 'C', 'E'], 'var(--gold-soft)']], poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], txt: [[147, 114, 'G'], [135, 170, '□GDCE = 40 cm²  (노란 부분)']], h: 178, alt: '□GDCE에 색칠' }));
   L.l15.gen.fig = () => F({ w: 270, P: cP, poly: [['A', 'B', 'C']], seg: [['A', 'D', 'r'], ['B', 'E', 'r'], ['C', 'F', 'r']], tk: [['B', 'D'], ['D', 'C'], ['A', 'E'], ['E', 'C'], ['A', 'F'], ['F', 'B']], txt: [[147, 114, 'G'], [135, 170, 'AG : GD = BG : GE = CG : GF = 2 : 1']], h: 178, alt: '무게중심 G와 세 중선 AD, BE, CF' });
   put('l16', 0, () => F({ w: 270, P: { A: [45, 80], B: [10, 130], C: [95, 130], D: [180, 25], E: [125, 130], F: [255, 130] }, poly: [['A', 'B', 'C'], ['D', 'E', 'F']], txt: [[52, 118, '18 cm²'], [190, 100, '? cm²'], [135, 168, '닮음비 3 : 5']], h: 172, alt: '닮은 두 삼각형의 넓이' }));
   put('l16', 1, () => h('div', { class: 'figbox' }, h('s:svg', { viewBox: '-10 -10 290 195', class: 'qfig', role: 'img', 'aria-label': '닮은 두 원뿔' }, cone(70, 125, 30, 70), cone(185, 135, 60, 125), label(70, 150, '40 cm³', 'svgm'), label(185, 172, '? cm³', 'svgm'), label(128, 90, '2 : 3', 'svgm')), h('div', { class: 'figcap', text: '※ 그림은 실제 크기와 다를 수 있어요.' })));
@@ -2011,14 +2011,16 @@ function stepSum(p, l, s, advance) {
 
 
 /* ---------- 풀이 쓰기(필기) ---------- */
-const PW = 600, PH = 440, PCOL = { k: '#1f2937', b: '#1d5fa0', r: '#c0392b' };
+const PW = 600, PH = 440, PCOL = { k: '#1f2937', b: '#1d5fa0', r: '#c0392b', w: '#ffffff' };
 function inkPad(x) {
   x.ink = x.ink || []; const st = { col: 'k', era: false };
   const cv = h('canvas', { class: 'padcv', width: PW * 2, height: PH * 2, 'aria-label': '풀이 쓰는 칸' }), g = cv.getContext('2d');
   function stroke(s) {
     g.save(); g.scale(2, 2); g.lineCap = 'round'; g.lineJoin = 'round';
     g.globalCompositeOperation = s.e ? 'destination-out' : 'source-over'; g.strokeStyle = PCOL[s.c] || PCOL.k; g.lineWidth = s.e ? 22 : 2.6;
-    const p = s.p; g.beginPath(); g.moveTo(p[0], p[1]); if (p.length === 2) g.lineTo(p[0] + .1, p[1]); for (let i = 2; i < p.length; i += 2) g.lineTo(p[i], p[i + 1]); g.stroke(); g.restore();
+    const p = s.p; g.beginPath(); g.moveTo(p[0], p[1]); if (p.length === 2) g.lineTo(p[0] + .1, p[1]); for (let i = 2; i < p.length; i += 2) g.lineTo(p[i], p[i + 1]);
+    if (s.c === 'w' && !s.e) { g.strokeStyle = 'rgba(60,70,80,.45)'; g.lineWidth = 5.4; g.stroke(); g.strokeStyle = '#fff'; g.lineWidth = 2.6; }
+    g.stroke(); g.restore();
   }
   const redraw = () => { g.clearRect(0, 0, PW * 2, PH * 2); x.ink.forEach(stroke); };
   let cur = null;
@@ -2031,7 +2033,7 @@ function inkPad(x) {
   const btn = (txt, cls, fn) => h('button', { type: 'button', class: 'pt ' + (cls || ''), text: txt, onclick: fn });
   function bar() {
     tools.replaceChildren(
-      ...['k', 'b', 'r'].map(c => h('button', { type: 'button', class: 'pt dot' + (!st.era && st.col === c ? ' on' : ''), style: 'background:' + PCOL[c], 'aria-label': { k: '검정', b: '파랑', r: '빨강' }[c] + ' 펜', onclick: () => { st.col = c; st.era = false; bar(); } })),
+      ...['k', 'b', 'r', 'w'].map(c => h('button', { type: 'button', class: 'pt dot' + (!st.era && st.col === c ? ' on' : ''), style: 'background:' + PCOL[c], 'aria-label': { k: '검정', b: '파랑', r: '빨강', w: '하양' }[c] + ' 펜', onclick: () => { st.col = c; st.era = false; bar(); } })),
       btn('지우개', st.era ? 'on' : '', () => { st.era = !st.era; bar(); }),
       btn('되돌리기', '', () => { x.ink.pop(); redraw(); save(); }),
       btn('모두 지우기', '', () => { if (!x.ink.length || confirm('쓴 풀이를 모두 지울까요?')) { x.ink.length = 0; redraw(); save(); } }));
@@ -2185,7 +2187,7 @@ function teacherDetail(rec) {
 
 /* ---------- 판서(화면 위에 직접 쓰기) : 전자칠판·수업용 ---------- */
 const Board = (() => {
-  const COL = { k: '#111827', b: '#1d5fa0', r: '#d33a2c', g: '#1f9d55' };
+  const COL = { k: '#111827', b: '#1d5fa0', r: '#d33a2c', g: '#1f9d55', w: '#ffffff' };
   const st = { on: false, pen: true, col: 'k', tool: 'pen' }, strokes = [];
   let cv = null, g = null, bar = null, fab = null, cur = null, raf = 0;
   const dpr = () => Math.min(window.devicePixelRatio || 1, 2);
@@ -2195,7 +2197,9 @@ const Board = (() => {
     g.save(); g.scale(d, d); g.lineCap = 'round'; g.lineJoin = 'round';
     g.globalCompositeOperation = s.t === 'e' ? 'destination-out' : 'source-over';
     g.strokeStyle = s.t === 'h' ? 'rgba(255,214,10,.38)' : COL[s.c] || COL.k; g.lineWidth = s.t === 'e' ? 40 : s.t === 'h' ? 24 : 4;
-    g.beginPath(); g.moveTo(p[0], p[1] - sy); if (p.length === 2) g.lineTo(p[0] + .1, p[1] - sy); for (let i = 2; i < p.length; i += 2) g.lineTo(p[i], p[i + 1] - sy); g.stroke(); g.restore();
+    g.beginPath(); g.moveTo(p[0], p[1] - sy); if (p.length === 2) g.lineTo(p[0] + .1, p[1] - sy); for (let i = 2; i < p.length; i += 2) g.lineTo(p[i], p[i + 1] - sy);
+    if (s.c === 'w' && s.t === 'p') { g.strokeStyle = 'rgba(40,50,60,.55)'; g.lineWidth = 7.5; g.stroke(); g.strokeStyle = '#fff'; g.lineWidth = 4; }
+    g.stroke(); g.restore();
   }
   function redraw() { if (!g) return; g.clearRect(0, 0, cv.width, cv.height); strokes.forEach(one); }
   const later = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; redraw(); }); };
@@ -2213,7 +2217,7 @@ const Board = (() => {
     const b = (t, cls, fn, label) => h('button', { type: 'button', class: 'bt ' + (cls || ''), text: t, 'aria-label': label || t, onclick: fn });
     bar.replaceChildren(
       b(st.pen ? '✏️ 쓰기' : '👆 스크롤·조작', st.pen ? 'on' : '', () => { st.pen = !st.pen; apply(); }, st.pen ? '지금은 쓰기 모드 (누르면 스크롤·조작)' : '지금은 스크롤·조작 모드 (누르면 쓰기)'),
-      ...['k', 'b', 'r', 'g'].map(c => h('button', { type: 'button', class: 'bt dot' + (st.tool === 'pen' && st.col === c ? ' on' : ''), style: 'background:' + COL[c], 'aria-label': { k: '검정', b: '파랑', r: '빨강', g: '초록' }[c] + ' 펜', onclick: () => { st.col = c; st.tool = 'pen'; st.pen = true; apply(); } })),
+      ...['k', 'b', 'r', 'g', 'w'].map(c => h('button', { type: 'button', class: 'bt dot' + (st.tool === 'pen' && st.col === c ? ' on' : ''), style: 'background:' + COL[c], 'aria-label': { k: '검정', b: '파랑', r: '빨강', g: '초록', w: '하양' }[c] + ' 펜', onclick: () => { st.col = c; st.tool = 'pen'; st.pen = true; apply(); } })),
       b('🖍 형광펜', st.tool === 'hl' ? 'on' : '', () => { st.tool = 'hl'; st.col = st.col; st.pen = true; apply(); }),
       b('지우개', st.tool === 'er' ? 'on' : '', () => { st.tool = 'er'; st.pen = true; apply(); }),
       b('되돌리기', '', () => { strokes.pop(); redraw(); }),
