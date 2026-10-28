@@ -724,7 +724,7 @@ LESSONS.push(
   tasks: [
     { ask: '"중선" 탭에서 A를 움직여 삼각형의 모양을 바꿔 보세요. 세 중선은 늘 어떻게 만나나요?', opts: ['항상 한 점 G에서 만난다', '모양에 따라 달라진다'], ans: 0, why: '어떤 삼각형이든 세 중선은 한 점 G에서 만나요. 이 점을 무게중심이라고 해요.' },
     { ask: '같은 탭에서 AG ÷ DG, BG ÷ EG, CG ÷ FG의 값을 보세요.', opts: ['모두 1', '모두 2', '모두 3'], ans: 1, why: '모두 2예요. 즉 (꼭짓점에서 G까지) : (G에서 변 위의 점까지)가 AG : GD = BG : GE = CG : GF = 2 : 1이에요.' },
-    { ask: '"넓이" 탭에서 6개의 작은 삼각형의 넓이를 비교해 보세요.', opts: ['모두 같다', 'G에 가까울수록 크다', '모양에 따라 다르다'], ans: 0, why: '여섯 삼각형의 넓이는 모두 같아요. 각각 전체 넓이의 1/6이에요.' }
+    { ask: '"넓이" 탭에서 6개의 작은 삼각형(1~6번)의 넓이를 비교해 보세요.', opts: ['모두 같다', 'G에 가까울수록 크다', '모양에 따라 다르다'], ans: 0, why: '여섯 삼각형의 넓이는 모두 같아요. 각각 전체 넓이의 1/6이에요.' }
   ],
   gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
     { pre: '삼각형의 한 꼭짓점과 그 대변의 중점을 이은 선분을', opts: ['중선', '높이', '이등분선'], ans: 0, post: '이라고 한다.' },
@@ -1128,9 +1128,9 @@ function wCen(use) {
       const tr = [[A, F, G], [F, B, G], [B, D, G], [D, C, G], [C, E, G], [E, A, G]];
       tr.forEach((t, i) => svg.append(poly(t, { fill: cols[i], stroke: 'var(--ink2)', 'stroke-width': 1.5 })));
       svg.append(poly([A, B, C], { fill: 'none' }));
-      tr.forEach((t, i) => svg.append(label((t[0][0] + t[1][0] + t[2][0]) / 3, (t[0][1] + t[1][1] + t[2][1]) / 3 + 4, '①②③④⑤⑥'[i], 'svgm')));
+      tr.forEach((t, i) => svg.append(h('s:text', { x: (t[0][0] + t[1][0] + t[2][0]) / 3, y: (t[0][1] + t[1][1] + t[2][1]) / 3 + 8, 'text-anchor': 'middle', style: 'font-size:24px;font-weight:800;fill:var(--ink);paint-order:stroke;stroke:#fff;stroke-width:3px', text: String(i + 1) })));
       const ar = tr.map(t => area(...t)), tot = area(A, B, C);
-      read.replaceChildren(...ar.map((v, i) => h('span', { class: 'hi', text: '①②③④⑤⑥'[i] + ' = ' + r1(v) + ' cm²' })), h('span', { text: '전체 = ' + r1(tot) + ' cm²' }));
+      read.replaceChildren(...ar.map((v, i) => h('span', { class: 'hi', text: (i + 1) + '번 = ' + r1(v) + ' cm²' })), h('span', { text: '전체 = ' + r1(tot) + ' cm²' }));
       verdict.className = 'verdict yes'; verdict.textContent = '여섯 삼각형의 넓이가 모두 같고, 각각 전체의 1/6이에요';
     } else {
       svg.append(poly([A, B, C]), seg(A, D, { stroke: 'var(--red)', 'stroke-width': 2.2 }), seg(B, E, { stroke: 'var(--red)', 'stroke-width': 2.2 }), seg(C, F, { stroke: 'var(--red)', 'stroke-width': 2.2 }),
