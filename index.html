@@ -723,7 +723,7 @@ LESSONS.push(
   pred: { ask: '삼각형의 세 꼭짓점에서 각각 마주 보는 변의 중점으로 선분(중선)을 그으면, 세 선분은 어떻게 될 것 같아요?', opts: ['한 점에서 만난다', '두 점에서 만난다', '만나지 않는다', '모르겠다'] },
   tasks: [
     { ask: '"중선" 탭에서 A를 움직여 삼각형의 모양을 바꿔 보세요. 세 중선은 늘 어떻게 만나나요?', opts: ['항상 한 점 G에서 만난다', '모양에 따라 달라진다'], ans: 0, why: '어떤 삼각형이든 세 중선은 한 점 G에서 만나요. 이 점을 무게중심이라고 해요.' },
-    { ask: '같은 탭에서 AG ÷ DG, BG ÷ EG, CG ÷ FG의 값을 보세요.', opts: ['모두 1', '모두 2', '모두 3'], ans: 1, why: '모두 2예요. 즉 AG : DG = BG : EG = CG : FG = 2 : 1이에요.' },
+    { ask: '같은 탭에서 AG ÷ DG, BG ÷ EG, CG ÷ FG의 값을 보세요.', opts: ['모두 1', '모두 2', '모두 3'], ans: 1, why: '모두 2예요. 즉 (꼭짓점에서 G까지) : (G에서 변 위의 점까지)가 AG : GD = BG : GE = CG : GF = 2 : 1이에요.' },
     { ask: '"넓이" 탭에서 6개의 작은 삼각형의 넓이를 비교해 보세요.', opts: ['모두 같다', 'G에 가까울수록 크다', '모양에 따라 다르다'], ans: 0, why: '여섯 삼각형의 넓이는 모두 같아요. 각각 전체 넓이의 1/6이에요.' }
   ],
   gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
@@ -734,7 +734,7 @@ LESSONS.push(
   ] },
   sum: { title: '삼각형의 무게중심', defs: [['중선', '삼각형의 한 꼭짓점과 그 대변의 중점을 이은 선분'], ['무게중심', '삼각형의 세 중선이 만나는 점']],
     points: ['삼각형의 세 중선은 한 점(무게중심)에서 만난다.', '무게중심은 세 중선의 길이를 각 꼭짓점으로부터 2 : 1로 나눈다. (AG : DG = BG : EG = CG : FG = 2 : 1)', '한 중선은 삼각형의 넓이를 이등분하고, 세 중선은 삼각형의 넓이를 6등분한다.', '증명 아이디어: 중점연결정리로 △GAB ∽ △GDE(닮음비 2 : 1)임을 보인다.'],
-    note: '2 : 1은 "꼭짓점 쪽이 2"예요. AG : DG = 2 : 1이지 DG : AG가 아니에요.' },
+    note: '2 : 1은 "꼭짓점에서 G까지가 2, G에서 변 위의 점까지가 1"이에요. AG : GD = 2 : 1이지 GD : AG가 아니에요.' },
   checks: [
     { q: '점 G가 △ABC의 무게중심이고 중선 AD의 길이가 18 cm일 때, AG의 길이는?', unit: 'cm', ans: 12, hint: 'AG : DG = 2 : 1이면 AG는 AD의 몇 분의 몇일까요?', why: 'AG = 18 × 2/3 = 12 cm' },
     { q: '점 G가 △ABC의 무게중심이고, E가 AC의 중점입니다. EG = 5 cm일 때, BG의 길이는?', unit: 'cm', ans: 10, hint: 'BE는 중선이에요. BG : EG = 2 : 1', why: 'BG = 2 × EG = 10 cm' },
@@ -1138,7 +1138,7 @@ function wCen(use) {
         label(A[0], A[1] - 10, 'A'), label(B[0] - 12, B[1] + 6, 'B'), label(C[0] + 12, C[1] + 6, 'C'), label(D[0], D[1] + 20, 'D'), label(E[0] + 13, E[1], 'E'), label(F[0] - 13, F[1], 'F'), label(G[0] + 13, G[1] + 18, 'G'));
       const u = 20, d = (p, q) => dist(p, q) / u, ag = d(A, G), gd = d(G, D), bg = d(B, G), ge = d(G, E), cg = d(C, G), gf = d(G, F);
       read.replaceChildren(...[['AG = ' + r1(ag), 0], ['DG = ' + r1(gd), 0], ['BG = ' + r1(bg), 0], ['EG = ' + r1(ge), 0], ['CG = ' + r1(cg), 0], ['FG = ' + r1(gf), 0], ['AG ÷ DG = ' + (Math.round(ag / gd * 100) / 100), 1], ['BG ÷ EG = ' + (Math.round(bg / ge * 100) / 100), 1], ['CG ÷ FG = ' + (Math.round(cg / gf * 100) / 100), 1]].map(([x, hi]) => h('span', { class: hi ? 'hi' : '', text: x })));
-      verdict.className = 'verdict yes'; verdict.textContent = '세 중선은 한 점 G에서 만나고, 꼭짓점 쪽 : 변 쪽 = 2 : 1';
+      verdict.className = 'verdict yes'; verdict.textContent = '세 중선은 한 점 G에서 만나고, (꼭짓점에서 G까지) : (G에서 변 위의 점까지) = 2 : 1';
     }
   }
   function paintCtl() { ctl.replaceChildren(); const row = (...a) => ctl.append(h('div', { class: 'ctl' }, slider(...a)));
