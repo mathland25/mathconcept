@@ -1060,13 +1060,17 @@ function wPyth(use) {
       const cen = q => [q.reduce((s, p) => s + p[0], 0) / 4, q.reduce((s, p) => s + p[1], 0) / 4 + 4];
       const lb = (q, side, t) => label(...cen(q), side * sc < 60 ? t.replace(' = ', '=') : t, side * sc < 60 ? 'svgm' : 'svgt');
       svg.append(lb(sqa, a, 'a² = ' + a * a), lb(sqb, b, 'b² = ' + b * b), lb(sqc, c, 'c² = ' + r1(a * a + b * b)));
+      const sl = (p, q, dx, dy, t) => { if (Math.hypot(q[0] - p[0], q[1] - p[1]) > 34) svg.append(label((p[0] + q[0]) / 2 + dx, (p[1] + q[1]) / 2 + dy, t, 'svgt')); };
+      sl(Cc, B, 0, -7, 'a'); sl(Cc, A, 9, 4, 'b'); sl(A, B, -9, 14, 'c');
       read.replaceChildren(...[['a = ' + a, 0], ['b = ' + b, 0], ['c = ' + r1(c), 0], ['a² + b² = ' + (a * a + b * b), 1], ['c² = ' + r1(c * c), 1]].map(([t, hi]) => h('span', { class: hi ? 'hi' : '', text: t })));
       verdict.className = 'verdict yes'; verdict.textContent = 'a² + b² = c² (' + a * a + ' + ' + b * b + ' = ' + r1(a * a + b * b) + ')';
     } else {
       const a = 3, b = 4, ang = S.ang, rad = ang * Math.PI / 180, c2 = a * a + b * b - 2 * a * b * Math.cos(rad), sc = 38;
       const C0 = [90, 235], B = [C0[0] + a * sc, C0[1]], A = [C0[0] + b * sc * Math.cos(rad), C0[1] - b * sc * Math.sin(rad)];
       svg.append(poly([C0, B, A]), label(C0[0] - 12, C0[1] + 6, 'C'), label(B[0] + 12, B[1] + 6, 'B'), label(A[0], A[1] - 10, 'A'), dot(C0), dot(B), dot(A),
+        label((C0[0] + B[0]) / 2, C0[1] + 20, 'a = 3', 'svgt'), label((C0[0] + A[0]) / 2 - 16, (C0[1] + A[1]) / 2, 'b = 4', 'svgt'), label((A[0] + B[0]) / 2 + 16, (A[1] + B[1]) / 2, 'c', 'svgt'),
         label(200, 285, 'a = 3, b = 4 로 고정하고 ∠C만 바꿔요', 'svgm'));
+      if (ang === 90) svg.append(h('s:path', { d: 'M' + (C0[0] + 12) + ' ' + C0[1] + ' v-12 h-12', fill: 'none', stroke: 'var(--ink)', 'stroke-width': 1.5 }));
       read.replaceChildren(...[['∠C = ' + ang + '°', 1], ['a² + b² = 25', 0], ['c² = ' + r1(c2), 1]].map(([t, hi]) => h('span', { class: hi ? 'hi' : '', text: t })));
       const d = Math.abs(c2 - 25) < 1e-6 ? 0 : c2 < 25 ? -1 : 1;
       verdict.className = 'verdict ' + (d === 0 ? 'yes' : 'no'); verdict.textContent = d === 0 ? '∠C = 90° → a² + b² = c²' : d < 0 ? '∠C < 90° → c² < a² + b² (예각)' : '∠C > 90° → c² > a² + b² (둔각)';
@@ -1610,6 +1614,8 @@ const onLn = (p, q, y) => { const t = (y - p[1]) / (q[1] - p[1]); return [p[0] +
   put('l09', 0, () => F({ w: 270, P: R, poly: [['A', 'B', 'C']], rt: [['C', 'A', 'B']], txt: [['A', 'C', '6', 14], ['C', 'B', '8', 14], ['A', 'B', '?', 14]], alt: '직각삼각형, 직각변 6, 8' }));
   put('l09', 1, () => F({ w: 270, P: { C: [40, 135], A: [40, 85], B: [160, 135] }, poly: [['A', 'B', 'C']], rt: [['C', 'A', 'B']], txt: [['A', 'C', '5', 14], ['C', 'B', '?', 14], ['A', 'B', '13', 14]], alt: '직각삼각형, 빗변 13, 한 직각변 5' }));
   put('l09', 2, () => F({ w: 270, P: { A: [30, 25], B: [30, 110], C: [180, 110], D: [180, 25] }, poly: [['A', 'B', 'C', 'D']], seg: [['A', 'C', 'r']], txt: [['B', 'C', '15', 14], ['A', 'B', '8', 14], [130, 62, '대각선 ?']], alt: '가로 15, 세로 8인 직사각형의 대각선' }));
+  L.l09.pred.fig = () => F({ w: 270, P: R, poly: [['A', 'B', 'C']], rt: [['C', 'A', 'B']], txt: [['C', 'B', 'a', 14], ['A', 'C', 'b', 14], ['A', 'B', 'c', 14]], alt: '직각삼각형, 직각을 낀 두 변 a, b와 빗변 c' });
+  L.l09.gen.fig = () => F({ w: 270, P: R, poly: [['A', 'B', 'C']], rt: [['C', 'A', 'B']], txt: [['C', 'B', 'a', 14], ['A', 'C', 'b', 14], ['A', 'B', 'c', 14], [135, 170, 'a² + b² = c²']], h: 178, alt: '직각삼각형 ABC에서 a² + b² = c²' });
 })();
 
 /* ===== Ⅳ. 도형의 성질 — 질문·일반화·확인 문제 그림 ===== */
