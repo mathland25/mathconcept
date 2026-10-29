@@ -671,6 +671,96 @@ LESSONS.forEach(l => { if (l.refl) l.refl = l.refl.map(q => q.replace(/\s*\(없�
   );
 })();
 
+/* ===== Ⅴ. 도형의 닮음 — 수행평가 2 「도형 감정사」 대비 연습 1~3 ===== */
+(() => {
+  const GR = '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요. (없으면 "없음")';
+  const EL = '실생활 판정 연습 (판정 · 근거 · 계산)', ELP = '수행평가 2 대비';
+  const DEFS = [['판정', '주장이나 상황이 맞는지 틀린지(닮음인지, 평행인지) 먼저 한 문장으로 말해요.'], ['근거', '가정 → 성질·조건 → 결론 순서로, 어떤 조건이나 성질을 썼는지 밝혀요.'], ['계산', '근거에서 세운 비례식을 풀어 길이나 비를 구해요.']];
+  const RLAB = ['판정 · 근거 · 계산 쓰기', '약식 발표 대비 · 예상 질문과 내 대답'];
+  const SELF = ['닮음 조건·성질을 정확히 골랐다', '판정 - 근거 - 계산 순서로 썼다', '근거를 들어 말로 설명할 수 있다'];
+  const TPL = '[판정]을 한 문장으로 쓰고, [근거]는 (가정 → 성질·조건 → 결론) 순서로, [계산]은 비례식을 세워 풀어 보세요.\n';
+
+  LESSONS.push(
+    { id: 'l25', unit: 1, sec: '수행평가', lab: 'Ⅴ 수행평가 연습 1', title: '도형 감정사 연습 1 · 지붕틀 감정', q: '두 삼각형이 닮았는지 알려면 어떤 길이를 비교하면 될까?', lens: '판정 · 근거', ready: true, widget: 'sss', elp: ELP, el: EL, rlab: RLAB, self: SELF,
+      pred: { ask: '삼각형 모양 지붕틀 △ABC의 세 변은 6 m, 9 m, 12 m이고, △DEF의 세 변은 8 m, 12 m, 16 m예요. 학생 갑: "대응하는 세 쌍의 변의 길이의 비가 모두 같으니 닮은 도형이다." 학생 을: "한 쌍의 변의 비(6 : 8)만 구해 봐도 닮았는지 알 수 있다." 누구의 말이 타당할 것 같아요?', opts: ['갑이 타당하다', '을이 타당하다', '둘 다 타당하다', '모르겠다'] },
+      tasks: [
+        { ask: '"DE=8, EF=12, FD=16" 버튼을 누르세요. DE÷AB, EF÷BC, FD÷CA의 값은 어떤가요?', opts: ['세 값이 모두 같다', '세 값이 모두 다르다', '두 값만 같다'], ans: 0, why: '세 값이 모두 1.33...(= 4/3)으로 같아요. 즉 AB : DE = BC : EF = CA : FD = 3 : 4예요.' },
+        { ask: '"DE=8, EF=12, FD=14" 버튼을 누르세요. 두 삼각형은 닮았나요?', opts: ['닮았다', '닮지 않았다'], ans: 1, why: 'DE÷AB와 EF÷BC는 같지만 FD÷CA는 달라요. 세 쌍이 모두 같아야 SSS 닮음이에요. 한 쌍만 확인하면 틀릴 수 있어요.' },
+        { ask: '"DE=10, EF=15, FD=20" 버튼을 누르세요. 닮음비 △ABC : △DEF는?', opts: ['3 : 5', '5 : 3', '2 : 3'], ans: 0, why: '6 : 10 = 9 : 15 = 12 : 20 = 3 : 5예요. 작은 것(△ABC) : 큰 것(△DEF) 순서로 썼어요.' },
+        { ask: '닮음비가 3 : 4일 때(DE=8, EF=12, FD=16) 아래 읽기 칸의 둘레와 넓이의 비를 보세요. 넓이의 비는?', opts: ['3 : 4', '9 : 16', '6 : 8'], ans: 1, why: '넓이의 비는 닮음비의 제곱이에요. 3² : 4² = 9 : 16이에요. (둘레의 비는 닮음비와 같은 3 : 4)' }
+      ],
+      gen: { lead: '"근거"를 문장으로 완성해 보세요.', items: [
+        { pre: '두 삼각형에서 세 쌍의 대응변의 길이의 비가', opts: ['모두 같으면', '한 쌍만 같으면', '차가 같으면'], ans: 0, post: '닮음이다. (SSS 닮음)' },
+        { pre: '△ABC와 △DEF에서 변 BC에 대응하는 변은', opts: ['EF', 'DF', 'DE'], ans: 0, post: '이다.' },
+        { pre: '닮음비가 m : n이면 둘레의 비는', opts: ['m : n', 'm² : n²', '2m : n'], ans: 0, post: '이다.' },
+        { pre: '닮음비가 m : n이면 넓이의 비는', opts: ['m² : n²', 'm : n', 'm³ : n³'], ans: 0, post: '이다.' }
+      ] },
+      sum: { title: '판정 · 근거 · 계산으로 쓰기 (지붕틀)', defs: DEFS,
+        points: ['[판정] 두 지붕틀 △ABC, △DEF는 닮은 도형이다. (SSS 닮음)', '[근거] 가정: AB=6, BC=9, CA=12, DE=8, EF=12, FD=16 → 성질·조건: AB : DE = 6 : 8 = 3 : 4, BC : EF = 9 : 12 = 3 : 4, CA : FD = 12 : 16 = 3 : 4로 세 쌍의 대응변의 길이의 비가 같다 (SSS 닮음 조건) → 결론: △ABC ∽ △DEF, 닮음비는 3 : 4', '[계산] 닮은 도형의 둘레의 비는 닮음비와 같으므로 27 : (큰 지붕틀의 둘레) = 3 : 4 → 큰 지붕틀의 둘레 = 36 m. (작은 지붕틀의 둘레 6 + 9 + 12 = 27 m) 넓이의 비는 3² : 4² = 9 : 16이다.'],
+        note: '닮음비는 "어느 도형 : 어느 도형"인지 순서를 정해서 써요. 작은 것 : 큰 것으로 쓰면 둘레와 넓이의 비도 같은 순서로 써요. 한 쌍만 비교하면 안 되고 세 쌍을 모두 확인해야 해요.' },
+      checks: [
+        { q: '△ABC: AB=4, BC=6, CA=8 / △DEF: DE=6, EF=9, FD=12일 때 두 삼각형의 관계로 알맞은 것은?', opts: ['닮음이다 (SSS 닮음)', '닮음이 아니다', '알 수 없다'], ans: 0, hint: '4 : 6, 6 : 9, 8 : 12를 각각 간단히 해 보세요.', why: '4 : 6 = 6 : 9 = 8 : 12 = 2 : 3으로 세 쌍의 비가 같아요. SSS 닮음이에요.' },
+        { q: '△ABC: AB=5, BC=7, CA=9 / △DEF: DE=10, EF=14, FD=19일 때 두 삼각형의 관계로 알맞은 것은?', opts: ['닮음이다 (SSS 닮음)', '닮음이 아니다 (세 비가 같지 않다)', '알 수 없다'], ans: 1, hint: '세 쌍의 비를 모두 구해 보세요.', why: '5 : 10 = 7 : 14 = 1 : 2이지만 9 : 19는 1 : 2가 아니에요. 세 비가 같지 않으므로 닮음이 아니에요.' },
+        { q: '닮음비가 2 : 5인 두 삼각형에서 작은 삼각형의 둘레가 18 cm일 때, 큰 삼각형의 둘레는?', unit: 'cm', ans: 45, hint: '둘레의 비는 닮음비와 같아요. 18 : □ = 2 : 5', why: '18 : □ = 2 : 5 → □ = 18 × 5 ÷ 2 = 45 cm' },
+        { q: '닮음비가 2 : 3인 두 삼각형에서 작은 삼각형의 넓이가 20 cm²일 때, 큰 삼각형의 넓이는?', unit: 'cm²', ans: 45, hint: '넓이의 비는 닮음비의 제곱이에요. 2² : 3² = 4 : 9', why: '20 : □ = 4 : 9 → □ = 20 × 9 ÷ 4 = 45 cm²' }
+      ],
+      refl: [TPL + '[연습 1] 삼각형 모양 지붕틀 △ABC, △DEF의 변의 길이는 AB=6 m, BC=9 m, CA=12 m, DE=8 m, EF=12 m, FD=16 m이다.\n(1) 닮은 도형인지 판정하고 이용한 닮음 조건을 쓰시오. (2) 닮음비를 구하시오. (3) 작은 지붕틀의 둘레가 27 m일 때 큰 지붕틀의 둘레를 구하시오. (4) 두 지붕틀에 칠할 페인트 면적의 비를 구하시오.',
+        '약식 발표 연습: 선생님이 "닮음비가 3 : 4인데 넓이의 비는 왜 9 : 16이 되나요?"라고 물으면 어떻게 대답할까요? 내 대답을 써 보세요.'] },
+
+    { id: 'l26', unit: 1, sec: '수행평가', lab: 'Ⅴ 수행평가 연습 2', title: '도형 감정사 연습 2 · 울타리 감정', q: '길이의 비만 알면 울타리가 평행인지 알 수 있을까?', lens: '판정 · 근거', ready: true, widget: 'de', elp: ELP, el: EL, rlab: RLAB, self: SELF,
+      pred: { ask: '삼각형 모양 땅 △ABC에서 D는 AB 위, E는 AC 위의 점이에요. 학생 갑: "AD : DB와 AE : EC가 같으니 울타리 DE는 BC와 평행하다." 학생 을: "길이의 비가 같아도 각도를 직접 재어 보아야 평행하다고 할 수 있다." 누구의 말이 타당할 것 같아요?', opts: ['갑이 타당하다', '을이 타당하다', '둘 다 타당하다', '모르겠다'] },
+      tasks: [
+        { ask: '"A 현장" 탭에서 "AD=4, AE=6" 버튼을 누르세요. AD ÷ DB와 AE ÷ EC의 값은?', opts: ['둘 다 2', 'AD÷DB = 2, AE÷EC = 3', '둘 다 1'], ans: 0, why: '4 : 2 = 6 : 3 = 2 : 1이에요. 두 비가 같고, 그래서 DE는 BC와 평행해요.' },
+        { ask: '같은 탭에서 "AD=4, AE=5" 버튼을 누르세요. DE는 BC와 평행한가요?', opts: ['평행하다', '평행하지 않다'], ans: 1, why: 'AD : DB = 2 : 1이지만 AE : EC = 5 : 4라서 비가 달라요. 비가 다르면 평행하지 않아요.' },
+        { ask: '"B 현장" 탭에서 "AD=6, AE=9" 버튼을 누르세요. 두 비 AD : DB와 AE : EC는?', opts: ['같다 (3 : 2)', '다르다'], ans: 0, why: '6 : 4 = 9 : 6 = 3 : 2예요. 두 비가 같으므로 DE ∥ BC라고 판정할 수 있어요.' },
+        { ask: 'AD : DB = AE : EC이면 DE와 BC의 관계는?', opts: ['항상 평행하다', '평행할 수도 있고 아닐 수도 있다', '항상 평행하지 않다'], ans: 0, why: '"비가 같으면 평행이다"는 평행의 조건이에요. 반대로 "평행이면 비가 같다"는 평행선의 성질이에요.' }
+      ],
+      gen: { lead: '"근거"를 문장으로 완성해 보세요.', items: [
+        { pre: '△ABC에서 DE ∥ BC이면 AD : DB =', opts: ['AE : EC', 'AE : AC', 'DE : BC'], ans: 0, post: '이다.' },
+        { pre: '△ABC에서 DE ∥ BC이면 AD : AB = AE : AC =', opts: ['DE : BC', 'DB : BC', 'AD : DE'], ans: 0, post: '이다.' },
+        { pre: '거꾸로 AD : DB = AE : EC이면', opts: ['DE ∥ BC이다', 'DE = BC이다', 'DE ⊥ BC이다'], ans: 0, post: '.' },
+        { pre: 'AD : DB와 AE : EC가 같지 않으면 DE는 BC와', opts: ['평행하지 않다', '평행하다', '알 수 없다'], ans: 0, post: '.' }
+      ] },
+      sum: { title: '판정 · 근거 · 계산으로 쓰기 (울타리)', defs: DEFS,
+        points: ['[A 현장 판정] EC = 3 m, DE = 6 m', '[A 현장 근거] 가정: DE ∥ BC, AD=4, DB=2, AE=6, BC=9 → 성질: 삼각형에서 평행선과 선분의 길이의 비 (AD : DB = AE : EC, AD : AB = DE : BC) → 결론: EC와 DE의 길이를 구할 수 있다.', '[A 현장 계산] 4 : 2 = 6 : EC → EC = 3 m, AB = 4 + 2 = 6이므로 AD : AB = 4 : 6 = 2 : 3 = DE : 9 → DE = 9 × 2/3 = 6 m', '[B 현장 판정] 평행하다. 의뢰인의 말이 맞다.', '[B 현장 근거] 가정: AD=6, DB=4, AE=9, EC=6 → 조건: AD : DB = 6 : 4 = 3 : 2, AE : EC = 9 : 6 = 3 : 2로 두 비가 같다 (평행의 조건) → 결론: DE ∥ BC', '[B 현장 계산] 6 : 4 = 3 : 2, 9 : 6 = 3 : 2이므로 두 비가 같다.'],
+        note: '"성질"(평행이면 비가 같다)은 길이를 구할 때 쓰고, "조건"(비가 같으면 평행이다)은 평행인지 판정할 때 써요. 이번엔 B 현장에서 비가 같았지만, 비가 다르면 평행이 아니라고 판정해요.' },
+      checks: [
+        { q: '△ABC에서 DE ∥ BC이고 AD = 3 cm, DB = 6 cm, AE = 2 cm일 때 EC의 길이는?', unit: 'cm', ans: 4, hint: 'AD : DB = AE : EC', why: '3 : 6 = 2 : EC → EC = 6 × 2 ÷ 3 = 4 cm' },
+        { q: '△ABC에서 DE ∥ BC이고 AD = 6 cm, AB = 10 cm, BC = 15 cm일 때 DE의 길이는?', unit: 'cm', ans: 9, hint: 'AD : AB = DE : BC', why: '6 : 10 = DE : 15 → DE = 15 × 6 ÷ 10 = 9 cm' },
+        { q: '△ABC에서 AD=4, DB=6, AE=6, EC=9일 때 DE와 BC의 관계는?', opts: ['평행하다', '평행하지 않다', '알 수 없다'], ans: 0, hint: 'AD : DB와 AE : EC를 각각 간단히 해 보세요.', why: '4 : 6 = 2 : 3, 6 : 9 = 2 : 3으로 같아요. 평행의 조건에 의해 DE ∥ BC예요.' },
+        { q: '△ABC에서 AD=5, DB=3, AE=4, EC=3일 때 DE와 BC의 관계는?', opts: ['평행하다', '평행하지 않다', '알 수 없다'], ans: 1, hint: 'AD : DB와 AE : EC를 비교해 보세요.', why: '5 : 3과 4 : 3은 같지 않아요. 비가 다르므로 DE와 BC는 평행하지 않아요.' }
+      ],
+      refl: [TPL + '[연습 2] 삼각형 모양 땅 △ABC에서 D는 변 AB 위의 점, E는 변 AC 위의 점이다.\n(1) A 현장: DE ∥ BC이고 AD=4 m, DB=2 m, AE=6 m, BC=9 m일 때 EC와 DE의 길이를 구하시오.\n(2) B 현장: AD=6 m, DB=4 m, AE=9 m, EC=6 m이다. 의뢰인은 "울타리 DE를 BC와 평행하게 세웠다"고 한다. 이 말이 맞는지 판정하시오.',
+        '약식 발표 연습: 선생님이 "AD : DB와 AE : EC가 같으면 왜 DE ∥ BC라고 할 수 있나요?"라고 물으면 어떻게 대답할까요? 내 대답을 써 보세요.'] },
+
+    { id: 'l27', unit: 1, sec: '수행평가', lab: 'Ⅴ 수행평가 연습 3', title: '도형 감정사 연습 3 · 도로 감정', q: '세 평행한 도로가 두 직선 도로를 자를 때, 길이는 어떻게 구할까?', lens: '판정 · 계산', ready: true, widget: 'pl_def', elp: ELP, el: EL, rlab: RLAB, self: SELF,
+      pred: { ask: '세 평행한 도로 l, m, n이 두 직선 도로와 각각 점 A, B, C와 D, E, F에서 만나요. 한쪽 도로에서 AB : BC = 2 : 3이면, 다른 쪽 도로에서 DE : EF는 어떨 것 같아요?', opts: ['2 : 3', '3 : 2', '알 수 없다', '모르겠다'] },
+      tasks: [
+        { ask: '"l ∥ m ∥ n" 탭에서 m의 높이를 바꿔 보세요. AB ÷ BC와 DE ÷ EF의 값은?', opts: ['항상 같다', '항상 다르다', 'm의 위치에 따라 다르다'], ans: 0, why: 'm을 어디로 옮겨도 두 비는 같아요. 길이는 바뀌어도 비는 변하지 않아요.' },
+        { ask: '같은 탭에서 q의 기울기를 바꿔 보세요. 두 비는 여전히 같을까요?', opts: ['여전히 같다', '달라진다'], ans: 0, why: '두 직선 도로가 어떻게 놓여도 평행한 세 도로가 자른 비는 같아요.' },
+        { ask: '"m 기울이기" 탭에서 m의 양 끝 높이를 서로 다르게 해 보세요. 두 비는?', opts: ['여전히 같다', '달라진다'], ans: 1, why: 'm이 l, n과 평행하지 않으면 비가 달라져요. "평행"이 꼭 필요한 조건이에요.' },
+        { ask: '세 도로가 서로 평행하지 않아도 AB : BC = DE : EF를 쓸 수 있을까요?', opts: ['쓸 수 없다 (평행해야 한다)', '쓸 수 있다'], ans: 0, why: '평행선이 자른 선분의 길이의 비가 같다는 성질은 세 직선이 평행할 때만 쓸 수 있어요.' }
+      ],
+      gen: { lead: '"근거"를 문장으로 완성해 보세요.', items: [
+        { pre: 'l ∥ m ∥ n이면 AB : BC =', opts: ['DE : EF', 'DE : DF', 'BC : EF'], ans: 0, post: '이다.' },
+        { pre: '4 : 6 = 6 : EF에서 안쪽 두 수의 곱과 바깥쪽 두 수의 곱이 같으므로 4 × EF =', opts: ['6 × 6', '4 × 6', '6 × 4'], ans: 0, post: '이다.' },
+        { pre: '세 직선이 평행하지 않으면 AB : BC = DE : EF가', opts: ['항상 성립하지는 않는다', '항상 성립한다'], ans: 0, post: '.' },
+        { pre: '점 E가 DF 위에 있으면 DF의 길이는 DE와 EF의', opts: ['합이다', '차이다', '곱이다'], ans: 0, post: '.' }
+      ] },
+      sum: { title: '판정 · 근거 · 계산으로 쓰기 (도로)', defs: DEFS,
+        points: ['[판정] EF = 9 km이다.', '[근거] 가정: l ∥ m ∥ n (세 도로가 평행), AB=4, BC=6, DE=6 → 성질: 세 평행선이 두 직선과 만날 때 평행선 사이의 선분의 길이의 비는 같다 (AB : BC = DE : EF) → 결론: EF의 길이를 구할 수 있다.', '[계산] 4 : 6 = 6 : EF → 4 × EF = 36 → EF = 9 km. 확인: DF = DE + EF = 6 + 9 = 15 km'],
+        note: '평행하다는 가정이 있어야 이 성질을 쓸 수 있어요. 계산 후에는 DF = DE + EF처럼 전체 길이로 다시 확인해 봐요.' },
+      checks: [
+        { q: 'l ∥ m ∥ n이고 AB = 3 km, BC = 5 km, DE = 6 km일 때 EF의 길이는?', unit: 'km', ans: 10, hint: 'AB : BC = DE : EF', why: '3 : 5 = 6 : EF → EF = 5 × 6 ÷ 3 = 10 km' },
+        { q: 'l ∥ m ∥ n이고 AB = 2 cm, BC = 3 cm, EF = 4.5 cm일 때 DE의 길이는?', unit: 'cm', ans: 3, hint: 'AB : BC = DE : EF', why: '2 : 3 = DE : 4.5 → DE = 4.5 × 2 ÷ 3 = 3 cm' },
+        { q: 'l ∥ m ∥ n이고 AB = 6, BC = 4, DF = 15일 때 DE의 길이는? (E는 DF 위의 점)', unit: '', ans: 9, hint: 'AB : BC = 6 : 4 = 3 : 2이므로 DE : EF = 3 : 2이고 DE + EF = 15예요.', why: 'DE : EF = 3 : 2이므로 DE = 15 × 3/5 = 9' },
+        { q: 'm이 l, n과 평행하지 않을 때 "AB : BC = DE : EF"를 이용해 EF를 구해도 될까요?', opts: ['구해도 된다', '구할 수 없다 (평행이 아니므로)', '항상 성립한다'], ans: 1, hint: '이 성질을 쓰려면 어떤 가정이 필요한가요?', why: '세 직선이 평행해야 성립해요. 평행하지 않으면 비가 달라질 수 있어요.' }
+      ],
+      refl: [TPL + '[연습 3] 세 평행한 도로 l, m, n이 두 직선 도로와 각각 점 A, B, C와 D, E, F에서 만난다. AB=4 km, BC=6 km, DE=6 km일 때 EF의 길이를 구하시오.',
+        '약식 발표 연습: 선생님이 "세 도로가 평행하지 않아도 이 계산을 쓸 수 있나요?"라고 물으면 어떻게 대답할까요? 내 대답을 써 보세요.'] }
+  );
+})();
+
 /* ===== Ⅴ. 도형의 닮음 — 학습지 5, 6, 7차시 + 평가 요소 표시 ===== */
 const GEN_REFL = '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요.';
 LESSONS.push(
@@ -769,7 +859,7 @@ LESSONS.push(
 
 /* 차시 순서: 선생님 학습지(5단원 1~8차시) 순서 */
 (() => {
-  const ord = ['l01','l18','l02','l03','l04','l19','l20','l21','l05','l22','l23','l24','l06','l07','l17','l16','l08','l14','l15','l09','l10','l11','l12','l13'];
+  const ord = ['l01','l18','l02','l03','l04','l19','l20','l21','l05','l22','l23','l24','l06','l07','l17','l16','l08','l14','l25','l26','l27','l15','l09','l10','l11','l12','l13'];
   const m = Object.fromEntries(LESSONS.map(l => [l.id, l]));
   LESSONS.splice(0, LESSONS.length, ...ord.map(id => m[id]));
   const cnt = {};
@@ -1085,7 +1175,8 @@ function wPyth(use) {
 }
 
 /* 8. 평행선 사이의 선분의 길이의 비 */
-function wPl(use) {
+function wPl(use, N) {
+  N = N || { a: 'A′', b: 'B′', c: 'C′' };
   const S = { tab: 'par', t: 0.4, q: 0, y1: 120, y2: 160 };
   const svg = h('s:svg', { viewBox: '0 0 400 300', role: 'img', 'aria-label': '평행선 사이의 선분의 길이의 비 탐색' });
   const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), tabsBox = h('div');
@@ -1102,12 +1193,12 @@ function wPl(use) {
     svg.replaceChildren(
       seg([20, yl], [380, yl], { stroke: 'var(--blue)', 'stroke-width': 2.5 }), seg([20, y1], [380, y2], { stroke: par ? 'var(--blue)' : 'var(--red)', 'stroke-width': 2.5 }), seg([20, yn], [380, yn], { stroke: 'var(--blue)', 'stroke-width': 2.5 }),
       seg(P[0], P[1]), seg(Q[0], Q[1]), dot(A), dot(B), dot(C), dot(A2), dot(B2), dot(C2),
-      label(A[0] - 12, A[1] - 6, 'A'), label(B[0] - 12, B[1] - 6, 'B'), label(C[0] - 12, C[1] + 16, 'C'), label(A2[0] + 14, A2[1] - 6, 'A′'), label(B2[0] + 14, B2[1] - 6, 'B′'), label(C2[0] + 14, C2[1] + 16, 'C′'),
+      label(A[0] - 12, A[1] - 6, 'A'), label(B[0] - 12, B[1] - 6, 'B'), label(C[0] - 12, C[1] + 16, 'C'), label(A2[0] + 14, A2[1] - 6, N.a), label(B2[0] + 14, B2[1] - 6, N.b), label(C2[0] + 14, C2[1] + 16, N.c),
       label(372, yl - 8, 'l'), label(372, Math.min(y1, y2) - 8 > yl + 12 ? Math.min(y1, y2) - 8 : y2 + 16, 'm'), label(372, yn - 8, 'n'), label(P[0][0] - 10, 18, 'p'), label(Q[0][0] + 10, 18, 'q'));
     const ab = dist(A, B) / K, bc = dist(B, C) / K, ab2 = dist(A2, B2) / K, bc2 = dist(B2, C2) / K, f = v => r1(Math.round(v * 10) / 10);
     const r = ab / bc, r2 = ab2 / bc2, same = Math.abs(r - r2) < 0.015;
-    read.replaceChildren(...[['AB = ' + f(ab) + ' cm', 0], ['BC = ' + f(bc) + ' cm', 0], ['A′B′ = ' + f(ab2) + ' cm', 0], ['B′C′ = ' + f(bc2) + ' cm', 0], ['AB ÷ BC = ' + (Math.round(r * 100) / 100), 1], ['A′B′ ÷ B′C′ = ' + (Math.round(r2 * 100) / 100), 1]].map(([x, hi]) => h('span', { class: hi ? 'hi' : '', text: x })));
-    verdict.className = 'verdict ' + (same ? 'yes' : 'no'); verdict.textContent = same ? 'AB : BC = A′B′ : B′C′ (비가 같아요)' : 'AB : BC ≠ A′B′ : B′C′ (비가 달라졌어요)';
+    read.replaceChildren(...[['AB = ' + f(ab) + ' cm', 0], ['BC = ' + f(bc) + ' cm', 0], [N.a + N.b + ' = ' + f(ab2) + ' cm', 0], [N.b + N.c + ' = ' + f(bc2) + ' cm', 0], ['AB ÷ BC = ' + (Math.round(r * 100) / 100), 1], [N.a + N.b + ' ÷ ' + N.b + N.c + ' = ' + (Math.round(r2 * 100) / 100), 1]].map(([x, hi]) => h('span', { class: hi ? 'hi' : '', text: x })));
+    verdict.className = 'verdict ' + (same ? 'yes' : 'no'); verdict.textContent = same ? 'AB : BC = ' + N.a + N.b + ' : ' + N.b + N.c + ' (비가 같아요)' : 'AB : BC ≠ ' + N.a + N.b + ' : ' + N.b + N.c + ' (비가 달라졌어요)';
   }
   function paintCtl() { ctl.replaceChildren(); const row = (...a) => ctl.append(h('div', { class: 'ctl' }, slider(...a)));
     if (S.tab === 'par') row('m 높이', 0.2, 0.8, 0.05, S.t, v => Math.round(v * 100) + '%', v => { S.t = v; draw(); use(); });
@@ -1519,6 +1610,81 @@ Object.assign(WIDGETS, {
   qd_rect: u => wQd(u, ['rect', 'para']), qd_rhomb: u => wQd(u, ['rhomb', 'para', 'kite']), qd_sq: u => wQd(u, ['sq', 'all']), qd_kite: u => wQd(u, ['kite', 'rhomb', 'para'])
 });
 
+/* ===== Ⅴ. 도형의 닮음 — 수행평가 「도형 감정사」 연습용 탐색 위젯 ===== */
+const heron = (a, b, c) => { const s = (a + b + c) / 2, v = s * (s - a) * (s - b) * (s - c); return v > 0 ? Math.sqrt(v) : 0; };
+const triXY = (ab, bc, ca) => { const x = (ab * ab - ca * ca + bc * bc) / (2 * bc), y = Math.sqrt(Math.max(0, ab * ab - x * x)); return { B: [0, 0], C: [bc, 0], A: [x, y] }; };
+const gcd2 = (a, b) => b ? gcd2(b, a % b) : a;
+
+/* 연습 1 · 지붕틀: 세 변의 길이의 비 (SSS 닮음) */
+function wSss(use) {
+  const S = { de: 8, ef: 12, fd: 14 }, AB = 6, BC = 9, CA = 12;
+  const svg = h('s:svg', { viewBox: '0 0 400 260', role: 'img', 'aria-label': '두 지붕틀의 세 변의 길이의 비 탐색' });
+  const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), pre = h('div', { class: 'wtabs' });
+  function draw() {
+    const { de, ef, fd } = S, ok = de + ef > fd && ef + fd > de && fd + de > ef;
+    svg.replaceChildren();
+    const T1 = triXY(AB, BC, CA), T2 = ok ? triXY(de, ef, fd) : null;
+    const all = [...Object.values(T1), ...(T2 ? Object.values(T2) : [])], maxY = Math.max(...all.map(p => p[1]));
+    const w1 = Math.max(...Object.values(T1).map(p => p[0])) - Math.min(...Object.values(T1).map(p => p[0]));
+    const w2 = T2 ? Math.max(...Object.values(T2).map(p => p[0])) - Math.min(...Object.values(T2).map(p => p[0])) : 0;
+    const sc = Math.min(165 / Math.max(w1, w2, 1), 170 / Math.max(maxY, 1));
+    const place = (T, x0) => { const minX = Math.min(...Object.values(T).map(p => p[0])); const f = p => [x0 + (p[0] - minX) * sc, 215 - p[1] * sc]; return { A: f(T.A), B: f(T.B), C: f(T.C) }; };
+    let cc = [0, 0];
+    const sideLab = (p, q, t) => { const m = mid2(p, q), v = [q[0] - p[0], q[1] - p[1]], L = Math.hypot(...v) || 1; let n = [v[1] / L, -v[0] / L]; if ((m[0] - cc[0]) * n[0] + (m[1] - cc[1]) * n[1] < 0) n = [-n[0], -n[1]]; return label(m[0] + n[0] * 16, m[1] + n[1] * 16 + 4, t, 'svgm'); };
+    const P1 = place(T1, 50); cc = [(P1.A[0] + P1.B[0] + P1.C[0]) / 3, (P1.A[1] + P1.B[1] + P1.C[1]) / 3];
+    svg.append(poly([P1.A, P1.B, P1.C]), sideLab(P1.A, P1.B, 'AB = ' + AB), sideLab(P1.B, P1.C, 'BC = ' + BC), sideLab(P1.C, P1.A, 'CA = ' + CA), label(P1.A[0], P1.A[1] - 8, 'A'), label(P1.B[0] - 11, P1.B[1] + 6, 'B'), label(P1.C[0] + 11, P1.C[1] + 6, 'C'));
+    if (ok) { const P2 = place(T2, 222); cc = [(P2.A[0] + P2.B[0] + P2.C[0]) / 3, (P2.A[1] + P2.B[1] + P2.C[1]) / 3];
+      svg.append(poly([P2.A, P2.B, P2.C], { fill: 'var(--red-soft)', stroke: 'var(--red)' }), sideLab(P2.A, P2.B, 'DE = ' + de), sideLab(P2.B, P2.C, 'EF = ' + ef), sideLab(P2.C, P2.A, 'FD = ' + fd), label(P2.A[0], P2.A[1] - 8, 'D'), label(P2.B[0] - 11, P2.B[1] + 6, 'E'), label(P2.C[0] + 11, P2.C[1] + 6, 'F')); }
+    else svg.append(label(300, 130, '삼각형이 만들어지지 않아요', 'svgt'));
+    const same = de * BC === ef * AB && ef * CA === fd * BC;
+    const f2 = v => String(Math.round(v * 100) / 100);
+    const items = [['DE ÷ AB = ' + f2(de / AB), de * BC === ef * AB ? 1 : 0], ['EF ÷ BC = ' + f2(ef / BC), 0], ['FD ÷ CA = ' + f2(fd / CA), 0]];
+    items[1][1] = de * BC === ef * AB ? 1 : 0; items[2][1] = items[1][1] && ef * CA === fd * BC ? 1 : 0;
+    if (ok) { const p1 = AB + BC + CA, p2 = de + ef + fd; items.push(['둘레 ' + p1 + ' : ' + p2 + ' m', 0]); if (same) { const g = gcd2(AB, de); items.push(['둘레의 비 = ' + (AB / g) + ' : ' + (de / g), 1], ['넓이 ' + f2(heron(AB, BC, CA)) + ' : ' + f2(heron(de, ef, fd)) + ' m²', 0], ['넓이의 비 = ' + (AB / g) ** 2 + ' : ' + (de / g) ** 2, 1]); } }
+    read.replaceChildren(...items.map(([t, hi]) => h('span', { class: hi ? 'hi' : '', text: t })));
+    if (!ok) { verdict.className = 'verdict no'; verdict.textContent = '세 변이 삼각형을 이룰 수 없어요 (가장 긴 변 < 나머지 두 변의 합)'; }
+    else if (same) { const g = gcd2(AB, de); verdict.className = 'verdict yes'; verdict.textContent = '세 쌍의 변의 길이의 비가 모두 같아요 → SSS 닮음 (△ABC : △DEF = ' + (AB / g) + ' : ' + (de / g) + ')'; }
+    else { verdict.className = 'verdict no'; verdict.textContent = '세 쌍의 변의 길이의 비가 같지 않아요 → 닮음이 아니에요 (SSS 조건을 만족하지 않아요)'; }
+  }
+  function paintCtl() { ctl.replaceChildren(); const row = (...a) => ctl.append(h('div', { class: 'ctl' }, slider(...a)));
+    row('DE', 3, 24, 1, S.de, v => v + ' m', v => { S.de = v; draw(); use(); }); row('EF', 3, 24, 1, S.ef, v => v + ' m', v => { S.ef = v; draw(); use(); }); row('FD', 3, 24, 1, S.fd, v => v + ' m', v => { S.fd = v; draw(); use(); }); }
+  const PRE = [['DE=8, EF=12, FD=16', 8, 12, 16], ['DE=8, EF=12, FD=14', 8, 12, 14], ['DE=10, EF=15, FD=20', 10, 15, 20], ['DE=6, EF=9, FD=12', 6, 9, 12]];
+  pre.append(...PRE.map(([t, a, b, c]) => h('button', { type: 'button', text: t, onclick: () => { S.de = a; S.ef = b; S.fd = c; paintCtl(); draw(); use(); } })));
+  paintCtl(); draw();
+  return h('div', { class: 'card widget' }, svg, verdict, ctl, pre, h('p', { class: 'note', text: '△ABC는 그대로 두고 △DEF의 세 변을 바꿔 보세요. 닮음이면 △DEF가 △ABC를 같은 비율로 키우거나 줄인 모양이 돼요.' }), read);
+}
+
+/* 연습 2 · 울타리: 삼각형에서 평행선과 선분의 길이의 비 */
+function wDe(use) {
+  const CFG = { a: { AB: 6, AC: 9, BC: 9, st: 0.5, d: 3, e: 4.5 }, b: { AB: 10, AC: 15, BC: null, st: 1, d: 6, e: 8 } };
+  const S = { tab: 'a', a: { d: 3, e: 5 }, b: { d: 6, e: 8 } };
+  const svg = h('s:svg', { viewBox: '0 0 400 280', role: 'img', 'aria-label': '삼각형에서 DE와 BC가 평행한지 탐색' });
+  const read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict' }), ctl = h('div'), tabsBox = h('div'), pre = h('div', { class: 'wtabs' });
+  const lerp2 = (p, q, t) => [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t];
+  function draw() {
+    const c = CFG[S.tab], { d, e } = S[S.tab], A = [200, 30], B = [45, 240], C = [355, 240], D = lerp2(A, B, d / c.AB), E = lerp2(A, C, e / c.AC);
+    const par = Math.abs(d * c.AC - e * c.AB) < 1e-9, DB = c.AB - d, EC = c.AC - e;
+    svg.replaceChildren(poly([A, B, C]), seg(D, E, { stroke: par ? 'var(--green)' : 'var(--red)', 'stroke-width': 3 }), dot(D, 4.5, 'var(--red)'), dot(E, 4.5, 'var(--red)'), dot(A), dot(B), dot(C),
+      label(A[0], A[1] - 10, 'A'), label(B[0] - 12, B[1] + 6, 'B'), label(C[0] + 12, C[1] + 6, 'C'), label(D[0] - 13, D[1], 'D'), label(E[0] + 13, E[1], 'E'));
+    const f = v => r1(Math.round(v * 100) / 100);
+    const items = [['AD = ' + f(d) + ' m', 0], ['DB = ' + f(DB) + ' m', 0], ['AE = ' + f(e) + ' m', 0], ['EC = ' + f(EC) + ' m', 0], ['AD ÷ DB = ' + String(Math.round(d / DB * 100) / 100), 1], ['AE ÷ EC = ' + String(Math.round(e / EC * 100) / 100), 1]];
+    if (par && c.BC) items.push(['DE = ' + f(c.BC * d / c.AB) + ' m', 1]);
+    read.replaceChildren(...items.map(([t, hi]) => h('span', { class: hi ? 'hi' : '', text: t })));
+    verdict.className = 'verdict ' + (par ? 'yes' : 'no');
+    verdict.textContent = par ? 'AD : DB = AE : EC → DE ∥ BC (평행이 맞아요)' : 'AD : DB ≠ AE : EC → DE와 BC는 평행하지 않아요';
+  }
+  function paintCtl() { ctl.replaceChildren(); const c = CFG[S.tab], st = S[S.tab], row = (...a) => ctl.append(h('div', { class: 'ctl' }, slider(...a)));
+    row('AD (AB = ' + c.AB + ' m)', c.st, c.AB - c.st, c.st, st.d, v => r1(v) + ' m', v => { st.d = v; draw(); use(); });
+    row('AE (AC = ' + c.AC + ' m)', c.st, c.AC - c.st, c.st, st.e, v => r1(v) + ' m', v => { st.e = v; draw(); use(); }); }
+  const PRE = { a: [['AD=4, AE=6 (A 현장)', 4, 6], ['AD=4, AE=5', 4, 5]], b: [['AD=6, AE=9 (B 현장)', 6, 9], ['AD=6, AE=8', 6, 8]] };
+  function paintPre() { pre.replaceChildren(...PRE[S.tab].map(([t, d, e]) => h('button', { type: 'button', text: t, onclick: () => { S[S.tab].d = d; S[S.tab].e = e; paintCtl(); draw(); use(); } }))); }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['a', 'A 현장 (AB 6, AC 9)'], ['b', 'B 현장 (AB 10, AC 15)']], S.tab, k => { S.tab = k; paintTabs(); paintCtl(); paintPre(); draw(); use(); })); }
+  paintTabs(); paintCtl(); paintPre(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, svg, verdict, ctl, pre, h('p', { class: 'note', text: 'D, E의 위치를 바꾸면서 AD ÷ DB와 AE ÷ EC의 값이 같아지는 순간을 찾아보세요. 그때 DE는 BC와 평행해요.' }), read);
+}
+
+Object.assign(WIDGETS, { sss: wSss, de: wDe, pl_def: u => wPl(u, { a: 'D', b: 'E', c: 'F' }) });
+
 /* ===== 확인 문제용 그림 ===== */
 function F(o) {
   const w = o.w || 260, hh = o.h || 160, P = o.P || {};
@@ -1719,6 +1885,41 @@ const onLn = (p, q, y) => { const t = (y - p[1]) / (q[1] - p[1]); return [p[0] +
   L.l24.gen.fig = () => F({ P: ktO, poly: [['A', 'B', 'C', 'D']], seg: [['A', 'C', 'r'], ['B', 'D', 'r']], rt: [['O', 'A', 'B']], tk: [['B', 'O', 2], ['O', 'D', 2]], h: 160, alt: '대각선이 수직이지만 AO ≠ CO인 사각형' });
   put('l24', 1, () => F({ P: ktO, poly: [['A', 'B', 'C', 'D']], seg: [['A', 'C', 'r'], ['B', 'D', 'r']], rt: [['O', 'A', 'B']], tk: [['A', 'O', 1], ['O', 'C', 1]], h: 160, txt: [[130, 172, 'AC ⊥ BD,  AO = CO']], alt: 'AC ⊥ BD, AO = CO인 사각형' }));
   put('l24', 2, () => F({ P: rhO, poly: [['A', 'B', 'C', 'D']], seg: [['A', 'C', 'r'], ['B', 'D', 'r']], rt: [['O', 'A', 'B']], txt: [[130, 168, 'AC = 12 cm,  BD = 16 cm']], h: 175, alt: '마름모 ABCD, AC = 12, BD = 16' }));
+})();
+
+/* ===== Ⅴ. 도형의 닮음 — 수행평가 대비 연습 그림 ===== */
+(() => {
+  const L = Object.fromEntries(LESSONS.map(l => [l.id, l]));
+  const put = (id, i, fn) => { L[id].checks[i].fig = fn; };
+  const lp = (p, q, t) => [p[0] + (q[0] - p[0]) * t, p[1] + (q[1] - p[1]) * t];
+
+  /* 연습 1: 두 지붕틀 (6, 9, 12 / 8, 12, 16) 같은 축척 */
+  const roof = { A: [15, 79], B: [25.5, 120], C: [88.5, 120], D: [130, 66], E: [144, 120], F: [228, 120] };
+  const roofTxt = [['A', 'B', '6', 14], ['B', 'C', '9', 14], ['C', 'A', '12', 14], ['D', 'E', '8', 14], ['E', 'F', '12', 14], ['F', 'D', '16', 14]];
+  L.l25.pred.fig = () => F({ w: 270, h: 150, P: roof, poly: [['A', 'B', 'C'], ['D', 'E', 'F']], txt: roofTxt, alt: '삼각형 지붕틀 △ABC(6, 9, 12)와 △DEF(8, 12, 16)' });
+  L.l25.gen.fig = () => F({ w: 270, h: 162, P: roof, poly: [['A', 'B', 'C'], ['D', 'E', 'F']], txt: roofTxt.concat([[135, 154, 'AB : DE = BC : EF = CA : FD = 3 : 4']]), alt: '세 쌍의 변의 비가 모두 3 : 4인 두 삼각형' });
+
+  /* 연습 2: 울타리 */
+  const T2 = { A: [135, 15], B: [40, 135], C: [230, 135] };
+  const fence = (r, extra) => Object.assign({ D: lp(T2.A, T2.B, r), E: lp(T2.A, T2.C, r) }, T2, extra || {});
+  L.l26.pred.fig = () => F({ w: 270, P: fence(.6), poly: [['A', 'B', 'C']], seg: [['D', 'E', 'r']], txt: [['A', 'D', '6', 14], ['D', 'B', '4', 14], ['A', 'E', '9', 14], ['E', 'C', '6', 14], [135, 170, 'DE ∥ BC 일까?']], h: 178, alt: '삼각형 ABC에서 AD=6, DB=4, AE=9, EC=6' });
+  L.l26.gen.fig = () => F({ w: 270, P: fence(2 / 3), poly: [['A', 'B', 'C']], seg: [['D', 'E', 'r']], par: [['D', 'E'], ['B', 'C']], txt: [['A', 'D', '4', 14], ['D', 'B', '2', 14], ['A', 'E', '6', 14], ['E', 'C', '3', 14], [135, 170, 'DE ∥ BC  →  AD : DB = AE : EC']], h: 178, alt: 'DE ∥ BC인 삼각형 ABC' });
+  put('l26', 0, () => F({ w: 270, P: fence(1 / 3), poly: [['A', 'B', 'C']], seg: [['D', 'E', 'r']], par: [['D', 'E'], ['B', 'C']], txt: [['A', 'D', '3', 14], ['D', 'B', '6', 14], ['A', 'E', '2', 14], ['E', 'C', '?', 14]], h: 178, alt: 'DE ∥ BC, AD=3, DB=6, AE=2' }));
+  put('l26', 1, () => F({ w: 270, P: fence(.6), poly: [['A', 'B', 'C']], seg: [['D', 'E', 'r']], par: [['D', 'E'], ['B', 'C']], txt: [['A', 'D', 'AD = 6', 26], ['A', 'B', 'AB = 10', 26], ['B', 'C', 'BC = 15', 18], ['D', 'E', 'DE = ?', -12]], h: 178, alt: 'DE ∥ BC, AD=6, AB=10, BC=15' }));
+  put('l26', 2, () => F({ w: 270, P: fence(.4), poly: [['A', 'B', 'C']], seg: [['D', 'E', 'r']], txt: [['A', 'D', '4', 14], ['D', 'B', '6', 14], ['A', 'E', '6', 14], ['E', 'C', '9', 14]], h: 178, alt: 'AD=4, DB=6, AE=6, EC=9' }));
+  put('l26', 3, () => F({ w: 270, P: Object.assign({ D: lp(T2.A, T2.B, 5 / 8), E: lp(T2.A, T2.C, 4 / 7) }, T2), poly: [['A', 'B', 'C']], seg: [['D', 'E', 'r']], txt: [['A', 'D', '5', 14], ['D', 'B', '3', 14], ['A', 'E', '4', 14], ['E', 'C', '3', 14]], h: 178, alt: 'AD=5, DB=3, AE=4, EC=3' }));
+
+  /* 연습 3: 도로 */
+  const road = (ys, sx) => ({ _l1: [15, ys[0]], _l2: [255, ys[0]], _m1: [15, ys[1]], _m2: [255, ys[1]], _n1: [15, ys[2]], _n2: [255, ys[2]],
+    A: [80, ys[0]], B: [80 - 20 * (ys[1] - ys[0]) / (ys[2] - ys[0]), ys[1]], C: [60, ys[2]], D: [170, ys[0]], E: [170 + sx * (ys[1] - ys[0]) / (ys[2] - ys[0]), ys[1]], F: [170 + sx, ys[2]] });
+  const roadF = (ys, sx, txt, alt) => F({ w: 270, P: road(ys, sx), seg: [['_l1', '_l2', 't'], ['_m1', '_m2', 't'], ['_n1', '_n2', 't'], ['A', 'C'], ['D', 'F']], txt: txt, h: 170, alt });
+  const R0 = [25, 75, 125];
+  L.l27.pred.fig = () => roadF(R0, 30, [[135, 162, 'l ∥ m ∥ n,  AB : BC = 2 : 3']], '평행한 세 도로 l, m, n과 두 직선 도로');
+  L.l27.gen.fig = () => roadF(R0, 30, [[135, 162, 'l ∥ m ∥ n  →  AB : BC = DE : EF']], '평행한 세 도로 l, m, n과 두 직선 도로');
+  put('l27', 0, () => roadF([25, 62, 135], 30, [[135, 162, 'AB = 3 km, BC = 5 km, DE = 6 km']], 'AB=3, BC=5, DE=6'));
+  put('l27', 1, () => roadF([25, 65, 135], 35, [[135, 162, 'AB = 2 cm, BC = 3 cm, EF = 4.5 cm']], 'AB=2, BC=3, EF=4.5'));
+  put('l27', 2, () => roadF([25, 85, 135], 40, [[135, 162, 'AB = 6, BC = 4,  DF = 15']], 'AB=6, BC=4, DF=15'));
+  put('l27', 3, () => F({ w: 270, P: Object.assign(road([25, 70, 125], 30), { _m1: [15, 55], _m2: [255, 100] }), seg: [['_l1', '_l2', 't'], ['_m1', '_m2', 'r'], ['_n1', '_n2', 't'], ['A', 'C'], ['D', 'F']], txt: [[135, 162, 'm이 l, n과 평행하지 않아요']], h: 170, alt: 'm이 평행하지 않은 도로' }));
 })();
 
 /* ===== 앱 ===== */
@@ -2085,7 +2286,14 @@ function stepRefl(p, l, s, advance, touch, home) {
   }
   box.append(...l.refl.map((q, i) => { const ta = h('textarea', { class: 'in', id: 'refl' + i, placeholder: i === 0 ? '여기에 내 말로 써 보세요' : '', 'aria-label': q }); ta.value = s.refl[i] || '';
     ta.addEventListener('input', () => { s.refl[i] = ta.value; s.upd = Date.now(); save(); Sync.push(p); if (i === 0) paintNb(); });
-    return h('div', { class: 'card', style: i ? 'margin-top:12px' : '' }, h('label', { class: 'l', for: 'refl' + i, style: 'font-size:1rem;color:var(--ink)', text: (i === 0 ? '내 말로 설명하기' : '남은 궁금증') + ' — ' + q }), ta); }));
+    return h('div', { class: 'card', style: i ? 'margin-top:12px' : '' }, h('label', { class: 'l', for: 'refl' + i, style: 'font-size:1rem;color:var(--ink)', text: (l.rlab ? l.rlab[i] : i === 0 ? '내 말로 설명하기' : '남은 궁금증') + ' — ' + q }), ta); }));
+  if (l.self) {
+    const k = l.refl.length, cur = () => { const a = (s.refl[k] || '').padEnd(l.self.length, '-').split(''); return a; };
+    const selBox = h('div', { class: 'card', style: 'margin-top:12px' }, h('b', { text: '자기평가 (○ 잘함 · △ 보통 · × 더 연습)' }));
+    const paintSel = () => { const a = cur(); selBox.replaceChildren(h('b', { text: '자기평가 (○ 잘함 · △ 보통 · × 더 연습)' }), ...l.self.map((t, j) => h('div', { style: 'margin-top:10px' }, h('div', { text: (j + 1) + '. ' + t }),
+      h('div', { class: 'row', style: 'gap:8px;margin:6px 0 0' }, ['○', '△', '×'].map(m => h('button', { type: 'button', class: 'btn sm' + (a[j] === m ? ' primary' : ''), text: m, 'aria-label': t + ' ' + m, onclick: () => { const b = cur(); b[j] = m; s.refl[k] = b.join(''); s.upd = Date.now(); save(); Sync.push(p); paintSel(); } })))))); };
+    paintSel(); box.append(selBox);
+  }
   paintNb();
   return h('div', {}, box, nb);
 }
@@ -2183,8 +2391,9 @@ function teacherDetail(rec) {
   a.rows.forEach(x => { const r = x.r;
     out.push(h('section', { class: 'card', style: 'margin-top:12px' }, h('div', { class: 'row', style: 'margin:0;justify-content:space-between' }, h('div', {}, h('b', { text: lno(x.l) + ' · ' + x.l.title }), x.l.el ? h('div', { class: 'note', style: 'margin:2px 0 0;font-size:12px', text: '평가 요소 · ' + x.l.el }) : null), !r ? h('span', { class: 'chip gray', text: '미시작' }) : r.d ? h('span', { class: 'chip green', text: '완료 · 확인 ' + r.c[0] + '/' + r.c[1] }) : h('span', { class: 'chip gold', text: '진행 ' + (Math.min(r.s, 5) + 1) + '/6' })),
       r && r.p ? h('div', { class: 'refl' }, h('small', { text: '처음 예상' }), r.p) : null,
-      r && r.r && r.r[0] ? h('div', { class: 'refl' }, h('small', { text: '내 말로 설명하기' }), r.r[0]) : null,
-      r && r.r && r.r[1] ? h('div', { class: 'refl' }, h('small', { text: '남은 궁금증' }), r.r[1]) : null)); });
+      r && r.r && r.r[0] ? h('div', { class: 'refl' }, h('small', { text: x.l.rlab ? x.l.rlab[0] : '내 말로 설명하기' }), r.r[0]) : null,
+      r && r.r && r.r[1] ? h('div', { class: 'refl' }, h('small', { text: x.l.rlab ? x.l.rlab[1] : '남은 궁금증' }), r.r[1]) : null,
+      r && r.r && r.r[2] && x.l.self ? h('div', { class: 'refl' }, h('small', { text: '자기평가' }), x.l.self.map((t, j) => (j + 1) + ' ' + (r.r[2][j] || '-')).join('  ·  ')) : null)); });
   const fb = h('textarea', { class: 'in', id: 't-fb', rows: '7', 'aria-label': '피드백 글' }); fb.value = rec.fb || draftFeedback(rep); fb.addEventListener('input', () => { rec.fb = fb.value; tsave(); });
   out.push(h('section', { class: 'card', style: 'margin-top:12px' }, h('h2', { class: 'h2', text: '피드백 초안' }), h('p', { class: 'note', text: '기록으로 만든 초안이에요. 고치면 자동으로 저장돼요.' }), fb,
     h('div', { class: 'row' }, h('button', { class: 'btn primary', text: '복사', onclick: () => copyText(fb.value, '피드백을 복사했어요') }), h('button', { class: 'btn', text: '초안 다시 만들기', onclick: () => { fb.value = draftFeedback(rep); rec.fb = ''; tsave(); toast('초안을 다시 만들었어요'); } }))));
