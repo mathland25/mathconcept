@@ -2199,10 +2199,13 @@ function stepExplore(p, l, s, advance, touch) {
 function stepGen(p, l, s, advance, touch) {
   const list = h('div'), nb = h('div');
   const allOk = () => l.gen.items.every((_, i) => s.gen[i]);
+  /* 보기 순서를 학생·문항마다 다르게 섞어요(첫 칸만 누르고 넘어가는 것을 막기 위해). 같은 학생은 항상 같은 순서. */
+  const ord = (it, i) => { let x = 7; for (const c of l.id + ':' + i + ':' + (p.id || p.name || '')) x = (Math.imul(x, 31) + c.charCodeAt(0)) >>> 0;
+    const a = it.opts.map((_, j) => j); for (let k = a.length - 1; k > 0; k--) { x = (Math.imul(x, 1664525) + 1013904223) >>> 0; const r = x % (k + 1); [a[k], a[r]] = [a[r], a[k]]; } return a; };
   function paint() {
     list.replaceChildren(...l.gen.items.map((it, i) => {
       const ok = s.gen[i], wr = s.genWrong && s.genWrong[i];
-      const blank = h('span', { class: 'blank' }, ok ? h('button', { type: 'button', class: 'good', disabled: true, text: it.opts[it.ans] }) : it.opts.map((o, j) => h('button', { type: 'button', class: wr === j ? 'bad' : '', text: o,
+      const blank = h('span', { class: 'blank' }, ok ? h('button', { type: 'button', class: 'good', disabled: true, text: it.opts[it.ans] }) : ord(it, i).map(j => h('button', { type: 'button', class: wr === j ? 'bad' : '', text: it.opts[j],
         onclick: () => { if (j === it.ans) { s.gen[i] = true; if (s.genWrong) delete s.genWrong[i]; } else s.genWrong = Object.assign(s.genWrong || {}, { [i]: j }); touch(); paint(); } })));
       return h('div', { class: 'genitem gen' }, it.pre, blank, it.post, wr != null && !ok ? h('div', { class: 'fb hint', text: '탐색에서 직접 확인한 것을 떠올려 보세요. (위의 "탐색" 단계로 돌아가도 돼요)' }) : null);
     }));
