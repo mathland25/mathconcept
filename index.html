@@ -2258,6 +2258,8 @@ function inkPad(x) {
   return h('div', { class: 'pad' }, h('div', { class: 'padhd', text: '✏️ 풀이 쓰기 (손가락이나 펜으로 써 보세요)' }), h('div', { class: 'padwrap' }, cv), tools);
 }
 function normNum(str) { const t = String(str).replace(/[−–]/g, '-').replace(/,/g, '').trim(); const m = /^-?\d+(\.\d+)?/.exec(t); return m ? parseFloat(m[0]) : NaN; }
+/* 보기 순서를 학생·문항마다 섞어요(같은 학생은 항상 같은 순서) */
+function shufOrd(n, seed) { let x = 7; for (const c of seed) x = (Math.imul(x, 31) + c.charCodeAt(0)) >>> 0; const a = Array.from({ length: n }, (_, j) => j); for (let k = n - 1; k > 0; k--) { x = (Math.imul(x, 1664525) + 1013904223) >>> 0; const r = x % (k + 1); [a[k], a[r]] = [a[r], a[k]]; } return a; }
 function stepCheck(p, l, s, advance, touch) {
   const list = h('div', { class: 'checks' }), nb = h('div');
   const allOk = () => l.checks.every((_, i) => s.chk[i] && s.chk[i].ok);
@@ -2265,7 +2267,7 @@ function stepCheck(p, l, s, advance, touch) {
     list.replaceChildren(...l.checks.map((c, i) => {
       const x = s.chk[i] || (s.chk[i] = { tries: 0, ok: false, first: false, show: false });
       let ctrl;
-      if (c.opts) ctrl = h('div', { class: 'opts' }, c.opts.map((o, j) => h('button', { type: 'button', class: 'opt' + (x.ok && j === c.ans ? ' good' : x.pick === j && !x.ok ? ' bad' : ''), disabled: x.ok || x.show, text: o,
+      if (c.opts) ctrl = h('div', { class: 'opts' }, shufOrd(c.opts.length, l.id + ':c' + i + ':' + (p.id || p.name || '')).map(j => h('button', { type: 'button', class: 'opt' + (x.ok && j === c.ans ? ' good' : x.pick === j && !x.ok ? ' bad' : ''), disabled: x.ok || x.show, text: c.opts[j],
         onclick: () => submit(i, j) })));
       else { const inp = h('input', { class: 'in', id: 'chk' + i, inputmode: 'decimal', autocomplete: 'off', 'aria-label': '답', value: x.val || '', disabled: x.ok || x.show });
         inp.addEventListener('keydown', e => { if (e.key === 'Enter') submit(i, inp.value); });
