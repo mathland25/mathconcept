@@ -1013,10 +1013,110 @@ LESSONS.push(
   });
 })();
 
+/* ===== Ⅵ 확률과 그 기본 성질: 학습지(1·2 / 3·4 / 5·6차시)에 맞춘 구성 ===== */
+(() => {
+  const m = id => LESSONS.find(l => l.id === id);
+  const RG = '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요. (없으면 "없음")';
+
+  Object.assign(m('l10'), {
+    lab: 'Ⅵ 1·2차시', title: '사건과 경우의 수 · 합의 법칙 · 곱의 법칙', q: '"또는"과 "동시에"는 경우를 세는 방법을 어떻게 바꿀까?', lens: '구조 · 세기',
+    pred: { ask: '푸드코트에서 한식 3종류, 중식 4종류 중 한 가지를 주문한다면 주문하는 방법은 모두 몇 가지일 것 같아요?', opts: ['7가지', '12가지', '1가지', '모르겠다'] },
+    tasks: [
+      { ask: '"사건·경우의 수" 탭에서 주사위를 고르고 "짝수의 눈이 나온다"를 눌러 보세요. 경우의 수는?', opts: ['3가지', '2가지', '6가지'], ans: 0, why: '짝수의 눈은 2, 4, 6이라서 경우의 수는 3가지예요. 사건은 "짝수의 눈이 나온다"이고, 경우는 2, 4, 6이에요.' },
+      { ask: '"동전 2개"를 고르고 "서로 다른 면이 나온다"를 눌러 보세요. 경우의 수는?', opts: ['1가지', '2가지', '4가지'], ans: 1, why: '(앞, 뒤)와 (뒤, 앞)의 2가지예요. 두 동전은 서로 구별해서 세요.' },
+      { ask: '"또는(합)" 탭에서 한식 3, 중식 4로 맞춰 한 가지를 주문하는 방법의 수를 구해 보세요.', opts: ['12가지', '7가지', '3가지'], ans: 1, why: '3 + 4 = 7가지. 한식과 중식은 동시에 주문할 수 없는 서로 다른 선택이에요.' },
+      { ask: '"그리고(곱)" 탭에서 판 3, 바퀴 2로 맞춰 스케이트보드를 조립하는 방법의 수를 구해 보세요.', opts: ['5가지', '8가지', '6가지'], ans: 2, why: '3 × 2 = 6가지. 판 하나를 고르고, 그 각각에 바퀴를 고르는 상황이에요.' },
+      { ask: '판과 바퀴를 각각 한 종류씩 고르는 경우에는 어떤 법칙을 쓰나요?', opts: ['합의 법칙', '곱의 법칙'], ans: 1, why: '두 사건이 함께(동시에) 일어나면 곱의 법칙, 동시에 일어나지 않는 두 사건 중 하나가 일어나면 합의 법칙을 써요.' }
+    ],
+    gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+      { pre: '같은 조건에서 반복할 수 있는 실험이나 관찰의 결과를', opts: ['사건', '확률', '상대도수'], ans: 0, post: '이라고 한다.' },
+      { pre: '어떤 사건이 일어나는 가짓수를', opts: ['경우의 수', '확률', '상대도수'], ans: 0, post: '라고 한다.' },
+      { pre: '두 사건 A, B가 동시에 일어나지 않을 때, A 또는 B가 일어나는 경우의 수는 m', opts: ['+', '×', '−'], ans: 0, post: 'n이다. (합의 법칙)' },
+      { pre: '사건 A와 B가 동시에 일어날 때, 경우의 수는 m', opts: ['+', '×', '−'], ans: 1, post: 'n이다. (곱의 법칙)' },
+      { pre: '문제에 "또는"이 보이면', opts: ['합의 법칙', '곱의 법칙'], ans: 0, post: ', "동시에(잇달아)"가 보이면 곱의 법칙을 쓴다.' }
+    ] },
+    sum: { title: '사건과 경우의 수', defs: [['사건', '같은 조건에서 반복할 수 있는 실험이나 관찰의 결과'], ['경우의 수', '어떤 사건이 일어나는 가짓수'], ['합의 법칙', '동시에 일어나지 않는 두 사건 A, B의 경우의 수가 각각 m, n이면 A 또는 B가 일어나는 경우의 수는 m + n'], ['곱의 법칙', '사건 A가 일어나는 경우의 수가 m이고 그 각각에 대하여 사건 B가 일어나는 경우의 수가 n이면 A와 B가 동시에 일어나는 경우의 수는 m × n']],
+      points: ['실험(관찰) → 사건 → 경우 → 경우의 수 순서로 생각한다. (예: 동전 두 개를 던진다 → 서로 다른 면이 나온다 → (앞, 뒤), (뒤, 앞) → 2가지)', '"또는"이 보이면 더한다.', '"동시에", "잇달아"가 보이면 곱한다.', '세기 전에 "서로 다른 방법이 겹치지 않는지" 먼저 확인한다.'],
+      note: '합의 법칙을 쓸 때는 두 사건이 동시에 일어나지 않아야 해요.' },
+    checks: [
+      { q: '주사위 한 개를 던질 때 소수의 눈이 나오는 경우의 수는?', unit: '가지', ans: 3, hint: '1은 소수가 아니에요. 6 이하의 소수를 모두 찾아요.', why: '2, 3, 5의 3가지' },
+      { q: '푸드코트에 한식 3종류, 중식 4종류가 있습니다. 한식 또는 중식 중에서 한 가지를 주문하는 경우의 수는?', unit: '가지', ans: 7, hint: '"또는"이에요.', why: '3 + 4 = 7가지' },
+      { q: '티셔츠 4벌과 바지 3벌이 있습니다. 티셔츠 한 벌과 바지 한 벌을 짝지어 입는 경우의 수는?', unit: '가지', ans: 12, hint: '티셔츠 하나마다 바지를 고르는 경우가 3가지예요.', why: '4 × 3 = 12가지' },
+      { q: '서로 다른 두 개의 주사위를 동시에 던질 때, 나온 눈의 수의 합이 5 또는 6이 되는 경우의 수는?', unit: '가지', ans: 9, hint: '합이 5인 경우와 합이 6인 경우를 따로 세어 합쳐요.', why: '합이 5: (1,4)(2,3)(3,2)(4,1) 4가지, 합이 6: (1,5)(2,4)(3,3)(4,2)(5,1) 5가지 → 4 + 5 = 9가지' },
+      { q: '동전 2개와 주사위 1개를 동시에 던질 때, 나오는 경우의 수는? (동전은 서로 구분됩니다)', unit: '가지', ans: 24, hint: '동전 하나의 경우의 수 × 다른 동전 × 주사위', why: '2 × 2 × 6 = 24가지' }
+    ],
+    refl: ['"또는"과 "동시에"에서 계산이 왜 다른지, 오늘의 예시를 하나 들어 자기 말로 설명해 보세요.', RG]
+  });
+
+  m('l12').lab = 'Ⅵ 3·4차시 ①';
+
+  Object.assign(m('l28'), {
+    lab: 'Ⅵ 3·4차시 ②', title: '확률의 성질 · 일어나지 않을 확률', q: '확률은 얼마까지 커지고 얼마까지 작아질 수 있고, 일어나지 않을 확률은 어떻게 구할까?', lens: '범위 · 관계',
+    pred: { ask: '파인애플 맛 사탕 3개, 포도 맛 사탕 5개가 든 그릇에서 사탕 한 개를 꺼낼 때, 파인애플 맛일 확률은 얼마일 것 같아요?', opts: ['3/8', '3/5', '1/2', '모르겠다'] },
+    tasks: [
+      { ask: '"사탕 그릇" 탭을 열어 파인애플 3, 포도 5, 우유 0으로 맞추고 파인애플 맛이 나올 확률을 확인해 보세요.', opts: ['3/8', '3/5', '5/8'], ans: 0, why: '모든 경우 8가지 중 파인애플 맛이 3가지라서 3/8이에요.' },
+      { ask: '같은 상태에서 우유 맛 사탕이 나올 확률은?', opts: ['1/8', '0', '1'], ans: 1, why: '우유 맛 사탕이 없으므로 절대 일어나지 않는 사건이고, 확률은 0이에요.' },
+      { ask: '같은 상태에서 과일 맛(파인애플 또는 포도)이 나올 확률은? 세 확률의 합도 함께 살펴보세요.', opts: ['5/8', '1', '0'], ans: 1, why: '8/8 = 1. 반드시 일어나는 사건의 확률은 1이에요.' },
+      { ask: '"가위바위보" 탭에서 "비길 때"를 눌러 보세요. 한 번 할 때 비길 확률은?', opts: ['1/9', '1/2', '1/3'], ans: 2, why: '모든 경우 9가지 중 비기는 경우가 3가지(가위-가위, 바위-바위, 보-보)라서 3/9 = 1/3이에요.' },
+      { ask: '"승부가 날 때"를 눌러 보세요. 승부가 날 확률은?', opts: ['2/3', '1/3', '1/2'], ans: 0, why: '6/9 = 2/3. 비길 확률 1/3을 1에서 빼도 2/3예요.' }
+    ],
+    gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+      { pre: '어떤 사건이 일어날 확률을 p라 하면 p의 범위는', opts: ['0 ≤ p ≤ 1', 'p ≥ 1', 'p ≤ 0'], ans: 0, post: '이다.' },
+      { pre: '반드시 일어나는 사건의 확률은', opts: ['1', '0', '1/2'], ans: 0, post: '이다.' },
+      { pre: '절대로 일어나지 않는 사건의 확률은', opts: ['0', '1', '1/2'], ans: 0, post: '이다.' },
+      { pre: '사건 A가 일어날 확률이 p이면, A가 일어나지 않을 확률은', opts: ['1 − p', 'p − 1', '1 + p'], ans: 0, post: '이다.' }
+    ] },
+    sum: { title: '확률의 성질', defs: [['확률의 범위', '0 이상 1 이하'], ['반드시 일어나는 사건', '확률이 1'], ['절대로 일어나지 않는 사건', '확률이 0'], ['일어나지 않을 확률', '1 − (일어날 확률)']],
+      points: ['0 ≤ (확률) ≤ 1', '파인애플 3개, 포도 5개: 파인애플 3/8, 우유 0, 과일 맛 1', '가위바위보: 비길 확률 1/3, 승부가 날 확률 1 − 1/3 = 2/3'],
+      note: '"적어도 하나"처럼 직접 세기 어려울 때는 일어나지 않을 확률을 구해 1에서 빼면 편할 때가 있어요.' },
+    checks: [
+      { q: '주머니에 빨간 공 3개와 파란 공 5개가 들어 있습니다. 한 개를 꺼낼 때 파란 공이 나올 확률은? (분수나 소수로 써요)', unit: '', ans: 0.625, hint: '(파란 공의 수) ÷ (전체 공의 수)', why: '5 ÷ 8 = 5/8 = 0.625' },
+      { q: '주사위 한 개를 던질 때 7의 눈이 나올 확률은?', unit: '', ans: 0, hint: '주사위에 7의 눈이 있나요?', why: '7의 눈은 나올 수 없으므로 확률은 0이에요.' },
+      { q: '내일 비가 올 확률이 0.3일 때, 비가 오지 않을 확률은?', unit: '', ans: 0.7, hint: '일어나지 않을 확률 = 1 − 일어날 확률', why: '1 − 0.3 = 0.7' },
+      { q: '가위바위보를 한 번 할 때 비기지 않을 확률은? (분수로 써요. 예: 1/2)', unit: '', ans: 2 / 3, tol: 5e-4, hint: '비길 확률은 3/9 = 1/3이에요.', why: '1 − 1/3 = 2/3' },
+      { q: '다음 중 확률이 될 수 없는 것은?', opts: ['0', '1', '5/4', '0.8'], ans: 2, hint: '확률은 0 이상 1 이하예요.', why: '5/4는 1보다 커서 확률이 될 수 없어요.' }
+    ],
+    refl: ['확률이 왜 0보다 작거나 1보다 클 수 없는지 "경우의 수의 비율"이라는 말을 써서 설명해 보세요.', RG]
+  });
+
+  LESSONS.push({
+    id: 'l30', unit: 2, lab: 'Ⅵ 5·6차시', title: '확률의 계산 · 또는과 동시에', q: '"또는"과 "동시에"는 확률을 구하는 계산을 어떻게 바꿀까?', lens: '계산 · 구조',
+    ready: true, widget: 'pcalc',
+    pred: { ask: '학생 25명 중 B안을 12명, C안을 9명이 선택했어요. 한 명을 뽑을 때 B안 또는 C안을 선택한 학생이 뽑힐 확률은 얼마일 것 같아요?', opts: ['21/25', '108/625', '3/25', '모르겠다'] },
+    tasks: [
+      { ask: '"또는(더하기)" 탭에서 B안과 C안만 선택해 보세요. B 또는 C안을 선택한 학생이 뽑힐 확률은?', opts: ['3/25', '21/25', '108/625'], ans: 1, why: '12/25 + 9/25 = 21/25. 한 명은 한 가지만 선택하므로 두 사건은 동시에 일어나지 않아서 확률을 더해요.' },
+      { ask: 'A, B, C안을 모두 선택해 보세요. 이때의 확률은?', opts: ['1', '3', '1/3'], ans: 0, why: '4/25 + 12/25 + 9/25 = 25/25 = 1. 반드시 일어나는 사건이라서 1이에요.' },
+      { ask: '"동시에(곱하기)" 탭에서 판소리와 가곡을 모두 선택해 보세요. 진하게 칠해진 칸은 몇 개인가요?', opts: ['8개', '15개', '56개'], ans: 1, why: '판소리 3곡 × 가곡 5곡 = 15칸이에요. 전체 칸은 7 × 8 = 56개예요.' },
+      { ask: '판소리와 가곡으로 동시에 평가받을 확률은?', opts: ['8/56', '35/56', '15/56'], ans: 2, why: '15/56 = 3/7 × 5/8. 서로 영향을 끼치지 않는 두 사건이 동시에 일어날 확률은 각 확률의 곱이에요.' },
+      { ask: '판소리일 확률(3/7)과 가곡일 확률(5/8)을 더해도 15/56이 될까요?', opts: ['된다', '안 된다 (동시에는 곱해야 한다)'], ans: 1, why: '3/7 + 5/8 = 59/56 > 1이라서 확률이 될 수 없어요. 동시에 일어날 확률은 곱해야 해요.' }
+    ],
+    gen: { lead: '탐색에서 찾은 것을 문장으로 완성해 보세요.', items: [
+      { pre: '두 사건 A, B가 동시에 일어나지 않을 때, A 또는 B가 일어날 확률은 p', opts: ['+', '×', '−'], ans: 0, post: 'q이다. (p, q는 각 사건의 확률)' },
+      { pre: '두 사건 A, B가 서로 영향을 끼치지 않을 때, A와 B가 동시에 일어날 확률은 p', opts: ['×', '+', '−'], ans: 0, post: 'q이다.' },
+      { pre: '"또는"이 보이면 확률을', opts: ['더한다', '곱한다'], ans: 0, post: ', "동시에"가 보이면 곱한다.' },
+      { pre: '한 명이 B안과 C안을 동시에 선택할 수는 없으므로 "B안 또는 C안"의 확률은', opts: ['더해서 구한다', '곱해서 구한다'], ans: 0, post: '.' }
+    ] },
+    sum: { title: '확률의 계산', defs: [['확률의 계산 (1)', '동시에 일어나지 않는 두 사건 A, B의 확률이 각각 p, q이면 (A 또는 B가 일어날 확률) = p + q'], ['확률의 계산 (2)', '서로 영향을 끼치지 않는 두 사건 A, B의 확률이 각각 p, q이면 (A와 B가 동시에 일어날 확률) = p × q']],
+      points: ['교복: B안 12/25, C안 9/25 → B 또는 C안: 12/25 + 9/25 = 21/25', '음악: 판소리 3/7, 가곡 5/8 → 동시에: 3/7 × 5/8 = 15/56', '"또는"은 더하고 "동시에"는 곱한다.'],
+      note: '합의 법칙에서는 두 사건이 동시에 일어나지 않아야 하고, 곱의 법칙에서는 두 사건이 서로 영향을 끼치지 않아야 해요.' },
+    checks: [
+      { q: '학생 25명 중 A안 4명, B안 12명, C안 9명이 선택했습니다. 한 명을 뽑을 때 A안 또는 C안을 선택한 학생이 뽑힐 확률은? (분수나 소수로 써요)', unit: '', ans: 0.52, tol: 5e-4, hint: '4/25 + 9/25', why: '4/25 + 9/25 = 13/25 = 0.52' },
+      { q: '주사위 한 개를 던질 때 2의 배수 또는 5의 배수의 눈이 나올 확률은? (분수로 써요)', unit: '', ans: 2 / 3, tol: 5e-4, hint: '2의 배수는 2, 4, 6이고 5의 배수는 5예요. 겹치지 않아요.', why: '3/6 + 1/6 = 4/6 = 2/3' },
+      { q: '동전 한 개와 주사위 한 개를 동시에 던질 때, 동전은 앞면이 나오고 주사위는 짝수의 눈이 나올 확률은?', unit: '', ans: 0.25, hint: '앞면 1/2, 짝수 3/6 = 1/2이에요. 서로 영향을 끼치지 않아요.', why: '1/2 × 1/2 = 1/4' },
+      { q: '서로 영향을 끼치지 않는 두 사건 A, B의 확률이 각각 1/3, 1/4일 때, A와 B가 동시에 일어날 확률은? (분수로 써요)', unit: '', ans: 1 / 12, tol: 5e-4, hint: '동시에이므로 곱해요.', why: '1/3 × 1/4 = 1/12' },
+      { q: '다음 중 확률을 "곱해서" 구하는 것은?', opts: ['A 또는 B가 일어날 확률 (동시에 일어나지 않음)', 'A와 B가 동시에 일어날 확률 (서로 영향 없음)', 'A가 일어나지 않을 확률'], ans: 1, hint: '"동시에"가 보이면 곱해요.', why: '동시에 일어날 확률은 각 확률의 곱이에요. "또는"은 더하고, 일어나지 않을 확률은 1에서 빼요.' }
+    ],
+    refl: ['교복 문제에서 확률을 더하는 까닭과 음악 문제에서 확률을 곱하는 까닭을 비교해서 자기 말로 설명해 보세요.', RG]
+  });
+
+  m('l11').lab = 'Ⅵ 보충 ①';
+  m('l13').lab = 'Ⅵ 보충 ②';
+})();
+
 
 /* 차시 순서: 선생님 학습지(5단원 1~8차시) 순서 */
 (() => {
-  const ord = ['l01','l18','l02','l03','l04','l19','l20','l21','l05','l22','l23','l24','l06','l07','l17','l16','l08','l14','l25','l26','l27','l15','l09','l10','l11','l12','l28','l13','l29'];
+  const ord = ['l01','l18','l02','l03','l04','l19','l20','l21','l05','l22','l23','l24','l06','l07','l17','l16','l08','l14','l25','l26','l27','l15','l09','l10','l12','l28','l30','l11','l13','l29'];
   const m = Object.fromEntries(LESSONS.map(l => [l.id, l]));
   LESSONS.splice(0, LESSONS.length, ...ord.map(id => m[id]));
   const cnt = {};
@@ -1212,27 +1312,39 @@ function wSim(use) {
 
 /* 4. 경우의 수 */
 function wCount(use) {
-  const S = { tab: 'sum', a: 3, b: 2, n: 3, m: 4 };
+  const S = { tab: 'ev', a: 3, b: 4, n: 3, m: 2, subj: 'dice', ev: 0 };
+  const EV = {
+    dice: { head: '주사위 한 개를 한 번 던진다', all: ['1', '2', '3', '4', '5', '6'], list: [['짝수의 눈이 나온다', ['2', '4', '6']], ['5 이상의 눈이 나온다', ['5', '6']], ['3의 배수의 눈이 나온다', ['3', '6']], ['소수의 눈이 나온다', ['2', '3', '5']]] },
+    coin: { head: '동전 2개(앞·뒤)를 동시에 던진다', all: ['(앞, 앞)', '(앞, 뒤)', '(뒤, 앞)', '(뒤, 뒤)'], list: [['서로 다른 면이 나온다', ['(앞, 뒤)', '(뒤, 앞)']], ['두 개 모두 앞면이 나온다', ['(앞, 앞)']], ['적어도 한 개는 뒷면이 나온다', ['(앞, 뒤)', '(뒤, 앞)', '(뒤, 뒤)']]] }
+  };
   const body = h('div'), tabsBox = h('div');
   function draw() {
     body.replaceChildren();
-    if (S.tab === 'sum') {
-      body.append(h('p', { class: 'note', text: '서울 → 대전. 기차 또는 버스 중 하나를 골라 한 번 가요.' }),
-        h('div', { class: 'ctl' }, slider('기차 (편)', 1, 6, 1, S.a, v => String(v), v => { S.a = v; draw(); use(); })),
-        h('div', { class: 'ctl' }, slider('버스 (편)', 1, 6, 1, S.b, v => String(v), v => { S.b = v; draw(); use(); })),
-        h('div', { class: 'chips' }, Array.from({ length: S.a }, (_, i) => h('span', { text: '기차 ' + (i + 1) }))),
-        h('div', { class: 'chips gold' }, Array.from({ length: S.b }, (_, i) => h('span', { text: '버스 ' + (i + 1) }))),
-        h('div', { class: 'verdict yes', text: '한 번 가는 방법: ' + S.a + ' + ' + S.b + ' = ' + (S.a + S.b) + '가지' }));
+    if (S.tab === 'ev') {
+      const E = EV[S.subj], cur = E.list[Math.min(S.ev, E.list.length - 1)];
+      body.append(h('div', { class: 'wtabs', role: 'group' }, [['dice', '주사위 1개'], ['coin', '동전 2개']].map(([k, l]) => h('button', { type: 'button', class: S.subj === k ? 'on' : '', text: l, onclick: () => { S.subj = k; S.ev = 0; draw(); use(); } }))),
+        h('p', { class: 'note', text: '실험(관찰): ' + E.head + '.' }),
+        h('p', { class: 'note', text: '아래에서 사건을 눌러 보세요. 그 사건이 일어나는 "경우"에 색이 칠해져요.' }),
+        h('div', { class: 'chips' }, E.list.map(([t], i) => h('button', { type: 'button', class: 'btn sm' + (i === S.ev ? ' primary' : ''), text: t, onclick: () => { S.ev = i; draw(); use(); } }))),
+        h('div', { class: 'chips gold' }, E.all.map(c => h('span', { class: cur[1].includes(c) ? 'hit' : '', style: cur[1].includes(c) ? 'background:var(--blue);color:var(--paper);border-color:var(--blue);font-weight:700' : '', text: c }))),
+        h('div', { class: 'verdict yes', text: '사건: "' + cur[0] + '" → 경우: ' + cur[1].join(', ') + ' → 경우의 수 = ' + cur[1].length + '가지' }));
+    } else if (S.tab === 'sum') {
+      body.append(h('p', { class: 'note', text: '푸드코트 차림표에서 한식 또는 중식 중 한 가지를 주문해요.' }),
+        h('div', { class: 'ctl' }, slider('한식 (종류)', 1, 6, 1, S.a, v => String(v), v => { S.a = v; draw(); use(); })),
+        h('div', { class: 'ctl' }, slider('중식 (종류)', 1, 6, 1, S.b, v => String(v), v => { S.b = v; draw(); use(); })),
+        h('div', { class: 'chips' }, Array.from({ length: S.a }, (_, i) => h('span', { text: '한식 ' + (i + 1) }))),
+        h('div', { class: 'chips gold' }, Array.from({ length: S.b }, (_, i) => h('span', { text: '중식 ' + (i + 1) }))),
+        h('div', { class: 'verdict yes', text: '한 가지 주문하는 방법: ' + S.a + ' + ' + S.b + ' = ' + (S.a + S.b) + '가지' }));
     } else {
-      body.append(h('p', { class: 'note', text: '상의를 고르고 이어서 하의를 골라 한 벌을 만들어요.' }),
-        h('div', { class: 'ctl' }, slider('상의 (벌)', 1, 5, 1, S.n, v => String(v), v => { S.n = v; draw(); use(); })),
-        h('div', { class: 'ctl' }, slider('하의 (벌)', 1, 5, 1, S.m, v => String(v), v => { S.m = v; draw(); use(); })));
+      body.append(h('p', { class: 'note', text: '스케이트보드 가게에서 판과 바퀴를 각각 한 종류씩 골라 조립해요.' }),
+        h('div', { class: 'ctl' }, slider('판 (종류)', 1, 5, 1, S.n, v => String(v), v => { S.n = v; draw(); use(); })),
+        h('div', { class: 'ctl' }, slider('바퀴 (종류)', 1, 5, 1, S.m, v => String(v), v => { S.m = v; draw(); use(); })));
       const g = h('div', { class: 'grid-combo', style: 'grid-template-columns:repeat(' + S.m + ',minmax(0,1fr))' });
-      for (let i = 1; i <= S.n; i++) for (let j = 1; j <= S.m; j++) g.append(h('span', { text: '상' + i + '·하' + j }));
-      body.append(g, h('div', { class: 'verdict yes', text: '옷차림: ' + S.n + ' × ' + S.m + ' = ' + (S.n * S.m) + '가지' }));
+      for (let i = 1; i <= S.n; i++) for (let j = 1; j <= S.m; j++) g.append(h('span', { text: '판' + i + '·바퀴' + j }));
+      body.append(g, h('div', { class: 'verdict yes', text: '조립하는 방법: ' + S.n + ' × ' + S.m + ' = ' + (S.n * S.m) + '가지' }));
     }
   }
-  function paintTabs() { tabsBox.replaceChildren(tabs([['sum', '또는 (합)'], ['prod', '그리고 (곱)']], S.tab, k => { S.tab = k; paintTabs(); draw(); use(); })); }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['ev', '사건·경우의 수'], ['sum', '또는 (합)'], ['prod', '그리고 (곱)']], S.tab, k => { S.tab = k; paintTabs(); draw(); use(); })); }
   paintTabs(); draw();
   return h('div', { class: 'card widget' }, tabsBox, body);
 }
@@ -1962,25 +2074,37 @@ function wProb(use) {
 
 /* 8. 확률의 기본 성질 — 주머니 속 공 */
 function wBag(use) {
-  const S = { r: 2, b: 3, y: 1 };
-  const NAMES = { r: ['빨강', 'var(--red)'], b: ['파랑', 'var(--blue)'], y: ['노랑', 'var(--gold)'] };
-  const svgBox = h('div'), ctl = h('div'), read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict yes' });
-  function draw() {
+  const S = { tab: 'bag', r: 3, b: 5, y: 0, rps: 'tie' };
+  const NAMES = { r: ['파인애플 맛', 'var(--gold)'], b: ['포도 맛', 'var(--blue)'], y: ['우유 맛', 'var(--ink2)'] };
+  const svgBox = h('div'), ctl = h('div'), read = h('div', { class: 'read' }), verdict = h('div', { class: 'verdict yes' }), tabsBox = h('div'), body = h('div');
+  const HAND = ['가위', '바위', '보'], res = (i, j) => i === j ? 'tie' : ((i + 1) % 3 === j ? 'win' : 'lose');
+  function drawBag() {
     const T = S.r + S.b + S.y, balls = [].concat(Array(S.r).fill('r'), Array(S.b).fill('b'), Array(S.y).fill('y'));
-    const svg = h('s:svg', { viewBox: '0 0 360 190', role: 'img', 'aria-label': '주머니 속 공과 확률' });
+    const svg = h('s:svg', { viewBox: '0 0 360 190', role: 'img', 'aria-label': '그릇 속 사탕과 확률' });
     balls.forEach((c, i) => svg.append(h('s:circle', { cx: 28 + (i % 9) * 38, cy: 24 + Math.floor(i / 9) * 36, r: 14, fill: NAMES[c][1], 'fill-opacity': .85 })));
     let x = 20;
     ['r', 'b', 'y'].forEach(c => { const w = 320 * S[c] / T; if (S[c]) { svg.append(h('s:rect', { x, y: 108, width: w, height: 26, fill: NAMES[c][1], 'fill-opacity': .8 }), label(x + w / 2, 126, fr(S[c], T), 'svgm')); } x += w; });
     svg.append(h('s:rect', { x: 20, y: 108, width: 320, height: 26, fill: 'none', stroke: 'var(--ink2)', 'stroke-width': 1.5 }), label(20, 154, '0', 'svgm'), label(340, 154, '1', 'svgm'), label(180, 154, '확률의 막대 (전체 = 1)', 'svgm'));
     svgBox.replaceChildren(svg);
-    read.replaceChildren(...['r', 'b', 'y'].map(c => h('span', { text: NAMES[c][0] + ' 공이 나올 확률 ' + S[c] + '/' + T + ' = ' + fr(S[c], T) })));
-    verdict.textContent = '세 확률의 합 = ' + fr(T, T) + '  ·  빨간 공이 나오지 않을 확률 = 1 − ' + fr(S.r, T) + ' = ' + fr(T - S.r, T);
+    ctl.replaceChildren(...['r', 'b', 'y'].map(c => h('div', { class: 'ctl' }, slider(NAMES[c][0] + ' 사탕 (개)', 0, 6, 1, S[c], v => String(v), v => { S[c] = v; if (S.r + S.b + S.y === 0) { S[c] = 1; } draw(); use(); }))));
+    read.replaceChildren(...['r', 'b', 'y'].map(c => h('span', { text: NAMES[c][0] + '이 나올 확률 ' + S[c] + '/' + T + ' = ' + fr(S[c], T) })));
+    verdict.textContent = '세 확률의 합 = ' + fr(T, T) + '  ·  파인애플 맛이 나오지 않을 확률 = 1 − ' + fr(S.r, T) + ' = ' + fr(T - S.r, T);
+    body.replaceChildren(h('p', { class: 'note', text: '그릇에서 사탕을 임의로 한 개 꺼내요. 사탕의 수를 바꾸며 확률이 어떻게 변하는지 보세요.' }), svgBox, ctl, read, verdict);
   }
-  function paintCtl() {
-    ctl.replaceChildren(...['r', 'b', 'y'].map(c => h('div', { class: 'ctl' }, slider(NAMES[c][0] + ' 공 (개)', 0, 6, 1, S[c], v => String(v), v => { S[c] = v; if (S.r + S.b + S.y === 0) { S[c] = 1; paintCtl(); } draw(); use(); }))));
+  function drawRps() {
+    const cnt = { tie: 0, win: 0, lose: 0 }; for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) cnt[res(i, j)]++;
+    const g = h('div', { class: 'dg', style: 'grid-template-columns:repeat(4,minmax(0,1fr))' }, h('span', { class: 'hd', text: '현영＼준서' }), ...HAND.map(t => h('span', { class: 'hd', text: t })));
+    for (let i = 0; i < 3; i++) { g.append(h('span', { class: 'hd', text: HAND[i] })); for (let j = 0; j < 3; j++) { const r = res(i, j), on = S.rps === 'tie' ? r === 'tie' : r !== 'tie'; g.append(h('span', { class: on ? 'on' : '', text: r === 'tie' ? '비김' : r === 'win' ? '현영 승' : '준서 승' })); } }
+    const k = S.rps === 'tie' ? 3 : 6;
+    body.replaceChildren(h('p', { class: 'note', text: '현영이와 준서가 가위바위보를 한 번 해요. 가능한 경우는 모두 9가지이고, 각 경우가 일어날 가능성은 같아요.' }),
+      h('div', { class: 'chips' }, [['tie', '비길 때'], ['dec', '승부가 날 때']].map(([key, t]) => h('button', { type: 'button', class: 'btn sm' + (S.rps === key ? ' primary' : ''), text: t, onclick: () => { S.rps = key; draw(); use(); } }))), g,
+      h('div', { class: 'read' }, h('span', { text: '비길 확률 ' + cnt.tie + '/9 = ' + fr(3, 9) }), h('span', { text: '승부가 날 확률 ' + (9 - cnt.tie) + '/9 = ' + fr(6, 9) })),
+      h('div', { class: 'verdict yes', text: (S.rps === 'tie' ? '비길 확률 ' : '승부가 날 확률 ') + k + '/9 = ' + fr(k, 9) + '  ·  1 − ' + fr(9 - k, 9) + ' = ' + fr(k, 9) + ' (일어나지 않을 확률을 빼서도 구할 수 있어요)' }));
   }
-  paintCtl(); draw();
-  return h('div', { class: 'card widget' }, h('p', { class: 'note', text: '주머니에서 공을 한 개 꺼내요. 공의 수를 바꾸며 확률이 어떻게 변하는지 보세요.' }), svgBox, ctl, read, verdict);
+  function draw() { if (S.tab === 'bag') drawBag(); else drawRps(); }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['bag', '사탕 그릇'], ['rps', '가위바위보']], S.tab, k => { S.tab = k; paintTabs(); draw(); use(); })); }
+  paintTabs(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, body);
 }
 
 /* 9. 확률로 판단하기 — 가능성이 같은지 확인 */
@@ -2052,6 +2176,55 @@ function wGame(use) {
 
 Object.assign(WIDGETS, { tree: wTree, prob: wProb, bag: wBag, fair: wFair, game: wGame });
 
+
+/* ===== Ⅵ 5·6차시: 확률의 계산 (교복 스티커 · 음악 수행평가) ===== */
+function wPcalc(use) {
+  const S = { tab: 'uni', uni: { A: false, B: true, C: true }, pA: true, pB: true };
+  const UNI = { A: 4, B: 12, C: 9 }, TOTAL = 25, COL = { A: 'var(--ink2)', B: 'var(--blue)', C: 'var(--gold)' };
+  const tabsBox = h('div'), body = h('div');
+  function drawUni() {
+    const sel = ['A', 'B', 'C'].filter(k => S.uni[k]);
+    const dots = h('div', { class: 'chips' });
+    ['A', 'B', 'C'].forEach(k => { for (let i = 0; i < UNI[k]; i++) { const on = S.uni[k]; dots.append(h('span', { style: 'min-width:30px;text-align:center;border-color:' + COL[k] + ';' + (on ? 'background:' + COL[k] + ';color:var(--paper);font-weight:700' : 'opacity:.55'), text: k })); } });
+    const cnt = sel.reduce((s, k) => s + UNI[k], 0);
+    const parts = sel.map(k => fr(UNI[k], TOTAL));
+    let msg;
+    if (!sel.length) msg = '안을 눌러 골라 보세요.';
+    else if (sel.length === 1) msg = sel[0] + '안을 선택한 학생이 뽑힐 확률 = ' + UNI[sel[0]] + '/' + TOTAL + ' = ' + fr(UNI[sel[0]], TOTAL);
+    else msg = sel.join(' 또는 ') + '안: ' + sel.map(k => UNI[k] + '/' + TOTAL).join(' + ') + ' = ' + cnt + '/' + TOTAL + (fr(cnt, TOTAL) !== cnt + '/' + TOTAL ? ' = ' + fr(cnt, TOTAL) : '');
+    body.replaceChildren(h('p', { class: 'note', text: '학생 25명이 교복 디자인 A, B, C안 중 하나씩 스티커를 붙였어요. 한 명을 임의로 뽑아요. (A안 4명, B안 12명, C안 9명)' }),
+      h('div', { class: 'chips' }, ['A', 'B', 'C'].map(k => h('button', { type: 'button', class: 'btn sm' + (S.uni[k] ? ' primary' : ''), text: k + '안' + (S.uni[k] ? ' ✓' : ''), onclick: () => { S.uni[k] = !S.uni[k]; draw(); use(); } }))),
+      dots,
+      h('div', { class: 'read' }, ['A', 'B', 'C'].map(k => h('span', { text: k + '안 ' + UNI[k] + '/' + TOTAL + (UNI[k] % 1 === 0 && fr(UNI[k], TOTAL) !== UNI[k] + '/' + TOTAL ? ' = ' + fr(UNI[k], TOTAL) : '') }))),
+      h('div', { class: 'verdict yes', text: msg }),
+      h('p', { class: 'note', text: '세 안은 동시에 선택될 수 없으니 (한 명은 한 가지만 선택) 확률을 그대로 더할 수 있어요.' }));
+  }
+  function drawMusic() {
+    const R = 7, C = 8, pr = r => r >= 4, gc = c => c >= 3;
+    const g = h('div', { style: 'display:grid;grid-template-columns:repeat(' + C + ',minmax(0,1fr));gap:3px;margin:8px 0' });
+    for (let r = 0; r < R; r++) for (let c = 0; c < C; c++) {
+      const a = S.pA && pr(r), b = S.pB && gc(c);
+      const st = a && b ? 'background:var(--blue);border-color:var(--blue)' : a ? 'background:var(--blue-soft);border-color:var(--blue)' : b ? 'background:var(--gold-soft);border-color:var(--gold)' : '';
+      g.append(h('span', { style: 'border:1.5px solid var(--line);border-radius:5px;height:20px;' + st }));
+    }
+    const nA = S.pA ? 3 : 7, nB = S.pB ? 5 : 8;
+    const both = (S.pA ? 3 : 0) * (S.pB ? 5 : 0);
+    let msg = '판소리(3/7)와 가곡(5/8)을 모두 눌러 보세요.';
+    if (S.pA && S.pB) msg = '동시에 일어날 확률 = 3/7 × 5/8 = 15/56   (모든 경우 7 × 8 = 56가지 중 3 × 5 = 15가지)';
+    else if (S.pA) msg = '듣기에서 판소리: 3/7';
+    else if (S.pB) msg = '가창에서 가곡: 5/8';
+    body.replaceChildren(h('p', { class: 'note', text: '듣기 7곡(아리아 4, 판소리 3)과 가창 8곡(민요 3, 가곡 5)에서 각각 한 곡씩 제비를 뽑아요. 세로 줄은 듣기 곡, 가로 줄은 가창 곡이에요.' }),
+      h('div', { class: 'chips' }, [['pA', '듣기: 판소리'], ['pB', '가창: 가곡']].map(([k, t]) => h('button', { type: 'button', class: 'btn sm' + (S[k] ? ' primary' : ''), text: t + (S[k] ? ' ✓' : ''), onclick: () => { S[k] = !S[k]; draw(); use(); } }))),
+      g,
+      h('div', { class: 'read' }, h('span', { text: '판소리 3/7' }), h('span', { text: '가곡 5/8' }), h('span', { text: '진한 칸 ' + (S.pA && S.pB ? 15 : 0) + '개 / 56개' })),
+      h('div', { class: 'verdict yes', text: msg }));
+  }
+  function draw() { if (S.tab === 'uni') drawUni(); else drawMusic(); }
+  function paintTabs() { tabsBox.replaceChildren(tabs([['uni', '또는 (더하기)'], ['music', '동시에 (곱하기)']], S.tab, k => { S.tab = k; paintTabs(); draw(); use(); })); }
+  paintTabs(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, body);
+}
+Object.assign(WIDGETS, { pcalc: wPcalc });
 
 /* ===== 확인 문제용 그림 ===== */
 function F(o) {
