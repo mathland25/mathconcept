@@ -183,6 +183,10 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.6}
 .dg span.on{background:var(--blue);border-color:var(--blue);color:var(--paper);font-weight:700}
 .dg span.wa{background:var(--blue-soft);border-color:var(--blue)}
 .dg span.wb{background:var(--gold-soft);border-color:var(--gold)}
+@media (min-width:881px){
+  .cols>:first-child{position:sticky;top:8px}
+  .cols>section.card{max-height:calc(100vh - 150px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+}
 
 </style>
 <div id="app"></div>
