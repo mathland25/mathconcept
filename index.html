@@ -188,6 +188,7 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.6}
   .cols>section.card{max-height:calc(100vh - 150px);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 }
 
+.keys{display:flex;gap:6px;margin-top:6px}.keys .btn{min-width:44px}
 </style>
 <div id="app"></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -2802,7 +2803,7 @@ function inkPad(x) {
   bar(); redraw();
   return h('div', { class: 'pad' }, h('div', { class: 'padhd', text: '✏️ 풀이 쓰기 (손가락이나 펜으로 써 보세요)' }), h('div', { class: 'padwrap' }, cv), tools);
 }
-function normNum(str) { const t = String(str).replace(/[−–]/g, '-').replace(/,/g, '').trim(); const fm = /^(-?\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/.exec(t); if (fm && parseFloat(fm[2]) !== 0) return parseFloat(fm[1]) / parseFloat(fm[2]); const m = /^-?\d+(\.\d+)?/.exec(t); return m ? parseFloat(m[0]) : NaN; }
+function normNum(str) { const t = String(str).replace(/[−–]/g, '-').replace(/,/g, '').replace(/[（]/g, '(').replace(/[）]/g, ')').trim(); const rm = /^(-?)(\d+)\.(\d*)\((\d+)\)$/.exec(t); if (rm) { const np = rm[3], rp = rm[4], whole = parseInt(rm[2], 10), fr = (parseInt(np + rp, 10) - (np ? parseInt(np, 10) : 0)) / (Math.pow(10, np.length) * (Math.pow(10, rp.length) - 1)); return (rm[1] ? -1 : 1) * (whole + fr); } const fm = /^(-?\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/.exec(t); if (fm && parseFloat(fm[2]) !== 0) return parseFloat(fm[1]) / parseFloat(fm[2]); const m = /^-?\d+(\.\d+)?/.exec(t); return m ? parseFloat(m[0]) : NaN; }
 /* 보기 순서를 학생·문항마다 섞어요(같은 학생은 항상 같은 순서) */
 function shufOrd(n, seed) { let x = 7; for (const c of seed) x = (Math.imul(x, 31) + c.charCodeAt(0)) >>> 0; const a = Array.from({ length: n }, (_, j) => j); for (let k = n - 1; k > 0; k--) { x = (Math.imul(x, 1664525) + 1013904223) >>> 0; const r = x % (k + 1); [a[k], a[r]] = [a[r], a[k]]; } return a; }
 function stepCheck(p, l, s, advance, touch) {
@@ -2816,7 +2817,9 @@ function stepCheck(p, l, s, advance, touch) {
         onclick: () => submit(i, j) })));
       else { const inp = h('input', { class: 'in', id: 'chk' + i, inputmode: 'decimal', autocomplete: 'off', 'aria-label': '답', value: x.val || '', disabled: x.ok || x.show });
         inp.addEventListener('keydown', e => { if (e.key === 'Enter') submit(i, inp.value); });
-        ctrl = h('div', { class: 'ans' }, inp, c.unit ? h('span', { text: c.unit }) : null, h('button', { class: 'btn', type: 'button', disabled: x.ok || x.show, text: '확인', onclick: () => submit(i, inp.value) })); }
+        const keys = h('div', { class: 'keys' }, ['/', '.', '(', ')'].map(k => h('button', { type: 'button', class: 'btn sm', 'aria-label': k + ' 입력', disabled: x.ok || x.show, text: k, onclick: () => { const a = inp.selectionStart == null ? inp.value.length : inp.selectionStart, e2 = inp.selectionEnd == null ? a : inp.selectionEnd; inp.value = inp.value.slice(0, a) + k + inp.value.slice(e2); inp.focus(); try { inp.setSelectionRange(a + 1, a + 1); } catch (e) {} } })));
+        const nt = typeof c.ans === 'number' && Math.abs(Math.round(c.ans * 1e6) / 1e6 - c.ans) > 1e-9;
+        ctrl = h('div', null, h('div', { class: 'ans' }, inp, c.unit ? h('span', { text: c.unit }) : null, h('button', { class: 'btn', type: 'button', disabled: x.ok || x.show, text: '확인', onclick: () => submit(i, inp.value) })), x.ok || x.show ? null : keys, nt && !x.ok && !x.show ? h('div', { class: 'note', text: '분수는 1/3처럼, 순환소수는 0.(3)이나 0.1(6)처럼 괄호로 써요.' }) : null); }
       return h('div', { class: 'card chk' }, h('div', { class: 'qt', text: (i + 1) + '. ' + c.q }), c.fig ? c.fig() : null, inkPad(x), ctrl,
         x.ok ? h('div', { class: 'fb good', text: '정답! ' + c.why }) : x.show ? h('div', { class: 'fb hint', text: '정답 확인: ' + c.why }) : x.tries ? h('div', { class: 'fb bad', text: '아쉬워요. 힌트: ' + c.hint }) : null,
         !x.ok && !x.show && x.tries >= 2 ? h('button', { class: 'btn sm', type: 'button', text: '정답 보기', onclick: () => { x.show = true; x.ok = true; touch(); paint(); } }) : null);
@@ -2825,7 +2828,7 @@ function stepCheck(p, l, s, advance, touch) {
   }
   function submit(i, v) {
     const c = l.checks[i], x = s.chk[i]; if (x.ok) return;
-    let good; if (c.opts) { good = v === c.ans; x.pick = v; } else { x.val = String(v); const n = normNum(v); if (isNaN(n)) { toast('숫자로 답을 써 주세요'); return; } good = Math.abs(n - c.ans) < (c.tol || 1e-9); }
+    let good; if (c.opts) { good = v === c.ans; x.pick = v; } else { x.val = String(v); const n = normNum(v); if (isNaN(n)) { toast('숫자로 답을 써 주세요'); return; } good = Math.abs(n - c.ans) < (c.tol || (Math.abs(Math.round(c.ans * 1e6) / 1e6 - c.ans) > 1e-9 ? 6e-3 : 1e-9)); }
     x.tries++; if (good) { x.ok = true; if (x.tries === 1) x.first = true; } touch(); paint();
   }
   paint();
