@@ -1,9 +1,12 @@
 /* ===== 중2-2 개념 학습 내용 (초안) ===== */
 const UNITS = [
-  { id: 0, name: 'Ⅳ. 도형의 성질', sub: '삼각형과 사각형의 성질' },
-  { id: 1, name: 'Ⅴ. 도형의 닮음', sub: '닮음과 피타고라스 정리' },
-  { id: 2, name: 'Ⅵ. 경우의 수와 확률', sub: '세는 방법과 가능성' }
+  { id: 0, grade: 2, name: 'Ⅳ. 도형의 성질', sub: '삼각형과 사각형의 성질' },
+  { id: 1, grade: 2, name: 'Ⅴ. 도형의 닮음', sub: '닮음과 피타고라스 정리' },
+  { id: 2, grade: 2, name: 'Ⅵ. 경우의 수와 확률', sub: '세는 방법과 가능성' },
+  { id: 3, grade: 3, name: 'Ⅴ. 통계', sub: '대푯값 · 산포도 · 상관관계 (교과서 208~235쪽)' }
 ];
+const GRADES = [[2, '중2'], [3, '중3']];
+const gradeOf = l => (UNITS.find(u => u.id === l.unit) || {}).grade || 2;
 const LESSONS = [
   { id: 'l01', unit: 0, no: 1, title: '이등변삼각형의 성질', q: '두 변의 길이가 같은 삼각형에는 어떤 일이 함께 일어날까?', lens: '대칭 · 관계',
     ready: true, widget: 'iso',

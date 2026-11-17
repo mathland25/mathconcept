@@ -171,15 +171,18 @@ function viewWelcome() {
   const list = DB.profiles.length ? h('section', { class: 'card' }, h('h2', { class: 'h2', text: '이어서 하기' }), h('div', { class: 'pcards' }, DB.profiles.map(p =>
     h('button', { class: 'btn pcard', onclick: () => { DB.cur = p.id; save(); go('home'); } }, h('b', { text: p.name }), h('span', { class: 'chip gray', text: p.cls || '반 없음' })))), null) : null;
   return h('div', { class: 'welcome' }, h('div', { class: 'top' }, brand()),
-    h('section', { class: 'card' }, h('h1', { class: 'h1', text: '중2 수학 2학기' }), h('p', { class: 'note', text: '개념을 직접 만져 보고, 내 말로 정리하는 노트예요.' }),
+    h('section', { class: 'card' }, h('h1', { class: 'h1', text: '중학교 수학 개념 탐구' }), h('p', { class: 'note', text: '개념을 직접 만져 보고, 내 말로 정리하는 노트예요.' }),
       h('div', { class: 'fieldrow' }, h('div', {}, h('label', { class: 'l', for: 'nm', text: '이름' }), name), h('div', {}, h('label', { class: 'l', for: 'cl', text: '반' }), cls)),
       h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'button', text: '시작하기', onclick: go1 }))),
     list, h('div', { id: 'syncslot' }, syncBar()));
 }
 
 /* ---------- 홈 ---------- */
+let GRADE = (() => { try { const g = +localStorage.getItem('gn-grade'); return g === 3 ? 3 : 2; } catch (e) { return 2; } })();
+function setGrade(g) { GRADE = g; try { localStorage.setItem('gn-grade', String(g)); } catch (e) { } render(); }
 function viewHome(p) {
-  const ready = LESSONS.filter(l => l.ready), done = ready.filter(l => status(p, l) === 'done').length;
+  const gl = LESSONS.filter(l => gradeOf(l) === GRADE);
+  const ready = gl.filter(l => l.ready), done = ready.filter(l => status(p, l) === 'done').length;
   const next = ready.find(l => status(p, l) !== 'done');
   return h('div', {}, h('header', { class: 'top' }, brand(), h('div', { class: 'row', style: 'margin:0' },
     h('span', { class: 'chip', text: p.name + (p.cls ? ' · ' + p.cls : '') }), h('button', { class: 'btn sm ghost', onclick: () => { DB.cur = null; save(); go('welcome'); }, text: '학생 바꾸기' }))),
@@ -187,7 +190,8 @@ function viewHome(p) {
       h('p', { class: 'note', text: '열린 차시 ' + ready.length + '개 중 ' + done + '개를 끝냈어요. 나머지 차시는 선생님이 순서대로 열어 줄 거예요.' }),
       h('div', { class: 'bar', role: 'progressbar', 'aria-valuenow': pct(done / ready.length), 'aria-valuemin': '0', 'aria-valuemax': '100' }, h('i', { style: 'width:' + pct(done / ready.length) + '%' }))),
       next ? h('button', { class: 'btn primary', onclick: () => go('lesson', { id: next.id, step: lst(p, next.id).step }), text: (status(p, next) === 'new' ? '시작: ' : '이어서: ') + lno(next) + ' ' + next.title }) : null),
-    h('div', { class: 'units' }, UNITS.map(u => h('section', { class: 'unit' }, h('h2', { text: u.name }), h('p', { class: 'sub', text: u.sub }),
+    h('div', { class: 'gtabs', role: 'tablist', 'aria-label': '학년' }, GRADES.map(([g, t]) => h('button', { type: 'button', role: 'tab', 'aria-selected': g === GRADE ? 'true' : 'false', class: 'gtab' + (g === GRADE ? ' on' : ''), text: t + ' 수학', onclick: () => setGrade(g) }))),
+    h('div', { class: 'units' }, UNITS.filter(u => u.grade === GRADE).map(u => h('section', { class: 'unit' }, h('h2', { text: u.name }), h('p', { class: 'sub', text: u.sub }),
       h('div', { class: 'lgrid' }, LESSONS.filter(l => l.unit === u.id).map(l => lcard(p, l)))))),
     h('div', { id: 'syncslot' }, syncBar()),
     submitCard(p),

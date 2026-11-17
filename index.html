@@ -189,6 +189,9 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.6}
 }
 
 .keys{display:flex;gap:6px;margin-top:6px}.keys .btn{min-width:44px}
+.gtabs{display:flex;gap:8px;margin:14px 0 4px}
+.gtab{border:1.5px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:8px 22px;font:inherit;font-weight:700;cursor:pointer;min-height:44px}
+.gtab.on{background:var(--blue);border-color:var(--blue);color:var(--paper)}
 </style>
 <div id="app"></div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -196,10 +199,13 @@ textarea.in{min-height:110px;resize:vertical;line-height:1.6}
 (()=>{'use strict';
 /* ===== 중2-2 개념 학습 내용 (초안) ===== */
 const UNITS = [
-  { id: 0, name: 'Ⅳ. 도형의 성질', sub: '삼각형과 사각형의 성질' },
-  { id: 1, name: 'Ⅴ. 도형의 닮음', sub: '닮음과 피타고라스 정리' },
-  { id: 2, name: 'Ⅵ. 경우의 수와 확률', sub: '세는 방법과 가능성' }
+  { id: 0, grade: 2, name: 'Ⅳ. 도형의 성질', sub: '삼각형과 사각형의 성질' },
+  { id: 1, grade: 2, name: 'Ⅴ. 도형의 닮음', sub: '닮음과 피타고라스 정리' },
+  { id: 2, grade: 2, name: 'Ⅵ. 경우의 수와 확률', sub: '세는 방법과 가능성' },
+  { id: 3, grade: 3, name: 'Ⅴ. 통계', sub: '대푯값 · 산포도 · 상관관계 (교과서 208~235쪽)' }
 ];
+const GRADES = [[2, '중2'], [3, '중3']];
+const gradeOf = l => (UNITS.find(u => u.id === l.unit) || {}).grade || 2;
 const LESSONS = [
   { id: 'l01', unit: 0, no: 1, title: '이등변삼각형의 성질', q: '두 변의 길이가 같은 삼각형에는 어떤 일이 함께 일어날까?', lens: '대칭 · 관계',
     ready: true, widget: 'iso',
@@ -1133,6 +1139,146 @@ LESSONS.push(
   m.l08.wsLabel = '4·5';
 })();
 
+/* ===== 중3 Ⅴ. 통계 (교과서 208~235쪽) — 차시당 25분 구성 ===== */
+(() => {
+  const RG = '오늘 배운 것 중 아직 헷갈리는 부분이 있으면 적어 보세요. (없으면 "없음")';
+  const GEN = '탐색에서 찾은 것을 문장으로 완성해 보세요.';
+  const U = 3, base = LESSONS.length;
+  const add = (o) => LESSONS.push(Object.assign({ unit: U, ready: true, no: LESSONS.length + 1 }, o));
+
+  add({
+    id: 'm01', lab: '중3 통계 1차시', src: '교과서 210~213쪽', title: '대푯값 — 평균 · 중앙값 · 최빈값', q: '자료 전체를 수 하나로 말해야 한다면 어떤 수를 고를까?', lens: '대표 · 중심',
+    widget: 'dp',
+    pred: { ask: '지한이의 10일 동안 수면 시간은 8 7 6 5 8 9 8 7 6 7(시간)이에요. 이 자료를 수 하나로 나타낸다면 얼마쯤일 것 같아요?', opts: ['7시간쯤', '5시간', '9시간', '모르겠다'] },
+    tasks: [
+      { ask: '"수면 10일" 탭에서 평균을 확인하세요. 지한이의 평균 수면 시간은?', opts: ['7시간', '7.1시간', '8시간'], ans: 1, why: '(8+7+6+5+8+9+8+7+6+7) ÷ 10 = 71 ÷ 10 = 7.1시간이에요.' },
+      { ask: '"자료 7개"와 "자료 8개"를 번갈아 눌러 중앙값을 확인하세요. 자료가 8개(짝수)일 때 중앙값은?', opts: ['8', '10', '9'], ans: 2, why: '크기순으로 놓으면 한가운데 두 값이 8과 10이에요. 두 값의 평균 (8+10) ÷ 2 = 9가 중앙값이에요.' },
+      { ask: '"최빈값 2개" 탭에서 가장 많이 나온 값을 확인하세요. 최빈값은?', opts: ['5', '4', '4와 5'], ans: 2, why: '4와 5가 모두 두 번씩 나와서 최빈값은 두 개예요. 최빈값은 하나가 아닐 수도 있어요.' }
+    ],
+    gen: { lead: GEN, items: [
+      { pre: '자료 전체의 특징을 하나의 값으로 대표하여 나타낸 값을', opts: ['대푯값', '경우의 수', '편차'], ans: 0, post: '이라고 한다.' },
+      { pre: '자료를 크기순으로 나열할 때 한가운데 놓이는 값을', opts: ['중앙값', '최빈값', '평균'], ans: 0, post: '이라고 한다.' },
+      { pre: '자료의 수가 짝수이면 중앙값은 한가운데 놓인 두 값의', opts: ['평균', '합', '차'], ans: 0, post: '이다.' },
+      { pre: '자료에서 가장 많이 나오는 값을', opts: ['최빈값', '중앙값', '평균'], ans: 0, post: '이라고 하고, 두 개 이상일 수도 있다.' }
+    ] },
+    sum: { title: '대푯값', defs: [['대푯값', '자료 전체를 특징짓는 값. 평균, 중앙값, 최빈값 등이 있다'], ['평균', '(변량의 총합) ÷ (변량의 개수)'], ['중앙값', '크기순으로 나열했을 때 한가운데 값. 자료의 수가 짝수이면 한가운데 두 값의 평균'], ['최빈값', '가장 많이 나오는 값 (두 개 이상일 수도 있다)']],
+      points: ['피아노 연습 시간 3 7 2 4 5 1 5 8 5 2 → 평균 4.2 · 중앙값 4.5 · 최빈값 5', '자료의 수가 홀수이면 한가운데 값 1개, 짝수이면 한가운데 두 값의 평균이 중앙값이다.'],
+      note: '중앙값을 구하기 전에 먼저 자료를 크기순으로 나열해야 해요.' },
+    checks: [
+      { q: '피아노 연습 시간이 3 7 2 4 5 1 5 8 5 2(시간)일 때 평균은?', unit: '시간', ans: 4.2, hint: '모두 더한 값 42를 개수 10으로 나누어요.', why: '42 ÷ 10 = 4.2시간' },
+      { q: '같은 자료를 크기순으로 나열하면 1 2 2 3 4 5 5 5 7 8이에요. 중앙값은?', unit: '시간', ans: 4.5, hint: '자료가 10개(짝수)이므로 다섯 번째와 여섯 번째 값의 평균이에요.', why: '(4 + 5) ÷ 2 = 4.5시간' },
+      { q: '같은 자료의 최빈값은?', unit: '시간', ans: 5, hint: '가장 많이 나온 값은 세 번 나왔어요.', why: '5시간이 세 번으로 가장 많아요.' },
+      { q: '크기순으로 나열한 자료 3 5 x 9 11 12의 중앙값이 8일 때, x의 값은?', unit: '', ans: 7, hint: '자료가 6개이므로 중앙값은 세 번째와 네 번째 값 x, 9의 평균이에요.', why: '(x + 9) ÷ 2 = 8이므로 x = 7' }
+    ],
+    refl: ['자료의 수가 짝수일 때 중앙값을 한가운데 두 값의 평균으로 정하는 까닭을 내 말로 설명해 보세요.', RG]
+  });
+
+  add({
+    id: 'm02', lab: '중3 통계 2차시', src: '교과서 214~215쪽', title: '대푯값 고르기 — 극단적인 값의 영향', q: '아주 큰 값이 하나 끼어 있으면 평균과 중앙값 중 어느 쪽이 먼저 흔들릴까?', lens: '선택 · 영향',
+    widget: 'out',
+    pred: { ask: '수족관 물고기 8마리 중 7마리는 45~52 cm인데 한 마리가 119 cm예요. 8마리의 몸길이의 평균은 어떨 것 같아요?', opts: ['대부분의 물고기보다 꽤 크게 나올 것 같다', '대부분의 물고기와 비슷할 것 같다', '45 cm보다 작을 것 같다', '모르겠다'] },
+    tasks: [
+      { ask: '"물고기 몸길이"(119 cm)에서 평균(58 cm)보다 작은 물고기는 몇 마리인가요?', opts: ['1마리', '7마리', '4마리'], ans: 1, why: '119 cm 한 마리만 평균보다 크고 나머지 7마리는 평균보다 작아요. 평균이 자료 전체를 잘 나타내지 못해요.' },
+      { ask: '슬라이더로 큰 값을 50 cm 정도까지 줄여 보세요. 평균과 중앙값은 어떻게 변하나요?', opts: ['평균은 크게 변하고, 중앙값은 거의 그대로이다', '둘 다 똑같이 변한다', '중앙값만 크게 변한다'], ans: 0, why: '평균은 58에서 약 49로 크게 줄지만, 중앙값은 50에서 약 49.5로 거의 변하지 않아요.' },
+      { ask: '"전기 사용량" 탭(537 kWh)에서 평균(235)과 중앙값(172) 중 대부분의 가구를 더 잘 나타내는 대푯값은?', opts: ['평균', '중앙값'], ans: 1, why: '537 kWh 한 가구 때문에 평균이 커졌어요. 대부분의 가구는 120~190 kWh 쪽이라서 중앙값이 더 적당해요.' }
+    ],
+    gen: { lead: GEN, items: [
+      { pre: '자료에 매우 크거나 작은 값이 있으면 평균은 그 값의 영향을', opts: ['많이 받는다', '받지 않는다'], ans: 0, post: '.' },
+      { pre: '극단적인 값이 있을 때는 대푯값으로 평균보다', opts: ['중앙값', '합', '편차'], ans: 0, post: '을 쓰는 것이 합리적이다.' },
+      { pre: '중앙값은 극단적인 값의 영향을', opts: ['거의 받지 않는다', '많이 받는다'], ans: 0, post: '.' },
+      { pre: '신발 가게에서 가장 많이 만들 신발 크기를 정할 때 알맞은 대푯값은', opts: ['최빈값', '평균', '중앙값'], ans: 0, post: '이다.' }
+    ] },
+    sum: { title: '대푯값 고르기', defs: [['평균', '모든 값을 반영하지만 극단적인 값의 영향을 크게 받는다'], ['중앙값', '극단적인 값이 있을 때 합리적이다'], ['최빈값', '값이 중복되거나 수로 나타낼 수 없는 자료(선거, 신발 크기 등)에 유용하다']],
+      points: ['물고기 49 52 47 49 119 51 45 52 → 평균 58 cm, 중앙값 50 cm → 중앙값이 더 알맞다.', '전기 사용량 124 153 172 537 189 → 평균 235 kWh, 중앙값 172 kWh → 중앙값이 더 알맞다.'],
+      note: '"어떤 대푯값이 좋은가"는 자료의 모양에 따라 달라요. 극단적인 값이 있는지 먼저 살펴봐요.' },
+    checks: [
+      { q: '14명의 줄넘기 2단 뛰기 횟수가 12 2 15 13 18 2 11 105 2 15 70 1 82 16(회)일 때 평균은?', unit: '회', ans: 26, hint: '모두 더하면 364예요. 14로 나누어요.', why: '364 ÷ 14 = 26회' },
+      { q: '같은 자료의 중앙값은? (크기순: 1 2 2 2 11 12 13 15 15 16 18 70 82 105)', unit: '회', ans: 14, hint: '7번째와 8번째 값 13, 15의 평균이에요.', why: '(13 + 15) ÷ 2 = 14회' },
+      { q: '위 줄넘기 자료의 대푯값으로 가장 알맞은 것은?', opts: ['평균 26회', '중앙값 14회', '평균 26회와 중앙값 14회가 똑같이 알맞다'], ans: 1, hint: '70, 82, 105 같은 큰 값이 평균에 영향을 줬어요.', why: '큰 값 때문에 평균이 커졌고, 대부분의 학생은 20회 이하라서 중앙값 14회가 더 알맞아요.' },
+      { q: '대푯값으로 최빈값이 가장 알맞은 경우는?', opts: ['학급 학생들의 평균 키를 알고 싶을 때', '가장 많은 표를 얻은 후보를 대표로 뽑을 때', '자료를 크기순으로 놓고 한가운데 값을 알고 싶을 때'], ans: 1, hint: '"가장 많이 나온 것"이 대표가 되는 경우예요.', why: '선거에서는 최다 득표가 대표가 돼요. 이것이 최빈값이에요.' }
+    ],
+    refl: ['평균 대신 중앙값(또는 최빈값)을 쓰는 것이 더 알맞았던 경우를 우리 생활에서 하나 찾아 이유와 함께 써 보세요.', RG]
+  });
+
+  add({
+    id: 'm03', lab: '중3 통계 3차시', src: '교과서 216~220쪽', title: '산포도 — 편차 · 분산 · 표준편차', q: '평균이 같은 두 자료는 정말 똑같은 자료일까?', lens: '흩어짐 · 거리',
+    widget: 'sp',
+    pred: { ask: '합창 대회 1반의 점수는 83 84 87 85 86, 2반은 84 94 77 95 75예요. 평균은 둘 다 85점이에요. 점수가 평균 가까이에 더 모여 있는 반은?', opts: ['1반', '2반', '똑같다', '모르겠다'] },
+    tasks: [
+      { ask: '"1반 합창" 탭 "① 편차" 단계에서 편차의 합을 확인하세요. 편차의 합은?', opts: ['10', '0', '85'], ans: 1, why: '(변량) − (평균)을 모두 더하면 항상 0이에요. 그래서 편차의 합으로는 흩어진 정도를 알 수 없어요.' },
+      { ask: '"③ 표준편차" 단계에서 1반과 2반을 비교하세요. 표준편차가 더 큰 반은?', opts: ['1반', '2반'], ans: 1, why: '1반 약 1.41, 2반 약 8.32예요. 2반의 점수가 평균에서 더 멀리 흩어져 있어요.' },
+      { ask: '표준편차가 작다는 것은 무슨 뜻일까요?', opts: ['자료가 평균 가까이에 모여 있다', '자료가 평균에서 넓게 흩어져 있다'], ans: 0, why: '분산이나 표준편차가 작을수록 자료가 평균 가까이에 모여 있어요.' }
+    ],
+    gen: { lead: GEN, items: [
+      { pre: '(편차) =', opts: ['(변량) − (평균)', '(평균) − (변량)', '(변량) ÷ (평균)'], ans: 0, post: '이다.' },
+      { pre: '편차의 총합은 항상', opts: ['0', '1', '평균과 같다'], ans: 0, post: '이다.' },
+      { pre: '(분산) = ((편차)²의 총합) ÷', opts: ['(변량의 개수)', '(평균)', '(편차의 합)'], ans: 0, post: '이다.' },
+      { pre: '표준편차는 분산의', opts: ['양의 제곱근', '제곱', '2배'], ans: 0, post: '이다.' }
+    ] },
+    sum: { title: '산포도', defs: [['산포도', '자료가 대푯값 주위에 흩어져 있는 정도를 하나의 수로 나타낸 값'], ['편차', '(변량) − (평균). 편차의 합은 항상 0'], ['분산', '((편차)²의 총합) ÷ (변량의 개수)'], ['표준편차', '(분산)의 양의 제곱근. 변량과 단위가 같다']],
+      points: ['1반: 편차 −2 −1 2 0 1 → 분산 2, 표준편차 √2 ≈ 1.41', '2반: 편차 −1 9 −8 10 −10 → 분산 69.2, 표준편차 ≈ 8.32', '분산·표준편차가 작을수록 평균 가까이에 모여 있다.'],
+      note: '평균이 같아도 산포도는 다를 수 있어요. 평균은 "중심", 표준편차는 "흩어진 정도"를 말해 줘요.' },
+    checks: [
+      { q: '5회에 걸친 턱걸이 횟수가 6 9 5 8 7(회)이에요. 평균은 7회이고 편차는 −1, 2, −2, 1, 0이에요. 분산은?', unit: '', ans: 2, hint: '편차를 제곱하여 모두 더한 값 10을 변량의 개수 5로 나누어요.', why: '(1 + 4 + 4 + 1 + 0) ÷ 5 = 2' },
+      { q: '위 자료의 표준편차는? (소수 첫째 자리까지, 예: 1.4)', unit: '회', ans: Math.SQRT2, tol: 0.05, hint: '표준편차는 분산의 양의 제곱근이에요. √2 ≈ 1.414', why: '√2 ≈ 1.4회' },
+      { q: '학생 5명의 몸무게의 편차가 −4, 2, x, −3, 6(kg)일 때, x의 값은?', unit: '', ans: -1, hint: '편차의 합은 항상 0이에요.', why: '−4 + 2 + x − 3 + 6 = 0이므로 x = −1' },
+      { q: '평균이 같은 두 자료 A, B의 표준편차가 각각 2.1, 4.5입니다. 평균에 더 가까이 모여 있는 자료는?', opts: ['A', 'B', '알 수 없다'], ans: 0, hint: '표준편차가 작을수록 평균 가까이에 모여 있어요.', why: '표준편차가 더 작은 A의 자료가 평균에 더 가까이 모여 있어요.' }
+    ],
+    refl: ['두 선수의 평균 기록이 같을 때, 표준편차가 작은 선수와 큰 선수 중 누구를 대표로 뽑을지 이유와 함께 써 보세요.', RG]
+  });
+
+  add({
+    id: 'm04', lab: '중3 통계 4차시', src: '교과서 228~229쪽', title: '산점도 — 두 변량을 한 장에', q: '두 가지 정보를 한 장의 그림에 함께 나타내면 무엇이 보일까?', lens: '관계 · 표현',
+    widget: 'sc',
+    pred: { ask: '북반구 도시의 위도(북쪽일수록 큰 값)가 높을수록 12월 최고 기온은 어떨 것 같아요?', opts: ['낮아질 것 같다', '높아질 것 같다', '관계없을 것 같다', '모르겠다'] },
+    tasks: [
+      { ask: '"위도와 기온" 탭에서 찍은 점의 수를 1개로 하고 점의 좌표를 읽어 보세요. 첫 번째 점(런던)은?', opts: ['(8.2, 51)', '(51, 8.2)', '(37, 4.2)'], ans: 1, why: '(x, y) = (위도, 최고 기온) = (51, 8.2)예요. x는 가로, y는 세로예요.' },
+      { ask: '점을 모두 찍고 "경향선 보기"를 켜 보세요. 위도가 높아질수록 12월 최고 기온은 대체로?', opts: ['높아지는 경향이 있다', '낮아지는 경향이 있다', '변화가 없다'], ans: 1, why: '점들이 오른쪽 아래로 향해 분포해요. 위도가 높을수록 기온은 대체로 낮아져요.' },
+      { ask: '"차량 수와 속력" 탭을 열어 보세요. 차량의 수가 늘어날수록 평균 통과 속력은 대체로?', opts: ['증가한다', '변화가 없다', '감소한다'], ans: 2, why: '점들이 오른쪽 아래로 향해요. 차량이 많아질수록 평균 속력은 대체로 줄어요.' }
+    ],
+    gen: { lead: GEN, items: [
+      { pre: '두 변량 x, y의 순서쌍 (x, y)를 좌표로 하는 점을 좌표평면 위에 나타낸 그림을', opts: ['산점도', '히스토그램', '줄기와 잎 그림'], ans: 0, post: '라고 한다.' },
+      { pre: '산점도를 보면 두 변량 사이에 어떤 관계가 있는지', opts: ['한눈에 파악할 수 있다', '알 수 없다'], ans: 0, post: '.' },
+      { pre: '"x가 커질수록 y는 작아지는 경향"은 산점도에서 점들이 대체로', opts: ['오른쪽 아래로 향해 분포한다', '오른쪽 위로 향해 분포한다', '가로로 일직선이다'], ans: 0, post: '.' }
+    ] },
+    sum: { title: '산점도', defs: [['산점도', '두 변량 x, y의 순서쌍 (x, y)를 좌표로 하는 점을 좌표평면에 나타낸 그림'], ['읽는 방법', '점들이 어느 방향으로 모여 있는지를 보고 한 변량이 변할 때 다른 변량이 어떻게 변하는 경향인지 알아본다']],
+      points: ['위도와 12월 최고 기온 → 위도가 높을수록 기온은 대체로 낮아진다.', '왼쪽·오른쪽 눈의 시력 → 왼쪽 시력이 높으면 오른쪽 시력도 대체로 높다.', '차량의 수와 평균 속력 → 차량이 많을수록 속력은 대체로 줄어든다.'],
+      note: '산점도의 점 하나는 조사한 대상 하나(도시, 학생, 측정 1회 등)를 뜻해요.' },
+    checks: [
+      { q: '차량의 수(x)와 평균 통과 속력(y)을 12회 조사한 산점도에서, 차량의 수가 30대인 점은 모두 몇 개인가요? (자료: (54,25) (44,36) (32,52) (30,54) (35,50) (50,28) (42,44) (30,52) (48,35) (52,28) (37,45) (40,40))', unit: '개', ans: 2, hint: 'x좌표가 30인 순서쌍을 세어 보세요.', why: '(30, 54)와 (30, 52)의 2개예요.' },
+      { q: '산점도의 점 (35, 12.3)은 위도 35°N 도시의 12월 최고 기온 12.3℃를 뜻해요. 이 도시는?', opts: ['서울 (37, 4.2)', '도쿄 (35, 12.3)', '카이로 (30, 20.3)'], ans: 1, hint: '표에서 위도가 35인 도시를 찾아요.', why: '위도 35°N, 최고 기온 12.3℃인 도시는 도쿄예요.' },
+      { q: '왼쪽 눈의 시력이 높은 학생이 대체로 오른쪽 눈의 시력도 높다면, 산점도의 점들은 어떻게 분포할까요?', opts: ['오른쪽 위로 향한다', '오른쪽 아래로 향한다', 'x축에 평행하게 놓인다'], ans: 0, hint: 'x가 커질 때 y도 커지는 경향이에요.', why: 'x와 y가 함께 커지는 경향이면 점들이 오른쪽 위로 향해 분포해요.' }
+    ],
+    refl: ['우리 생활에서 산점도로 나타내면 좋을 두 변량을 하나 정하고, 어떤 모양이 나올지 예상해 써 보세요.', RG]
+  });
+
+  add({
+    id: 'm05', lab: '중3 통계 5차시', src: '교과서 230~235쪽', title: '상관관계 — 양 · 음 · 없음', q: '두 변량이 함께 움직이는 방향과 정도를 어떻게 말할까?', lens: '경향 · 정도',
+    widget: 'cr',
+    pred: { ask: '국어 점수가 높을수록 독서 시간이 대체로 길다면, 두 변량의 산점도에서 점들은 어떤 모양일까요?', opts: ['오른쪽 위로 향한다', '오른쪽 아래로 향한다', '고르게 흩어진다', '모르겠다'] },
+    tasks: [
+      { ask: '"양의 상관"에서 흩어진 정도를 "조금"으로 맞춰 보세요. 이때의 판정은?', opts: ['상관관계가 없다', '강한 양의 상관관계', '약한 음의 상관관계'], ans: 1, why: '점들이 오른쪽 위로 향하는 한 직선 가까이 모여 있어 강한 양의 상관관계예요.' },
+      { ask: '"음의 상관"으로 바꿔 보세요. x가 커질 때 y는 대체로?', opts: ['커진다', '작아진다'], ans: 1, why: '점들이 오른쪽 아래로 향해요. x가 커질 때 y는 작아지는 경향이 있으면 음의 상관관계예요.' },
+      { ask: '"고르게 흩어짐"과 "x축에 평행"을 눌러 보세요. 이런 산점도에서의 상관관계는?', opts: ['양의 상관관계', '음의 상관관계', '상관관계가 없다'], ans: 2, why: '점들이 고르게 흩어져 있거나 x축(또는 y축)에 평행한 직선 가까이 있으면 상관관계가 없어요.' }
+    ],
+    gen: { lead: GEN, items: [
+      { pre: '한 변량이 커질 때 다른 변량도 커지는 경향이 있으면', opts: ['양의 상관관계', '음의 상관관계', '상관관계가 없다'], ans: 0, post: '가 있다고 한다.' },
+      { pre: '한 변량이 커질 때 다른 변량은 작아지는 경향이 있으면', opts: ['음의 상관관계', '양의 상관관계', '상관관계가 없다'], ans: 0, post: '가 있다고 한다.' },
+      { pre: '점들이 x축에 평행한 직선 가까이 있으면 상관관계가', opts: ['없다', '강하다', '약하다'], ans: 0, post: '.' },
+      { pre: '점들이 한 직선에 가까이 모일수록 상관관계가', opts: ['강하다', '약하다'], ans: 0, post: '.' }
+    ] },
+    sum: { title: '상관관계', defs: [['양의 상관관계', '한 변량이 커질 때 다른 변량도 커지는 경향. 점들이 오른쪽 위로 향한다'], ['음의 상관관계', '한 변량이 커질 때 다른 변량은 작아지는 경향. 점들이 오른쪽 아래로 향한다'], ['상관관계가 없다', '점들이 고르게 흩어지거나 x축 또는 y축에 평행한 직선 가까이 있다'], ['강함과 약함', '점들이 한 직선에 가까이 모일수록 강하고, 흩어질수록 약하다']],
+      points: ['키와 몸무게 → 양의 상관관계', '차량의 수와 평균 속력 → 음의 상관관계', '국어 점수와 체육 점수 → 상관관계가 없다'],
+      note: '상관관계가 있다고 해서 한쪽이 다른 쪽의 원인이라고 말할 수는 없어요. (예: 기온↑ → 아이스크림 판매↑, 물놀이 사고↑. 아이스크림이 사고의 원인은 아니에요.)' },
+    checks: [
+      { q: '다음 중 양의 상관관계가 있다고 보기 어려운 것은?', opts: ['한 학생의 키와 몸무게', '한 도로의 차량 수와 평균 통과 속력', '8월의 최고 기온과 아이스크림 판매량'], ans: 1, hint: '한 변량이 커질 때 다른 변량이 작아지는 것을 찾아요.', why: '차량이 많을수록 평균 속력은 줄어요. 이는 음의 상관관계예요.' },
+      { q: '애호박 1개의 가격이 오를수록 판매량은 대체로 줄어듭니다. 두 변량 사이의 상관관계는?', opts: ['양의 상관관계', '음의 상관관계', '상관관계가 없다'], ans: 1, hint: '가격이 커질 때 판매량은 어떻게 되나요?', why: '가격이 커질 때 판매량은 작아져요. 음의 상관관계예요.' },
+      { q: '산점도의 점들이 기울기가 음수인 한 직선 가까이에 매우 촘촘히 모여 있습니다. 상관관계는?', opts: ['강한 음의 상관관계', '약한 양의 상관관계', '상관관계가 없다'], ans: 0, hint: '직선의 방향과 모인 정도를 함께 말해요.', why: '기울기가 음수인 직선에 가까이 모여 있으므로 음의 상관관계, 촘촘하므로 강해요.' },
+      { q: '최고 기온이 높을수록 아이스크림 판매량도, 물놀이 사고 건수도 늘어납니다. 민석이가 "아이스크림이 안 팔리면 물놀이 사고도 안 나겠네"라고 말한 것이 잘못된 까닭은?', opts: ['상관관계가 있어도 한 변량이 다른 변량의 원인이라고는 할 수 없기 때문이다', '아이스크림은 많이 팔릴수록 좋기 때문이다', '산점도에서는 양의 상관관계가 나타나지 않기 때문이다'], ans: 0, hint: '두 변량이 함께 변하는 진짜 이유(공통 원인)는 무엇일까요?', why: '두 변량 모두 "높은 기온" 때문에 함께 늘어난 것이에요. 상관관계는 인과관계가 아니에요.' }
+    ],
+    refl: ['"상관관계가 있다 = 원인과 결과다"라고 오해하기 쉬운 예를 하나 찾아, 왜 그렇게 말할 수 없는지 설명해 보세요.', RG]
+  });
+})();
 /* ===== 탐색 위젯 (SVG) ===== */
 const NS = 'http://www.w3.org/2000/svg';
 function h(tag, a, ...k) {
@@ -2231,6 +2377,172 @@ function wPcalc(use) {
 }
 Object.assign(WIDGETS, { pcalc: wPcalc });
 
+/* ===== 중3 Ⅴ. 통계 — 탐색 위젯 (대푯값 · 이상값 · 산포도 · 산점도 · 상관관계) ===== */
+const f2s = v => String(Math.round(v * 100) / 100);
+const f1s = v => (Math.round(v * 10) / 10).toFixed(1);
+const mean3 = a => a.reduce((s, x) => s + x, 0) / a.length;
+const median3 = a => { const b = a.slice().sort((x, y) => x - y), n = b.length; return n % 2 ? b[(n - 1) / 2] : (b[n / 2 - 1] + b[n / 2]) / 2; };
+const modes3 = a => { const c = {}; a.forEach(x => c[x] = (c[x] || 0) + 1); const m = Math.max(...Object.values(c)); return Object.keys(c).filter(k => c[k] === m).map(Number).sort((x, y) => x - y); };
+/* 수직선 위의 점 그림(점도표) — vals, 범위 [lo, hi], 표시할 마커 */
+function dotStrip(vals, lo, hi, opt = {}) {
+  const W = 400, H = 170, L = 24, R = 376, base = 128, sc = v => L + (v - lo) / (hi - lo) * (R - L);
+  const svg = h('s:svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img', 'aria-label': opt.aria || '자료의 점 그림' });
+  svg.append(h('s:line', { x1: L - 6, y1: base + 10, x2: R + 6, y2: base + 10, stroke: 'var(--ink2)', 'stroke-width': 1.5 }));
+  const step = opt.step || (hi - lo > 60 ? 10 : hi - lo > 20 ? 5 : hi - lo > 10 ? 2 : 1);
+  for (let t = Math.ceil(lo / step) * step; t <= hi; t += step) svg.append(h('s:line', { x1: sc(t), y1: base + 10, x2: sc(t), y2: base + 15, stroke: 'var(--ink2)' }), label(sc(t), base + 28, String(t), 'svgm'));
+  const cnt = {}, hit = opt.hit || [];
+  vals.forEach((v, i) => { const k = v; cnt[k] = (cnt[k] || 0) + 1; const x = sc(v), y = base - (cnt[k] - 1) * 15 - 2;
+    svg.append(h('s:circle', { cx: x, cy: y, r: 6, fill: hit.includes(v) ? 'var(--red)' : (opt.fill || 'var(--blue)'), 'fill-opacity': .88, stroke: 'var(--paper)', 'stroke-width': 1 })); });
+  (opt.lines || []).forEach(([v, name, col, dy]) => { if (v < lo || v > hi) return; const x = sc(v);
+    svg.append(h('s:line', { x1: x, y1: 18 + (dy || 0), x2: x, y2: base + 10, stroke: col, 'stroke-width': 2, 'stroke-dasharray': '5 3' }), label(Math.min(Math.max(x, 44), 356), 13 + (dy || 0), name + ' ' + f2s(v), 'svgm'));
+    svg.lastChild.setAttribute('style', 'fill:' + col + ';font-weight:700'); });
+  return { svg, sc };
+}
+
+/* 1. 대푯값 (평균 · 중앙값 · 최빈값) */
+function wDp(use) {
+  const DS = {
+    sleep: { name: '수면 10일', head: '지한이의 10일 동안 수면 시간', u: '시간', v: [8, 7, 6, 5, 8, 9, 8, 7, 6, 7] },
+    piano: { name: '피아노 10일', head: '형진이의 10일 동안 피아노 연습 시간', u: '시간', v: [3, 7, 2, 4, 5, 1, 5, 8, 5, 2] },
+    odd: { name: '자료 7개', head: '자료가 7개 (홀수)', u: '', v: [3, 5, 5, 8, 10, 11, 12] },
+    even: { name: '자료 8개', head: '자료가 8개 (짝수)', u: '', v: [3, 5, 5, 8, 10, 11, 12, 15] },
+    two: { name: '최빈값 2개', head: '가장 많이 나온 값이 두 개인 자료', u: '', v: [2, 4, 4, 5, 5, 7, 8] }
+  };
+  const S = { k: 'sleep', mean: true, med: false, mode: false };
+  const tabsBox = h('div'), body = h('div');
+  function draw() {
+    const D = DS[S.k], v = D.v, n = v.length, sorted = v.slice().sort((a, b) => a - b), m = mean3(v), md = median3(v), mo = modes3(v), sum = v.reduce((a, b) => a + b, 0);
+    const lines = []; if (S.mean) lines.push([m, '평균', 'var(--blue)', 0]); if (S.med) lines.push([md, '중앙값', 'var(--gold)', 14]);
+    const { svg } = dotStrip(v, Math.min(...v) - 1, Math.max(...v) + 1, { hit: S.mode ? mo : [], lines, aria: D.head + '의 점 그림', step: 1 });
+    const mid = n % 2 ? '한가운데 값 ' + sorted[(n - 1) / 2] : '한가운데 두 값 ' + sorted[n / 2 - 1] + ', ' + sorted[n / 2] + '의 평균';
+    const btn = (k, t) => h('button', { type: 'button', class: 'btn sm' + (S[k] ? ' primary' : ''), text: t + (S[k] ? ' ✓' : ''), onclick: () => { S[k] = !S[k]; draw(); use(); } });
+    body.replaceChildren(h('p', { class: 'note', text: D.head + (D.u ? ' (단위: ' + D.u + ')' : '') + '. 한 칸의 점이 자료 하나예요.' }), svg,
+      h('div', { class: 'chips' }, btn('mean', '평균'), btn('med', '중앙값'), btn('mode', '최빈값')),
+      h('div', { class: 'chips' }, sorted.map(x => h('span', { text: String(x), style: S.mode && mo.includes(x) ? 'background:var(--red);color:var(--paper);border-color:var(--red)' : '' }))),
+      h('div', { class: 'read' },
+        h('span', { text: '평균 = ' + sum + ' ÷ ' + n + ' = ' + f2s(m) }), h('span', { text: '중앙값 = ' + (n % 2 ? '홀수 개 → ' : '짝수 개 → ') + mid + ' = ' + f2s(md) }), h('span', { text: '최빈값 = ' + mo.join(', ') + ' (' + sorted.filter(x => x === mo[0]).length + '번)' })),
+      h('div', { class: 'verdict yes', text: '평균 ' + f2s(m) + ' · 중앙값 ' + f2s(md) + ' · 최빈값 ' + mo.join('과 ') }));
+  }
+  function paintTabs() { tabsBox.replaceChildren(tabs(Object.entries(DS).map(([k, d]) => [k, d.name]), S.k, k => { S.k = k; paintTabs(); draw(); use(); })); }
+  paintTabs(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, body);
+}
+
+/* 2. 대푯값 고르기 — 극단적인 값의 영향 */
+function wOut(use) {
+  const DS = {
+    fish: { name: '물고기 몸길이', head: '수족관 물고기 8마리의 몸길이(cm)', base: [49, 52, 47, 49, 51, 45, 52], big: { lo: 45, hi: 130, val: 119 }, lab: '한 마리의 몸길이 (cm)', lo: 40, hi: 135 },
+    elec: { name: '전기 사용량', head: '5가구의 12월 전기 사용량(kWh)', base: [124, 153, 172, 189], big: { lo: 100, hi: 560, val: 537 }, lab: '한 가구의 사용량 (kWh)', lo: 100, hi: 560 }
+  };
+  const S = { k: 'fish', x: { fish: 119, elec: 537 } };
+  const tabsBox = h('div'), body = h('div');
+  function draw() {
+    const D = DS[S.k], x = S.x[S.k], v = D.base.concat([x]), m = mean3(v), md = median3(v);
+    const lo = (m2 => m2)(D.lo), hi = D.hi, { svg } = dotStrip(v, lo, hi, { hit: [x], lines: [[m, '평균', 'var(--blue)', 0], [md, '중앙값', 'var(--gold)', 14]], aria: D.head + ' 점 그림', step: S.k === 'fish' ? 10 : 100 });
+    const below = t => v.filter(a => a < t).length, above = t => v.filter(a => a > t).length;
+    body.replaceChildren(h('p', { class: 'note', text: D.head + '. 빨간 점의 값을 슬라이더로 바꿔 보세요.' }),
+      h('div', { class: 'ctl' }, slider(D.lab, D.big.lo, D.big.hi, 1, x, t => String(t), t => { S.x[S.k] = t; draw(); use(); })),
+      svg,
+      h('div', { class: 'read' }, h('span', { text: '평균 ' + f2s(m) + ' → 평균보다 작은 자료 ' + below(m) + '개, 큰 자료 ' + above(m) + '개' }), h('span', { text: '중앙값 ' + f2s(md) + ' → 작은 자료 ' + below(md) + '개, 큰 자료 ' + above(md) + '개' })),
+      h('div', { class: 'verdict ' + (Math.abs(m - md) > (hi - lo) * 0.05 ? '' : 'yes'), text: Math.abs(m - md) > (hi - lo) * 0.05 ? '평균과 중앙값 차이가 커요. 평균이 극단적인 값에 끌려갔어요.' : '평균과 중앙값이 비슷해요.' }));
+  }
+  function paintTabs() { tabsBox.replaceChildren(tabs(Object.entries(DS).map(([k, d]) => [k, d.name]), S.k, k => { S.k = k; paintTabs(); draw(); use(); })); }
+  paintTabs(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, body);
+}
+
+/* 3. 산포도 — 편차 · 분산 · 표준편차 */
+function wSp(use) {
+  const DS = {
+    c1: { name: '1반 합창', v: [83, 84, 87, 85, 86], lo: 70, hi: 100, head: '합창 대회 1반의 심사 점수(점)' },
+    c2: { name: '2반 합창', v: [84, 94, 77, 95, 75], lo: 70, hi: 100, head: '합창 대회 2반의 심사 점수(점)' },
+    bb: { name: '야구팀 점수', v: [8, 5, 3, 7, 5, 2], lo: 0, hi: 10, head: '야구팀이 일주일 동안 낸 점수(점)' }
+  };
+  const S = { k: 'c1', st: 'dev' };
+  const tabsBox = h('div'), stepBox = h('div'), body = h('div');
+  function draw() {
+    const D = DS[S.k], v = D.v, n = v.length, m = mean3(v), dev = v.map(x => x - m), sq = dev.map(d => d * d), vr = sq.reduce((a, b) => a + b, 0) / n, sd = Math.sqrt(vr);
+    const W = 400, L = 24, R = 376, sc = t => L + (t - D.lo) / (D.hi - D.lo) * (R - L), svg = h('s:svg', { viewBox: '0 0 400 150', role: 'img', 'aria-label': D.head + '와 평균의 거리' });
+    svg.append(h('s:line', { x1: L - 6, y1: 100, x2: R + 6, y2: 100, stroke: 'var(--ink2)', 'stroke-width': 1.5 }));
+    const stp = D.hi - D.lo > 20 ? 5 : 1; for (let t = D.lo; t <= D.hi; t += stp) svg.append(h('s:line', { x1: sc(t), y1: 100, x2: sc(t), y2: 105, stroke: 'var(--ink2)' }), label(sc(t), 119, String(t), 'svgm'));
+    svg.append(h('s:line', { x1: sc(m), y1: 14, x2: sc(m), y2: 100, stroke: 'var(--blue)', 'stroke-width': 2, 'stroke-dasharray': '5 3' }), label(sc(m), 11, '평균 ' + f2s(m), 'svgm'));
+    svg.lastChild.setAttribute('style', 'fill:var(--blue);font-weight:700');
+    const cnt = {}; v.forEach((x, i) => { cnt[x] = (cnt[x] || 0) + 1; const y = 88 - (cnt[x] - 1) * 14, col = dev[i] >= 0 ? 'var(--gold)' : 'var(--red)';
+      if (S.st !== 'dev' || true) svg.append(h('s:line', { x1: sc(m), y1: y - 0.5 + 6 * 0, x2: sc(x), y2: y, stroke: col, 'stroke-width': 2.2, 'stroke-opacity': .55 }));
+      svg.append(h('s:circle', { cx: sc(x), cy: y, r: 6, fill: col, stroke: 'var(--paper)', 'stroke-width': 1 })); });
+    const row = (t, a, fmt) => h('tr', {}, h('th', { text: t }), a.map(z => h('td', { text: fmt(z) })));
+    const tbl = h('div', { class: 'tscroll' }, h('table', { class: 'mx', style: 'min-width:0;font-variant-numeric:tabular-nums;text-align:center' },
+      row('변량', v, f2s), row('편차', dev, z => (z > 0 ? '+' : '') + f2s(z)), S.st !== 'dev' ? row('(편차)²', sq, f2s) : null));
+    let msg;
+    if (S.st === 'dev') msg = '편차 = 변량 − 평균. 편차의 합 = ' + f2s(dev.reduce((a, b) => a + b, 0)) + ' (항상 0이라서 흩어진 정도를 알 수 없어요)';
+    else if (S.st === 'sq') msg = '(편차)²의 합 = ' + f2s(sq.reduce((a, b) => a + b, 0)) + '  →  분산 = ' + f2s(sq.reduce((a, b) => a + b, 0)) + ' ÷ ' + n + ' = ' + f2s(vr);
+    else msg = '분산 ' + f2s(vr) + ' → 표준편차 = √' + f2s(vr) + ' ≈ ' + f2s(sd) + ' (분산·표준편차가 작을수록 평균 가까이 모여 있어요)';
+    body.replaceChildren(h('p', { class: 'note', text: D.head + '. 노란 점은 평균보다 크고, 빨간 점은 평균보다 작아요. 선의 길이가 편차의 크기예요.' }), svg, tbl, h('div', { class: 'verdict yes', text: msg }));
+  }
+  function paintTabs() { tabsBox.replaceChildren(tabs(Object.entries(DS).map(([k, d]) => [k, d.name]), S.k, k => { S.k = k; paintTabs(); draw(); use(); })); stepBox.replaceChildren(tabs([['dev', '① 편차'], ['sq', '② 편차의 제곱·분산'], ['sd', '③ 표준편차']], S.st, k => { S.st = k; paintTabs(); draw(); use(); })); }
+  paintTabs(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, stepBox, body);
+}
+
+/* 4. 산점도 */
+const SC_DS = {
+  lat: { name: '위도와 기온', xl: '위도 x (°N)', yl: '12월 최고 기온 y (℃)', xr: [28, 54, 4], yr: [0, 22, 5], pts: [[51, 8.2, '런던'], [37, 4.2, '서울'], [35, 12.3, '도쿄'], [47, 7.3, '시애틀'], [33, 12.2, '애틀랜타'], [40, 10.1, '마드리드'], [30, 20.3, '카이로'], [49, 6.2, '밴쿠버']] },
+  eye: { name: '왼쪽·오른쪽 시력', xl: '왼쪽 눈 시력 x', yl: '오른쪽 눈 시력 y', xr: [0, 2.2, 0.5], yr: [0, 2.2, 0.5], pts: [[.9, .8], [1, 1.2], [1.5, 1.5], [.6, .4], [1, 1.5], [.8, .7], [.5, .7], [1.5, 1], [1.2, 1], [.6, .7], [1.5, 2], [.3, .5], [2, 1.5], [1.2, 1.2], [1.5, 1.2], [1.2, 1.5], [.2, .2], [.4, .9], [2, 2], [.3, .2]].map((p, i) => [p[0], p[1], (i + 1) + '번']) },
+  car: { name: '차량 수와 속력', xl: '차량의 수 x (대)', yl: '평균 통과 속력 y (km/h)', xr: [28, 56, 4], yr: [20, 60, 10], pts: [[54, 25], [44, 36], [32, 52], [30, 54], [35, 50], [50, 28], [42, 44], [30, 52], [48, 35], [52, 28], [37, 45], [40, 40]].map((p, i) => [p[0], p[1], (i + 1) + '회']) }
+};
+function lsq(pts) { const n = pts.length, mx = mean3(pts.map(p => p[0])), my = mean3(pts.map(p => p[1])); let sxy = 0, sxx = 0; pts.forEach(p => { sxy += (p[0] - mx) * (p[1] - my); sxx += (p[0] - mx) ** 2; }); const b = sxy / sxx; return { b, a: my - b * mx }; }
+function wSc(use) {
+  const S = { k: 'lat', n: 8, line: false };
+  const tabsBox = h('div'), body = h('div');
+  function draw() {
+    const D = SC_DS[S.k], n = Math.min(S.n, D.pts.length), W = 400, Ht = 260, L = 46, R = 384, T = 14, B = 218, [x0, x1, xs] = D.xr, [y0, y1, ys] = D.yr;
+    const X = v => L + (v - x0) / (x1 - x0) * (R - L), Y = v => B - (v - y0) / (y1 - y0) * (B - T);
+    const svg = h('s:svg', { viewBox: '0 0 ' + W + ' ' + Ht, role: 'img', 'aria-label': D.name + ' 산점도' });
+    svg.append(h('s:line', { x1: L, y1: B, x2: R, y2: B, stroke: 'var(--ink2)', 'stroke-width': 1.5 }), h('s:line', { x1: L, y1: T, x2: L, y2: B, stroke: 'var(--ink2)', 'stroke-width': 1.5 }));
+    for (let t = x0; t <= x1 + 1e-9; t += xs) svg.append(h('s:line', { x1: X(t), y1: T, x2: X(t), y2: B, stroke: 'var(--line)' }), label(X(t), B + 15, f2s(t), 'svgm'));
+    for (let t = y0; t <= y1 + 1e-9; t += ys) svg.append(h('s:line', { x1: L, y1: Y(t), x2: R, y2: Y(t), stroke: 'var(--line)' }), label(L - 6, Y(t) + 4, f2s(t), 'svgm', 'end'));
+    svg.append(label((L + R) / 2, Ht - 6, D.xl, 'svgm'), h('s:text', { x: 12, y: (T + B) / 2, class: 'svgm', 'text-anchor': 'middle', transform: 'rotate(-90 12 ' + (T + B) / 2 + ')', text: D.yl }));
+    if (S.line && n >= 3) { const { a, b } = lsq(D.pts.slice(0, n)); const xa = x0, xb = x1; let ya = a + b * xa, yb = a + b * xb;
+      svg.append(h('s:line', { x1: X(xa), y1: Y(Math.max(y0, Math.min(y1, ya))), x2: X(xb), y2: Y(Math.max(y0, Math.min(y1, yb))), stroke: 'var(--gold)', 'stroke-width': 2.5, 'stroke-dasharray': '6 4' })); }
+    D.pts.slice(0, n).forEach((p, i) => { const last = i === n - 1; svg.append(h('s:circle', { cx: X(p[0]), cy: Y(p[1]), r: last ? 7 : 5, fill: last ? 'var(--red)' : 'var(--blue)', 'fill-opacity': .9, stroke: 'var(--paper)', 'stroke-width': 1 })); });
+    const lp = n ? D.pts[n - 1] : null;
+    if (lp) { const lx = X(lp[0]), tx = Math.min(Math.max(lx, 70), 340); svg.append(label(tx, Math.max(Y(lp[1]) - 12, 12), '(' + f2s(lp[0]) + ', ' + f2s(lp[1]) + ')', 'svgt')); svg.lastChild.setAttribute('style', 'fill:var(--red)'); }
+    const ctl = h('div', { class: 'ctl' }, slider('찍은 점의 수', 0, D.pts.length, 1, n, t => t + '개', t => { S.n = t; draw(); use(); }));
+    body.replaceChildren(h('p', { class: 'note', text: D.xl + '와 ' + D.yl + '를 순서쌍 (x, y)로 하여 점을 찍어요. 슬라이더를 움직이면 점이 하나씩 찍혀요.' }), ctl, svg,
+      h('div', { class: 'chips' }, h('button', { type: 'button', class: 'btn sm' + (S.line ? ' primary' : ''), text: '경향선 보기' + (S.line ? ' ✓' : ''), onclick: () => { S.line = !S.line; draw(); use(); } })),
+      h('div', { class: 'verdict yes', text: lp ? '마지막으로 찍은 점: ' + (lp[2] ? lp[2] + ' ' : '') + '(' + f2s(lp[0]) + ', ' + f2s(lp[1]) + ')' : '점을 찍어 보세요.' }));
+  }
+  function paintTabs() { tabsBox.replaceChildren(tabs(Object.entries(SC_DS).map(([k, d]) => [k, d.name]), S.k, k => { S.k = k; S.n = SC_DS[k].pts.length; paintTabs(); draw(); use(); })); }
+  paintTabs(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, body);
+}
+
+/* 5. 상관관계 */
+function rng3(seed) { let t = seed >>> 0; return () => { t += 0x6D2B79F5; let r = Math.imul(t ^ t >>> 15, 1 | t); r ^= r + Math.imul(r ^ r >>> 7, 61 | r); return ((r ^ r >>> 14) >>> 0) / 4294967296; }; }
+function wCr(use) {
+  const N = 30, base = (() => { const r = rng3(12345), o = []; for (let i = 0; i < N; i++) { const gx = (i + r()) / N; let u = 0; for (let j = 0; j < 6; j++) u += r(); o.push({ x: gx, g: (u - 3) / 0.7071, u: r() }); } return o; })();
+  const S = { dir: 'pos', s: 0.15 };
+  const DIRS = { pos: ['양의 상관', '예) 한 학생의 키와 몸무게'], neg: ['음의 상관', '예) 차량의 수와 평균 속력'], none: ['고르게 흩어짐', '예) 국어 점수와 체육 점수'], flat: ['x축에 평행', '예) 학생 번호와 키'] };
+  const tabsBox = h('div'), body = h('div');
+  function pts() { const cl = v => Math.max(0.02, Math.min(0.98, v)); return base.map(b => { let y; if (S.dir === 'pos') y = b.x + S.s * b.g; else if (S.dir === 'neg') y = 1 - b.x + S.s * b.g; else if (S.dir === 'none') y = b.u; else y = 0.5 + 0.12 * b.g; return [b.x, cl(y)]; }); }
+  function pearson(p) { const mx = mean3(p.map(q => q[0])), my = mean3(p.map(q => q[1])); let a = 0, b = 0, c = 0; p.forEach(q => { a += (q[0] - mx) * (q[1] - my); b += (q[0] - mx) ** 2; c += (q[1] - my) ** 2; }); return a / Math.sqrt(b * c); }
+  function draw() {
+    const p = pts(), r = pearson(p), W = 400, Ht = 250, L = 40, R = 384, T = 12, B = 214, X = v => L + v * (R - L), Y = v => B - v * (B - T);
+    const svg = h('s:svg', { viewBox: '0 0 ' + W + ' ' + Ht, role: 'img', 'aria-label': '두 변량의 산점도' });
+    svg.append(h('s:line', { x1: L, y1: B, x2: R, y2: B, stroke: 'var(--ink2)', 'stroke-width': 1.5 }), h('s:line', { x1: L, y1: T, x2: L, y2: B, stroke: 'var(--ink2)', 'stroke-width': 1.5 }), label(R, B + 16, 'x', 'svgt', 'end'), label(L - 8, T + 8, 'y', 'svgt', 'end'));
+    p.forEach(q => svg.append(h('s:circle', { cx: X(q[0]), cy: Y(q[1]), r: 5, fill: 'var(--blue)', 'fill-opacity': .85, stroke: 'var(--paper)', 'stroke-width': 1 })));
+    const a = Math.abs(r); let verdict;
+    if (a < 0.3) verdict = '상관관계가 없어요'; else verdict = (a >= 0.8 ? '강한 ' : '약한 ') + (r > 0 ? '양의' : '음의') + ' 상관관계가 있어요';
+    const ctl = S.dir === 'pos' || S.dir === 'neg' ? h('div', { class: 'ctl' }, slider('점들이 흩어진 정도', 0.05, 0.6, 0.05, S.s, t => (t <= 0.2 ? '조금' : t <= 0.4 ? '보통' : '많이') + ' (' + f2s(t) + ')', t => { S.s = t; draw(); use(); })) : null;
+    body.replaceChildren(h('p', { class: 'note', text: '두 변량 x, y의 산점도예요. ' + DIRS[S.dir][1] }), ...(ctl ? [ctl] : []), svg,
+      h('div', { class: 'verdict ' + (a < 0.3 ? '' : 'yes'), text: verdict }),
+      h('p', { class: 'note', text: S.dir === 'pos' ? 'x가 커질 때 y도 커지는 경향이에요. 점들이 한 직선 가까이 모일수록 상관관계가 강해요.' : S.dir === 'neg' ? 'x가 커질 때 y는 작아지는 경향이에요. 점들이 한 직선 가까이 모일수록 상관관계가 강해요.' : S.dir === 'none' ? '점들이 각 방향으로 고르게 흩어져 있어요.' : '점들이 x축에 평행한 직선 가까이 있어요. x가 변해도 y는 거의 일정해요.' }));
+  }
+  function paintTabs() { tabsBox.replaceChildren(tabs(Object.entries(DIRS).map(([k, d]) => [k, d[0]]), S.dir, k => { S.dir = k; paintTabs(); draw(); use(); })); }
+  paintTabs(); draw();
+  return h('div', { class: 'card widget' }, tabsBox, body);
+}
+Object.assign(WIDGETS, { dp: wDp, out: wOut, sp: wSp, sc: wSc, cr: wCr });
 /* ===== 확인 문제용 그림 ===== */
 function F(o) {
   const w = o.w || 260, hh = o.h || 160, P = o.P || {};
@@ -2641,15 +2953,18 @@ function viewWelcome() {
   const list = DB.profiles.length ? h('section', { class: 'card' }, h('h2', { class: 'h2', text: '이어서 하기' }), h('div', { class: 'pcards' }, DB.profiles.map(p =>
     h('button', { class: 'btn pcard', onclick: () => { DB.cur = p.id; save(); go('home'); } }, h('b', { text: p.name }), h('span', { class: 'chip gray', text: p.cls || '반 없음' })))), null) : null;
   return h('div', { class: 'welcome' }, h('div', { class: 'top' }, brand()),
-    h('section', { class: 'card' }, h('h1', { class: 'h1', text: '중2 수학 2학기' }), h('p', { class: 'note', text: '개념을 직접 만져 보고, 내 말로 정리하는 노트예요.' }),
+    h('section', { class: 'card' }, h('h1', { class: 'h1', text: '중학교 수학 개념 탐구' }), h('p', { class: 'note', text: '개념을 직접 만져 보고, 내 말로 정리하는 노트예요.' }),
       h('div', { class: 'fieldrow' }, h('div', {}, h('label', { class: 'l', for: 'nm', text: '이름' }), name), h('div', {}, h('label', { class: 'l', for: 'cl', text: '반' }), cls)),
       h('div', { class: 'row' }, h('button', { class: 'btn primary', type: 'button', text: '시작하기', onclick: go1 }))),
     list, h('div', { id: 'syncslot' }, syncBar()));
 }
 
 /* ---------- 홈 ---------- */
+let GRADE = (() => { try { const g = +localStorage.getItem('gn-grade'); return g === 3 ? 3 : 2; } catch (e) { return 2; } })();
+function setGrade(g) { GRADE = g; try { localStorage.setItem('gn-grade', String(g)); } catch (e) { } render(); }
 function viewHome(p) {
-  const ready = LESSONS.filter(l => l.ready), done = ready.filter(l => status(p, l) === 'done').length;
+  const gl = LESSONS.filter(l => gradeOf(l) === GRADE);
+  const ready = gl.filter(l => l.ready), done = ready.filter(l => status(p, l) === 'done').length;
   const next = ready.find(l => status(p, l) !== 'done');
   return h('div', {}, h('header', { class: 'top' }, brand(), h('div', { class: 'row', style: 'margin:0' },
     h('span', { class: 'chip', text: p.name + (p.cls ? ' · ' + p.cls : '') }), h('button', { class: 'btn sm ghost', onclick: () => { DB.cur = null; save(); go('welcome'); }, text: '학생 바꾸기' }))),
@@ -2657,7 +2972,8 @@ function viewHome(p) {
       h('p', { class: 'note', text: '열린 차시 ' + ready.length + '개 중 ' + done + '개를 끝냈어요. 나머지 차시는 선생님이 순서대로 열어 줄 거예요.' }),
       h('div', { class: 'bar', role: 'progressbar', 'aria-valuenow': pct(done / ready.length), 'aria-valuemin': '0', 'aria-valuemax': '100' }, h('i', { style: 'width:' + pct(done / ready.length) + '%' }))),
       next ? h('button', { class: 'btn primary', onclick: () => go('lesson', { id: next.id, step: lst(p, next.id).step }), text: (status(p, next) === 'new' ? '시작: ' : '이어서: ') + lno(next) + ' ' + next.title }) : null),
-    h('div', { class: 'units' }, UNITS.map(u => h('section', { class: 'unit' }, h('h2', { text: u.name }), h('p', { class: 'sub', text: u.sub }),
+    h('div', { class: 'gtabs', role: 'tablist', 'aria-label': '학년' }, GRADES.map(([g, t]) => h('button', { type: 'button', role: 'tab', 'aria-selected': g === GRADE ? 'true' : 'false', class: 'gtab' + (g === GRADE ? ' on' : ''), text: t + ' 수학', onclick: () => setGrade(g) }))),
+    h('div', { class: 'units' }, UNITS.filter(u => u.grade === GRADE).map(u => h('section', { class: 'unit' }, h('h2', { text: u.name }), h('p', { class: 'sub', text: u.sub }),
       h('div', { class: 'lgrid' }, LESSONS.filter(l => l.unit === u.id).map(l => lcard(p, l)))))),
     h('div', { id: 'syncslot' }, syncBar()),
     submitCard(p),
